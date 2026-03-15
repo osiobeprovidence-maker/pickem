@@ -48,6 +48,14 @@ const getDefaultNameFromEmail = (email: string) => {
 const ensureSeededUsers = (): User[] => {
   const users = getStoredUsers();
   const now = new Date().toISOString();
+  // Normalize any legacy or invalid admin_level values saved as 'admin' or missing
+  for (let i = 0; i < users.length; i++) {
+    const u = users[i] as Partial<User>;
+    if (u.role === 'admin' && (!u.admin_level || u.admin_level === 'admin')) {
+      u.admin_level = 'operations_admin' as AdminLevel;
+      users[i] = u as User;
+    }
+  }
   const superAdminIndex = users.findIndex(user => normalizeEmail(user.email) === SUPER_ADMIN_EMAIL);
   const existingSuperAdmin = superAdminIndex >= 0 ? users[superAdminIndex] : null;
 
@@ -277,7 +285,8 @@ export const api = {
       email_verified: existingUser?.email_verified || true,
       phone_verified: existingUser?.phone_verified || false,
       verification_cleared: existingUser?.verification_cleared || false,
-      admin_level: existingUser?.admin_level || 'admin',
+      // Default to a valid admin level when inviting new admins
+      admin_level: (existingUser?.admin_level && existingUser.admin_level !== 'admin') ? existingUser.admin_level : 'operations_admin',
       invited_by: invitedBy,
       business: existingUser?.business,
     };
@@ -302,7 +311,7 @@ export const api = {
     const approvedAdmin: User = {
       ...target,
       status: 'approved',
-      admin_level: target.admin_level || 'admin',
+      admin_level: target.admin_level && target.admin_level !== 'admin' ? target.admin_level : 'operations_admin',
       verification_cleared: true,
       email_verified: true,
     };
