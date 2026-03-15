@@ -1,0 +1,5 @@
+{
+  "name": "Pick’em",
+  "description": "A campus logistics platform connecting students, businesses, and runners for affordable, human-powered deliveries.",
+  "requestFramePermissions": ["geolocation"]
+}
