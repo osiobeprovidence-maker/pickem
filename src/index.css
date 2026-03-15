@@ -20,3 +20,37 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
+
+/* Responsive typography & spacing tweaks for better mobile layout */
+@layer base {
+  html {
+    /* default base size (rem based utilities scale from here) */
+    font-size: 16px;
+  }
+
+  @media (max-width: 640px) {
+    html {
+      font-size: 15px;
+    }
+  }
+
+  h1 { @apply text-3xl md:text-5xl font-black leading-tight; }
+  h2 { @apply text-2xl md:text-3xl font-black; }
+  h3 { @apply text-xl md:text-2xl font-bold; }
+  p, li, span { @apply text-base md:text-lg; }
+
+  /* Reduce large paddings on very small screens for common containers */
+  .max-w-7xl { padding-left: 1rem; padding-right: 1rem; }
+
+  /* Improve button sizing and spacing on mobile */
+  button, .btn {
+    @apply touch-manipulation;
+  }
+
+  /* Navigation improvements for small screens */
+  nav .min-h-20 { min-height: 56px; }
+  @media (max-width: 640px) {
+    nav .min-h-20 { min-height: 48px; }
+    nav .px-4 { padding-left: 0.75rem; padding-right: 0.75rem; }
+  }
+}
