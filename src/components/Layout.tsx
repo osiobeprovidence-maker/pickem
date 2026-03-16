@@ -229,13 +229,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
                 className={cn(
-                  'fixed right-0 top-0 bottom-0 z-50 flex w-[85%] max-w-sm flex-col border-l p-8 shadow-2xl',
+                  'fixed right-0 top-0 bottom-0 z-50 flex h-dvh w-full max-w-[22rem] flex-col border-l p-5 shadow-2xl sm:w-[85%] sm:p-6',
                   isBizMode ? 'border-emerald-100 bg-emerald-50/95' : 'border-stone-100 bg-white',
                 )}
               >
-                <div className="mb-8 flex items-center justify-between">
+                <div className="mb-6 flex items-start justify-between gap-4 sm:mb-8">
                   <div className="flex flex-col">
-                    <span className="text-2xl font-black tracking-tighter text-apple-gray-500">
+                    <span className="text-xl font-black tracking-tighter text-apple-gray-500 sm:text-2xl">
                       {isBizMode ? "Pick'em Store" : "Pick'em"}
                     </span>
                     <span
@@ -258,17 +258,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   </button>
                 </div>
 
-                <div className="relative flex-grow overflow-hidden">
+                <div className="relative flex-1 overflow-hidden">
                   <motion.div
                     key={isBizMode ? 'business-menu' : 'default-menu'}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
-                    className="h-full space-y-3 overflow-y-auto no-scrollbar"
+                    className="h-full space-y-2 overflow-y-auto pr-1"
                   >
                     <div
                       className={cn(
-                        'mb-4 ml-2 text-[10px] font-black uppercase tracking-[0.2em]',
+                        'mb-3 ml-1 text-[10px] font-black uppercase tracking-[0.2em]',
                         isBizMode ? 'text-emerald-500' : 'text-apple-gray-200',
                       )}
                     >
@@ -283,7 +283,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                           to={item.path}
                           onClick={closeMenu}
                           className={cn(
-                            'group flex items-center gap-4 rounded-2xl px-6 py-5 text-lg font-bold transition-all',
+                            'group flex items-center gap-3 rounded-2xl px-4 py-4 text-base font-bold transition-all sm:px-5 sm:text-lg',
                             isBizMode
                               ? isActive
                                 ? 'bg-emerald-600 text-white shadow-lg'
@@ -295,7 +295,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         >
                           <item.icon
                             className={cn(
-                              'h-6 w-6',
+                              'h-5 w-5 shrink-0 sm:h-6 sm:w-6',
                               !isActive &&
                                 (isBizMode
                                   ? 'text-apple-gray-200 group-hover:text-emerald-500'
@@ -311,7 +311,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       <Link
                         to="/"
                         onClick={closeMenu}
-                        className="mt-8 flex items-center gap-4 rounded-2xl border border-emerald-100 bg-emerald-50 px-6 py-5 text-lg font-bold text-emerald-700 transition-all hover:bg-emerald-100"
+                        className="mt-6 flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-4 text-base font-bold text-emerald-700 transition-all hover:bg-emerald-100 sm:px-5 sm:text-lg"
                       >
                         <ChevronLeft className="h-6 w-6" />
                         Back to Pick'em
@@ -321,10 +321,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
 
                 {isBizMode ? (
-                  <div className="mt-auto border-t border-emerald-100 pt-8">
+                  <div className="mt-4 border-t border-emerald-100 pt-5 sm:mt-6 sm:pt-6">
                     {user && (
                       <div className="space-y-4">
-                        <div className="flex items-center gap-4 rounded-[1.5rem] bg-white p-4 border border-emerald-100">
+                        <div className="flex items-center gap-3 rounded-[1.5rem] border border-emerald-100 bg-white p-4">
                           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600 font-black text-white">
                             {user.name[0].toUpperCase()}
                           </div>
@@ -337,19 +337,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         </div>
                         <button
                           onClick={handleLogout}
-                          className="flex w-full items-center gap-4 rounded-2xl border border-red-100 bg-white px-6 py-5 text-lg font-bold text-red-600 transition-all hover:bg-red-50"
+                          className="flex w-full items-center gap-3 rounded-2xl border border-red-100 bg-white px-4 py-4 text-base font-bold text-red-600 transition-all hover:bg-red-50 sm:px-5 sm:text-lg"
                         >
-                          <LogOut className="h-6 w-6" />
+                          <LogOut className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
                           Logout
                         </button>
                       </div>
                     )}
                   </div>
                 ) : (
-                  <div className="mt-auto border-t border-apple-gray-100 pt-8">
+                  <div className="mt-4 border-t border-apple-gray-100 pt-5 sm:mt-6 sm:pt-6">
                     {user ? (
                       <div className="space-y-4">
-                        <div className="flex items-center gap-4 rounded-[1.5rem] bg-apple-gray-50 p-4">
+                        <div className="flex items-center gap-3 rounded-[1.5rem] bg-apple-gray-50 p-4">
                           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-apple-gray-500 font-black text-white">
                             {user.name[0].toUpperCase()}
                           </div>
@@ -362,20 +362,29 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         </div>
                         <button
                           onClick={handleLogout}
-                          className="flex w-full items-center gap-4 rounded-2xl border border-red-100 bg-red-50 px-6 py-5 text-lg font-bold text-red-600 transition-all hover:bg-red-100"
+                          className="flex w-full items-center gap-3 rounded-2xl border border-red-100 bg-red-50 px-4 py-4 text-base font-bold text-red-600 transition-all hover:bg-red-100 sm:px-5 sm:text-lg"
                         >
-                          <LogOut className="h-6 w-6" />
+                          <LogOut className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
                           Logout
                         </button>
                       </div>
                     ) : (
-                      <Link
-                        to="/auth"
-                        onClick={closeMenu}
-                        className="block w-full rounded-2xl bg-apple-gray-500 py-5 text-center text-lg font-bold text-white shadow-lg transition-opacity hover:opacity-90"
-                      >
-                        Get Started
-                      </Link>
+                      <div className="space-y-3">
+                        <Link
+                          to="/contact"
+                          onClick={closeMenu}
+                          className="flex items-center justify-center rounded-2xl border border-apple-gray-100 px-4 py-4 text-base font-bold text-apple-gray-500 transition-colors hover:bg-apple-gray-50 sm:text-lg"
+                        >
+                          Contact Support
+                        </Link>
+                        <Link
+                          to="/auth"
+                          onClick={closeMenu}
+                          className="block w-full rounded-2xl bg-apple-gray-500 py-4 text-center text-base font-bold text-white shadow-lg transition-opacity hover:opacity-90 sm:py-5 sm:text-lg"
+                        >
+                          Get Started
+                        </Link>
+                      </div>
                     )}
                   </div>
                 )}
