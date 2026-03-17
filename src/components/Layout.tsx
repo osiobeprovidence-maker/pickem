@@ -327,8 +327,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </main>
       <FloatingProxyTimer />
 
-      <footer className="bg-white border-t border-apple-gray-100 py-12">
-        <div className="max-w-[480px] mx-auto px-4">
+      <footer className="w-full block bg-white border-t border-apple-gray-100 py-12">
+        <div className="w-full max-w-[480px] mx-auto px-4">
           <div className="space-y-8">
             <div>
               <Link to="/" className="text-xl font-bold tracking-tight text-apple-gray-500">

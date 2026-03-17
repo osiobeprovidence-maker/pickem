@@ -54,14 +54,14 @@ export default function Home() {
   ];
 
   return (
-    <div className="bg-white">
+    <div className="w-full bg-white flex flex-col">
       {/* Hero Section */}
-      <section className="relative min-h-[80vh] flex flex-col items-center justify-center pt-16 pb-12 px-4 overflow-hidden bg-white">
-        <div className="w-full max-w-[480px] text-center">
+      <section className="w-full block relative pt-12 pb-8 overflow-hidden bg-white">
+        <div className="w-full text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-apple-gray-50 rounded-full text-[11px] font-semibold text-apple-gray-300 mb-4"
+            className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-apple-gray-50 rounded-full text-[11px] font-semibold text-apple-gray-300 mb-4 w-full"
           >
             <span className="text-blue-500">New</span> Active on 12 Campuses
           </motion.div>
@@ -110,14 +110,14 @@ export default function Home() {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-8 w-full"
+          className="mt-8 w-full block"
         >
-          <div className="relative rounded-3xl overflow-hidden shadow-xl border border-apple-gray-100">
+          <div className="w-full relative rounded-[16px] overflow-hidden shadow-xl border border-apple-gray-100">
             <img
               src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200"
               alt="Campus Life"
               crossOrigin="anonymous"
-              className="w-full h-auto object-cover aspect-[4/3]"
+              className="w-full h-auto object-cover aspect-[4/3] block rounded-[16px]"
               loading="eager"
             />
           </div>
@@ -125,9 +125,9 @@ export default function Home() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-16 px-4 bg-white">
-        <div className="w-full max-w-[480px] mx-auto">
-          <div className="grid grid-cols-1 gap-4">
+      <section className="w-full block py-12 bg-white">
+        <div className="w-full mx-auto">
+          <div className="grid grid-cols-1 gap-4 w-full">
             {features.map((feature, i) => (
               <motion.div
                 key={i}
@@ -140,8 +140,8 @@ export default function Home() {
                 <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-4", feature.color)}>
                   <feature.icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold mb-2 tracking-tight">{feature.title}</h3>
-                <p className="text-apple-gray-300 text-sm leading-relaxed font-medium">{feature.description}</p>
+                <h3 className="text-xl font-bold mb-2 tracking-tight block"> {feature.title}</h3>
+                <p className="text-apple-gray-300 text-sm leading-relaxed font-medium block">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -149,9 +149,9 @@ export default function Home() {
       </section>
 
       {/* Product Showcase - Buy & Deliver */}
-      <section className="py-16 bg-apple-gray-50">
-        <div className="w-full max-w-[480px] mx-auto px-4">
-          <div className="space-y-8">
+      <section className="w-full block py-12 bg-apple-gray-50 -mx-4 px-4">
+        <div className="w-full mx-auto">
+          <div className="w-full flex flex-col gap-8">
             <div className="text-center">
               <div className="text-blue-600 text-[10px] font-bold uppercase tracking-widest mb-3">New Service</div>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">Buy & Deliver. <br /> We've got you.</h2>
@@ -160,17 +160,17 @@ export default function Home() {
               </p>
               <Link
                 to="/buy-and-deliver"
-                className="inline-flex items-center justify-center gap-2 bg-apple-gray-500 text-white px-8 py-3.5 rounded-full font-semibold text-base hover:opacity-90 transition-opacity w-full sm:w-auto"
+                className="block w-full bg-apple-gray-500 text-white px-8 py-3.5 rounded-full font-semibold text-base hover:opacity-90 transition-opacity text-center mt-4"
               >
-                Explore Buy & Deliver <ArrowRight className="w-5 h-5" />
+                Explore Buy & Deliver <ArrowRight className="inline w-5 h-5 ml-2 align-middle" />
               </Link>
             </div>
-            <div className="relative">
+            <div className="w-full relative">
               <img
                 src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=1000"
                 alt="Shopping"
                 crossOrigin="anonymous"
-                className="rounded-3xl shadow-xl w-full"
+                className="w-full h-auto object-cover rounded-[16px] shadow-xl block"
                 loading="lazy"
               />
             </div>
@@ -179,15 +179,15 @@ export default function Home() {
       </section>
 
       {/* Steps Section */}
-      <section className="py-16 px-4 bg-white">
-        <div className="w-full max-w-[480px] mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-12">Simple. Fast. Secure.</h2>
-          <div className="space-y-8">
+      <section className="w-full block py-12 bg-white">
+        <div className="w-full mx-auto text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-12 block">Simple. Fast. Secure.</h2>
+          <div className="w-full flex flex-col gap-12">
             {steps.map((step, i) => (
               <div key={i} className="relative">
                 <div className="text-apple-gray-100 font-bold text-6xl absolute -top-8 left-1/2 -translate-x-1/2 -z-10 opacity-50">{i + 1}</div>
-                <h3 className="text-lg font-bold mb-2 pt-4">{step.title}</h3>
-                <p className="text-apple-gray-300 text-sm font-medium">{step.description}</p>
+                <h3 className="text-lg font-bold mb-2 pt-4 block">{step.title}</h3>
+                <p className="text-apple-gray-300 text-sm font-medium block">{step.description}</p>
               </div>
             ))}
           </div>
