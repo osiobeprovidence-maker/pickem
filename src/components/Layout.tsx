@@ -266,15 +266,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     exit={{ opacity: 0, x: 20 }}
                     className="h-full space-y-2 overflow-y-auto pr-1"
                   >
-                    <div
-                      className={cn(
-                        'mb-3 ml-1 text-[10px] font-black uppercase tracking-[0.2em]',
-                        isBizMode ? 'text-emerald-500' : 'text-apple-gray-200',
-                      )}
-                    >
-                      {isBizMode ? 'Business Dashboard' : 'Services & Tools'}
-                    </div>
-
                     {activeMenuItems.map((item) => {
                       const isActive = currentRoute === item.path;
                       return (
