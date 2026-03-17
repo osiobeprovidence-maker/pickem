@@ -72,118 +72,58 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const activeMenuItems = isBizMode ? bizNavItems : defaultNavItems;
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900 font-sans">
-      <nav className="sticky top-0 z-50 border-b border-stone-100 bg-white/95 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-          <div className="flex min-h-16 sm:min-h-20 items-center justify-between gap-3 sm:gap-4">
+    <div className="min-h-screen bg-stone-50 text-stone-900 font-sans overflow-x-hidden">
+      <nav className="sticky top-0 z-50 border-b border-stone-100 bg-white/95 backdrop-blur-sm will-change-auto">
+        <div className="max-w-[480px] mx-auto px-4">
+          <div className="flex h-16 items-center justify-between gap-3">
             <div className="flex shrink-0 items-center">
               <Link to="/" className="flex items-center group">
-                <span className="text-xl sm:text-2xl font-black tracking-tighter text-apple-gray-500 group-hover:text-blue-600 transition-colors">
+                <span className="text-xl font-black tracking-tighter text-apple-gray-500 group-hover:text-blue-600 transition-colors">
                   Pick'em
                 </span>
               </Link>
             </div>
 
-            {isBizMode ? (
-              <div className="hidden lg:flex min-w-0 flex-1 items-center justify-center px-4">
-                <div className="flex min-w-0 items-center gap-1">
-                  {bizNavItems.map((item) => {
-                    const isActive = currentRoute === item.path;
-                    return (
-                      <Link
-                        key={item.path}
-                        to={item.path}
-                        className={cn(
-                          'inline-flex items-center gap-1.5 rounded-full px-2.5 sm:px-3 py-2 text-[11px] sm:text-[13px] font-bold transition-all',
-                          isActive
-                            ? 'bg-emerald-600 text-white shadow-sm'
-                            : 'text-apple-gray-300 hover:bg-emerald-50 hover:text-emerald-700',
-                        )}
-                      >
-                        <item.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        <span className="hidden xl:inline">{item.label}</span>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            ) : (
-              <div className="hidden lg:flex items-center gap-6 xl:gap-10">
-                {isBusinessUser && (
-                  <Link
-                    to="/dashboard/business?tab=overview"
-                    className="flex items-center gap-1.5 text-[11px] sm:text-[13px] font-bold text-emerald-600 transition-colors hover:text-emerald-700"
-                  >
-                    <Store className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> <span className="hidden xl:inline">Manage Store</span>
-                  </Link>
-                )}
-                <Link
-                  to="/buy-and-deliver"
-                  className="text-[11px] sm:text-[13px] font-bold text-apple-gray-300 transition-colors hover:text-apple-gray-500"
-                >
-                  Buy & Deliver
-                </Link>
-                <Link
-                  to="/businesses"
-                  className="text-[11px] sm:text-[13px] font-bold text-apple-gray-300 transition-colors hover:text-apple-gray-500"
-                >
-                  For Businesses
-                </Link>
-                <Link
-                  to="/become-runner"
-                  className="text-[11px] sm:text-[13px] font-bold text-apple-gray-300 transition-colors hover:text-apple-gray-500"
-                >
-                  Become a Runner
-                </Link>
-                <Link
-                  to="/proxy-pickup"
-                  className="text-[11px] sm:text-[13px] font-bold text-apple-gray-300 transition-colors hover:text-apple-gray-500"
-                >
-                  Proxy Pickup
-                </Link>
-              </div>
-            )}
-
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2">
               {isBizMode && (
                 <div className="hidden lg:flex items-center">
                   <Link
                     to="/"
-                    className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-200 bg-white px-3 sm:px-5 py-1.5 sm:py-2.5 text-[11px] sm:text-[13px] font-bold text-emerald-700 transition-colors hover:bg-emerald-50"
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-[11px] font-bold text-emerald-700 transition-colors hover:bg-emerald-50"
                   >
-                    <ChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                    <ChevronLeft className="h-3.5 w-3.5" />
                     <span className="hidden xl:inline">Back to Pick'em</span>
                   </Link>
                 </div>
               )}
               {!isBizMode && (
-                <div className="hidden md:flex items-center gap-3 sm:gap-6">
+                <div className="hidden md:flex items-center gap-4">
                   <Link
                     to="/contact"
-                    className="text-[11px] sm:text-[13px] font-bold text-apple-gray-300 transition-colors hover:text-apple-gray-500"
+                    className="text-[11px] font-bold text-apple-gray-300 transition-colors hover:text-apple-gray-500"
                   >
                     Contact
                   </Link>
                   {user ? (
-                    <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="flex items-center gap-2">
                       <Link
                         to="/profile"
-                        className="rounded-full bg-apple-gray-500 px-3 sm:px-6 py-1.5 sm:py-2.5 text-[11px] sm:text-[13px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
+                        className="rounded-full bg-apple-gray-500 px-4 py-1.5 text-[11px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
                       >
                         Profile
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="p-1.5 sm:p-2 text-apple-gray-300 transition-colors hover:text-red-500"
+                        className="p-1.5 text-apple-gray-300 transition-colors hover:text-red-500"
                         title="Logout"
                       >
-                        <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
+                        <LogOut className="h-4 w-4" />
                       </button>
                     </div>
                   ) : (
                     <Link
                       to="/auth"
-                      className="rounded-full bg-apple-gray-500 px-4 sm:px-7 py-1.5 sm:py-2.5 text-[11px] sm:text-[13px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
+                      className="rounded-full bg-apple-gray-500 px-5 py-1.5 text-[11px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
                     >
                       Get Started
                     </Link>
@@ -195,13 +135,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <button
                   onClick={() => setIsMenuOpen((open) => !open)}
                   className={cn(
-                    'flex items-center justify-center rounded-xl p-2 sm:p-2.5 transition-all',
+                    'flex items-center justify-center rounded-xl p-2.5 transition-all',
                     isBizMode
                       ? 'bg-emerald-600 text-white shadow-lg hover:bg-emerald-700'
                       : 'bg-apple-gray-50 text-apple-gray-500 hover:bg-apple-gray-100',
                   )}
                 >
-                  {isMenuOpen ? <X className="h-5 w-5 sm:h-6 sm:w-6" /> : <Menu className="h-5 w-5 sm:h-6 sm:w-6" />}
+                  {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                 </button>
               </div>
             </div>
@@ -224,11 +164,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
                 className={cn(
-                  'fixed right-0 top-0 bottom-0 z-50 flex h-dvh w-full max-w-[18rem] flex-col border-l pb-6 shadow-2xl sm:max-w-[22rem]',
+                  'fixed right-0 top-0 bottom-0 z-50 flex h-dvh w-full max-w-[18rem] flex-col border-l bg-white shadow-2xl',
                   isBizMode ? 'border-emerald-100 bg-emerald-50/95' : 'border-stone-100 bg-white',
                 )}
               >
-                <div className="sticky top-0 flex items-center justify-between gap-3 border-b border-stone-100 bg-inherit px-4 py-4">
+                <div className="flex items-center justify-between gap-3 border-b border-stone-100 px-4 py-3">
                   <div className="flex flex-col">
                     <span className="text-lg font-black tracking-tighter text-apple-gray-500">
                       {isBizMode ? "Pick'em Store" : "Pick'em"}
@@ -307,7 +247,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
 
                 {isBizMode ? (
-                  <div className="sticky bottom-0 border-t border-emerald-100 bg-inherit px-3 pt-4">
+                  <div className="border-t border-emerald-100 px-3 py-4">
                     {user && (
                       <div className="space-y-3">
                         <div className="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white p-3">
@@ -332,7 +272,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     )}
                   </div>
                 ) : (
-                  <div className="sticky bottom-0 border-t border-apple-gray-100 bg-inherit px-3 pt-4">
+                  <div className="border-t border-apple-gray-100 px-3 py-4">
                     {user ? (
                       <div className="space-y-3">
                         <div className="flex items-center gap-3 rounded-xl bg-apple-gray-50 p-3">
@@ -381,31 +321,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </nav>
 
       <main className="flex-grow">
-        <motion.div
-          key={location.pathname + location.search}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
+        <div className="max-w-[480px] mx-auto">
           {children}
-        </motion.div>
+        </div>
       </main>
       <FloatingProxyTimer />
 
-      <footer className="bg-white border-t border-apple-gray-100 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div className="col-span-1 md:col-span-2 space-y-6">
+      <footer className="bg-white border-t border-apple-gray-100 py-12">
+        <div className="max-w-[480px] mx-auto px-4">
+          <div className="space-y-8">
+            <div>
               <Link to="/" className="text-xl font-bold tracking-tight text-apple-gray-500">
                 Pick'em
               </Link>
-              <p className="max-w-xs text-[15px] text-apple-gray-300 leading-relaxed font-medium">
+              <p className="mt-3 text-[13px] text-apple-gray-300 leading-relaxed font-medium">
                 Pick'em is a product of Cratebux and Logistics. The premium campus logistics platform connecting students and businesses.
               </p>
             </div>
             <div>
-              <h4 className="text-[13px] font-bold text-apple-gray-500 uppercase tracking-wider mb-6">Services</h4>
-              <ul className="space-y-4 text-[14px] text-apple-gray-300 font-medium">
+              <h4 className="text-[11px] font-bold text-apple-gray-500 uppercase tracking-wider mb-4">Services</h4>
+              <ul className="space-y-3 text-[13px] text-apple-gray-300 font-medium">
                 <li><Link to="/request" className="hover:text-blue-600 transition-colors">Send Item</Link></li>
                 <li><Link to="/businesses" className="hover:text-blue-600 transition-colors">Business Delivery</Link></li>
                 <li><Link to="/proxy-pickup" className="hover:text-blue-600 transition-colors">Pick'em Proxy</Link></li>
@@ -413,17 +348,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </ul>
             </div>
             <div>
-              <h4 className="text-[13px] font-bold text-apple-gray-500 uppercase tracking-wider mb-6">Support</h4>
-              <ul className="space-y-4 text-[14px] text-apple-gray-300 font-medium">
+              <h4 className="text-[11px] font-bold text-apple-gray-500 uppercase tracking-wider mb-4">Support</h4>
+              <ul className="space-y-3 text-[13px] text-apple-gray-300 font-medium">
                 <li><Link to="/how-it-works" className="hover:text-blue-600 transition-colors">How it Works</Link></li>
                 <li><Link to="/contact" className="hover:text-blue-600 transition-colors">Contact Us</Link></li>
                 <li className="hover:text-blue-600 cursor-pointer transition-colors">Terms of Service</li>
                 <li className="hover:text-blue-600 cursor-pointer transition-colors">Privacy Policy</li>
               </ul>
             </div>
-          </div>
-          <div className="border-t border-apple-gray-100 mt-20 pt-8 text-[12px] text-apple-gray-200 font-medium">
-            &copy; {new Date().getFullYear()} Cratebux and Logistics. All rights reserved.
+            <div className="border-t border-apple-gray-100 pt-6 text-[11px] text-apple-gray-200 font-medium">
+              &copy; {new Date().getFullYear()} Cratebux and Logistics. All rights reserved.
+            </div>
           </div>
         </div>
       </footer>
