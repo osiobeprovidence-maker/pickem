@@ -5,7 +5,7 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  
+
   --color-apple-gray-50: #f5f5f7;
   --color-apple-gray-100: #e8e8ed;
   --color-apple-gray-200: #d2d2d7;
@@ -14,29 +14,43 @@
   --color-apple-gray-500: #1d1d1f;
 }
 
-@layer base {
-  * {
-    box-sizing: border-box;
-    /* Temporary debug outline to identify layout issues */
-    outline: 1px solid red;
-  }
+/* Global CSS reset for mobile stability */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  body {
-    @apply text-apple-gray-500 antialiased selection:bg-blue-500/30;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-    width: 100%;
-    min-height: 100vh;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-  }
+html {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
 
-  #root {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+body {
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Responsive typography & spacing tweaks for better mobile layout */

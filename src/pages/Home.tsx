@@ -57,29 +57,30 @@ export default function Home() {
     <div className="w-full bg-white flex flex-col">
       {/* Hero Section */}
       <section className="w-full block relative pt-12 pb-8 overflow-hidden bg-white">
-        <div className="w-full text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-apple-gray-50 rounded-full text-[11px] font-semibold text-apple-gray-300 mb-4 w-full"
-          >
-            <span className="text-blue-500">New</span> Active on 12 Campuses
-          </motion.div>
+        <div className="w-full max-w-[480px] mx-auto px-4 text-center">
+          <div className="w-full flex justify-center mb-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-apple-gray-50 rounded-full text-[11px] font-semibold text-apple-gray-300"
+            >
+              <span className="text-blue-500">New</span> Active on 12 Campuses
+            </motion.div>
+          </div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl sm:text-5xl font-bold tracking-tight text-apple-gray-500 mb-4 leading-[1.15]"
+            className="w-full block text-4xl sm:text-5xl font-bold tracking-tight text-apple-gray-500 mb-4 leading-[1.15]"
           >
-            Move anything across <br />
-            <span className="text-apple-gray-300">campus, instantly.</span>
+            Move anything across <span className="block text-apple-gray-300">campus, instantly.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-base sm:text-lg text-apple-gray-300 mb-8 leading-relaxed font-medium"
+            className="w-full block text-base sm:text-lg text-apple-gray-300 mb-8 leading-relaxed font-medium"
           >
             Send packages, collect items, and deliver goods across campus using Pick'em's network of trusted runners.
           </motion.p>
@@ -126,7 +127,7 @@ export default function Home() {
 
       {/* Features Grid */}
       <section className="w-full block py-12 bg-white">
-        <div className="w-full mx-auto">
+        <div className="w-full max-w-[480px] mx-auto px-4">
           <div className="grid grid-cols-1 gap-4 w-full">
             {features.map((feature, i) => (
               <motion.div
@@ -149,8 +150,8 @@ export default function Home() {
       </section>
 
       {/* Product Showcase - Buy & Deliver */}
-      <section className="w-full block py-12 bg-apple-gray-50 -mx-4 px-4">
-        <div className="w-full mx-auto">
+      <section className="w-full block py-12 bg-apple-gray-50">
+        <div className="w-full max-w-[480px] mx-auto px-4">
           <div className="w-full flex flex-col gap-8">
             <div className="text-center">
               <div className="text-blue-600 text-[10px] font-bold uppercase tracking-widest mb-3">New Service</div>
@@ -180,8 +181,8 @@ export default function Home() {
 
       {/* Steps Section */}
       <section className="w-full block py-12 bg-white">
-        <div className="w-full mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-12 block">Simple. Fast. Secure.</h2>
+        <div className="w-full max-w-[480px] mx-auto px-4 text-center">
+          <h2 className="w-full block text-2xl sm:text-3xl font-bold tracking-tight mb-12">Simple. Fast. Secure.</h2>
           <div className="w-full flex flex-col gap-12">
             {steps.map((step, i) => (
               <div key={i} className="relative">
