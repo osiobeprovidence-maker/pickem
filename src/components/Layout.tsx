@@ -72,9 +72,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const activeMenuItems = isBizMode ? bizNavItems : defaultNavItems;
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900 font-sans overflow-x-hidden">
+    <div className="flex flex-col w-full min-h-screen bg-stone-50 text-stone-900 font-sans overflow-x-hidden">
       <nav className="sticky top-0 z-50 border-b border-stone-100 bg-white/95 backdrop-blur-sm will-change-auto">
-        <div className="max-w-[480px] mx-auto px-4">
+        <div className="w-full max-w-[480px] mx-auto px-4">
           <div className="flex h-16 items-center justify-between gap-3">
             <div className="flex shrink-0 items-center">
               <Link to="/" className="flex items-center group">
@@ -320,8 +320,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </AnimatePresence>
       </nav>
 
-      <main className="flex-grow">
-        <div className="max-w-[480px] mx-auto">
+      <main className="w-full flex-grow">
+        <div className="w-full max-w-[480px] mx-auto px-4">
           {children}
         </div>
       </main>

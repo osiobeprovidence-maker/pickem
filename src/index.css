@@ -15,9 +15,27 @@
 }
 
 @layer base {
+  * {
+    box-sizing: border-box;
+    /* Temporary debug outline to identify layout issues */
+    outline: 1px solid red;
+  }
+
   body {
     @apply text-apple-gray-500 antialiased selection:bg-blue-500/30;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 }
 

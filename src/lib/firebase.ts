@@ -12,23 +12,46 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
+// Validate required Firebase config
+const isFirebaseConfigValid = () => {
+  return !!(
+    firebaseConfig.apiKey &&
+    firebaseConfig.projectId
+  );
+};
+
 // Initialize Firebase
 let app: FirebaseApp;
 let auth: Auth;
 let analytics: Analytics | null = null;
 
-try {
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-
-  // Analytics is only available in browser
-  if (typeof window !== 'undefined') {
-    analytics = getAnalytics(app);
-  }
-} catch (error) {
-  console.error('Firebase initialization error:', error);
+if (!isFirebaseConfigValid()) {
+  console.error('Firebase config is invalid. Please check your .env file.');
+  console.error('API Key present:', !!firebaseConfig.apiKey);
+  console.error('Project ID:', firebaseConfig.projectId);
+  // Create dummy objects to prevent crashes
   app = {} as FirebaseApp;
-  auth = {} as Auth;
+  auth = {
+    onAuthStateChanged: () => () => {},
+    ...{}
+  } as unknown as Auth;
+} else {
+  try {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+
+    // Analytics is only available in browser
+    if (typeof window !== 'undefined') {
+      analytics = getAnalytics(app);
+    }
+  } catch (error) {
+    console.error('Firebase initialization error:', error);
+    app = {} as FirebaseApp;
+    auth = {
+      onAuthStateChanged: () => () => {},
+      ...{}
+    } as unknown as Auth;
+  }
 }
 
 const googleProvider = new GoogleAuthProvider();
