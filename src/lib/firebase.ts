@@ -1,38 +1,36 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth, GoogleAuthProvider } from 'firebase/auth';
+import { getAnalytics, type Analytics } from 'firebase/analytics';
 
-interface FirebaseConfig {
-  apiKey: string;
-  authDomain: string;
-  projectId: string;
-  storageBucket: string;
-  messagingSenderId: string;
-  appId: string;
-}
-
-const firebaseConfig: FirebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+const firebaseConfig = {
+  apiKey: "AIzaSyAc8AQ6PIBzvfnmzN_KUEbwJPGXYyyzxX0",
+  authDomain: "pick-em-6b10a.firebaseapp.com",
+  projectId: "pick-em-6b10a",
+  storageBucket: "pick-em-6b10a.firebasestorage.app",
+  messagingSenderId: "776489455293",
+  appId: "1:776489455293:web:c26dbaeceff6774da271d4",
+  measurementId: "G-JHC9QYGDV4"
 };
 
 // Initialize Firebase
 let app: FirebaseApp;
 let auth: Auth;
+let analytics: Analytics | null = null;
 
 try {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
+
+  // Analytics is only available in browser
+  if (typeof window !== 'undefined') {
+    analytics = getAnalytics(app);
+  }
 } catch (error) {
   console.error('Firebase initialization error:', error);
-  // Fallback for when env vars are not set (development)
   app = {} as FirebaseApp;
   auth = {} as Auth;
 }
 
 const googleProvider = new GoogleAuthProvider();
 
-export { app, auth, googleProvider };
+export { app, auth, analytics, googleProvider };
