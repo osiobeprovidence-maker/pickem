@@ -40,7 +40,7 @@ export default function BecomeRunner() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-apple-gray-500 mb-6 sm:mb-8 leading-[1.1]"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-apple-gray-500 mb-6 sm:mb-8 leading-[1.1]"
           >
             Earn money <br /> while you walk.
           </motion.h1>
@@ -87,10 +87,10 @@ export default function BecomeRunner() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-8 sm:p-12 bg-white rounded-[2rem] sm:rounded-[2.5rem] border border-apple-gray-100 shadow-sm hover:shadow-xl transition-all text-center"
+                className="p-8 sm:p-12 bg-white rounded-[2rem] sm:rounded-[2.5rem] border border-apple-gray-100 shadow-sm hover:shadow-xl transition-all text-center flex flex-col items-center"
               >
-                <div className="w-12 h-12 bg-apple-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-6 sm:mb-8">
-                  <perk.icon className="w-6 h-6 text-apple-gray-500" />
+                <div className="w-14 h-14 bg-apple-gray-50 rounded-2xl flex items-center justify-center mb-6 sm:mb-8">
+                  <perk.icon className="w-7 h-7 text-apple-gray-500" />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold mb-4">{perk.title}</h3>
                 <p className="text-apple-gray-300 text-base sm:text-lg leading-relaxed font-medium">{perk.description}</p>

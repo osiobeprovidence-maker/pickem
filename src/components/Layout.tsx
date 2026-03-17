@@ -74,7 +74,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col w-full min-h-screen bg-white text-stone-900 font-sans overflow-x-hidden">
       <nav className="w-full sticky top-0 z-50 border-b border-stone-100 bg-white/95 backdrop-blur-sm will-change-auto">
-        <div className="w-full max-w-[480px] mx-auto px-4 flex h-16 items-center justify-between gap-3">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between gap-3">
             <div className="flex shrink-0 items-center">
               <Link to="/" className="flex items-center group">
                 <span className="text-xl font-black tracking-tighter text-apple-gray-500 group-hover:text-blue-600 transition-colors">
@@ -107,7 +107,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <div className="flex items-center gap-2">
                       <Link
                         to="/profile"
-                        className="block rounded-full bg-apple-gray-500 px-4 py-1.5 text-[11px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
+                        className="block rounded-full bg-apple-gray-500 px-5 py-2 text-[13px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
                       >
                         Profile
                       </Link>
@@ -122,7 +122,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   ) : (
                     <Link
                       to="/auth"
-                      className="block rounded-full bg-apple-gray-500 px-5 py-1.5 text-[11px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
+                      className="block rounded-full bg-apple-gray-500 px-6 py-2.5 text-[13px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
                     >
                       Get Started
                     </Link>
@@ -324,9 +324,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <FloatingProxyTimer />
 
       <footer className="w-full block bg-white border-t border-apple-gray-100 py-12">
-        <div className="w-full max-w-[480px] mx-auto px-4">
-          <div className="space-y-8">
-            <div>
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div className="md:col-span-1">
               <Link to="/" className="text-xl font-bold tracking-tight text-apple-gray-500">
                 Pick'em
               </Link>
@@ -352,7 +352,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <li className="hover:text-blue-600 cursor-pointer transition-colors">Privacy Policy</li>
               </ul>
             </div>
-            <div className="border-t border-apple-gray-100 pt-6 text-[11px] text-apple-gray-200 font-medium">
+            <div className="pt-6 md:pt-0 border-t md:border-t-0 border-apple-gray-100 text-[11px] text-apple-gray-200 font-medium">
               &copy; {new Date().getFullYear()} Cratebux and Logistics. All rights reserved.
             </div>
           </div>

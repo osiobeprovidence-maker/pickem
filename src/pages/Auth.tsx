@@ -92,8 +92,9 @@ export default function Auth() {
   ];
 
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center py-20 px-4 sm:px-0 bg-white">
-      <div className="max-w-md w-full mx-auto">
+    <div className="min-h-[80vh] flex flex-col justify-center py-12 sm:py-20 px-4 bg-white">
+      <div className="max-w-7xl mx-auto w-full">
+        <div className="max-w-md w-full mx-auto">
         <div className="text-center mb-12">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -261,6 +262,7 @@ export default function Auth() {
         <p className="text-center text-xs text-apple-gray-300 font-bold mt-12 max-w-[280px] mx-auto leading-relaxed">
           By continuing, you agree to Pick’em's Terms of Service and Privacy Policy.
         </p>
+        </div>
       </div>
     </div>
   );

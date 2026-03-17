@@ -366,7 +366,7 @@ export default function BuyAndDeliver() {
   if (step === 'tracking') {
     return (
       <div className="min-h-screen bg-white pt-32 pb-20 px-4">
-        <div className="max-w-2xl mx-auto space-y-12">
+        <div className="max-w-7xl mx-auto space-y-12">
           <div className="text-center space-y-4">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-apple-gray-50 text-apple-gray-300 rounded-full text-sm font-bold">
               <span className="relative flex h-2 w-2">
@@ -499,7 +499,7 @@ export default function BuyAndDeliver() {
             className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4"
           >
             {/* Hero Section */}
-            <div className="max-w-4xl w-full space-y-12">
+            <div className="max-w-7xl w-full space-y-12">
               <div className="space-y-6">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -559,7 +559,7 @@ export default function BuyAndDeliver() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="pt-32 pb-20 px-4 max-w-6xl mx-auto space-y-12"
+            className="pt-32 pb-20 px-4 max-w-7xl mx-auto space-y-12"
           >
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
               <div className="space-y-4">
