@@ -1,5 +1,5 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
-import { getAuth, type Auth, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, type Auth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
 import { getAnalytics, type Analytics } from 'firebase/analytics';
 
 const firebaseConfig = {
@@ -55,5 +55,12 @@ if (!isFirebaseConfigValid()) {
 }
 
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-export { app, auth, analytics, googleProvider };
+const appleProvider = new OAuthProvider('apple.com');
+appleProvider.addScope('email');
+appleProvider.addScope('name');
+
+export const firebaseConfigured = isFirebaseConfigValid();
+
+export { app, auth, analytics, googleProvider, appleProvider };

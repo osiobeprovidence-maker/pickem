@@ -105,4 +105,13 @@ export const convexProfiles = {
     });
     return toAppUser(result);
   },
+
+  async markPasswordSet(id: string) {
+    const client = requireConvex();
+    await client.mutation(anyApi.users.updateUser, {
+      id: id as any,
+      hasPassword: true,
+      needs_password_setup: false,
+    });
+  },
 };

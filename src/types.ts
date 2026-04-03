@@ -1,12 +1,32 @@
 export type UserRole = 'customer' | 'business' | 'runner' | 'admin';
+export type UserStatus = 'pending' | 'approved' | 'suspended' | 'banned' | 'removed';
+export type AuthProvider = 'password' | 'google' | 'apple';
 
 export interface User {
   id: string;
   name: string;
   email: string;
   role: UserRole;
-  status: 'pending' | 'approved';
+  status: UserStatus;
   created_at: string;
+  updated_at?: string;
+  username?: string;
+  firebase_uid?: string;
+  auth_provider?: AuthProvider;
+  hasPassword?: boolean;
+  password?: string;
+  needs_password_setup?: boolean;
+  lastMagicLogin?: string;
+  email_verified?: boolean;
+  phone_verified?: boolean;
+  verification_cleared?: boolean;
+  admin_level?: string;
+  invited_by?: string;
+  two_factor_enabled?: boolean;
+  ip_whitelist?: string[];
+  last_ip_address?: string;
+  suspension_reason?: string;
+  ban_reason?: string;
 }
 
 export type DeliveryStatus = 'requested' | 'assigned' | 'picked_up' | 'delivered' | 'cancelled';

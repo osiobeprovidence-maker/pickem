@@ -15,6 +15,7 @@ import ProxyPickup from './pages/ProxyPickup';
 import BuyAndDeliver from './pages/BuyAndDeliver';
 import Contact from './pages/Contact';
 import Auth from './pages/Auth';
+import CompleteProfile from './pages/CompleteProfile';
 import CustomerDashboard from './pages/CustomerDashboard';
 import BuyDeliverDashboard from './pages/BuyDeliverDashboard';
 import ProxyDashboard from './pages/ProxyDashboard';
@@ -24,12 +25,30 @@ import RequestDelivery from './pages/RequestDelivery';
 import Profile from './pages/Profile';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, needsProfileCompletion } = useAuth();
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   if (!user) return <Navigate to="/auth" />;
+  if (needsProfileCompletion) return <Navigate to="/complete-profile" replace />;
 
   return <>{children}</>;
+}
+
+function AuthRoute() {
+  const { user, loading, needsProfileCompletion } = useAuth();
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (!user) return <Auth />;
+  return <Navigate to={needsProfileCompletion ? '/complete-profile' : '/dashboard'} replace />;
+}
+
+function CompleteProfileRoute() {
+  const { user, loading, needsProfileCompletion } = useAuth();
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (!user) return <Navigate to="/auth" replace />;
+  if (!needsProfileCompletion) return <Navigate to="/dashboard" replace />;
+  return <CompleteProfile />;
 }
 
 function DashboardRouter() {
@@ -52,7 +71,8 @@ function AppContent() {
           <Route path="/become-runner" element={<BecomeRunner />} />
           <Route path="/proxy-pickup" element={<ProxyPickup />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/auth" element={<Auth />} />
+          <Route path="/auth" element={<AuthRoute />} />
+          <Route path="/complete-profile" element={<CompleteProfileRoute />} />
           <Route
             path="/dashboard"
             element={
@@ -106,4 +126,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-
