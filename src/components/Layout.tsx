@@ -72,9 +72,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const activeMenuItems = isBizMode ? bizNavItems : defaultNavItems;
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-white text-stone-900 font-sans overflow-x-hidden">
-      <nav className="w-full sticky top-0 z-50 border-b border-stone-100 bg-white/95 backdrop-blur-sm will-change-auto">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between gap-3">
+    <div className="min-h-screen bg-stone-50 text-stone-900 font-sans overflow-x-hidden">
+      <nav className="sticky top-0 z-50 border-b border-stone-100 bg-white/95 backdrop-blur-sm will-change-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between gap-3">
             <div className="flex shrink-0 items-center">
               <Link to="/" className="flex items-center group">
                 <span className="text-xl font-black tracking-tighter text-apple-gray-500 group-hover:text-blue-600 transition-colors">
@@ -88,10 +89,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <div className="hidden lg:flex items-center">
                   <Link
                     to="/"
-                    className="flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-[11px] font-bold text-emerald-700 transition-colors hover:bg-emerald-50"
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-[11px] font-bold text-emerald-700 transition-colors hover:bg-emerald-50"
                   >
                     <ChevronLeft className="h-3.5 w-3.5" />
-                    <span className="hidden xl:inline-block">Back to Pick'em</span>
+                    <span className="hidden xl:inline">Back to Pick'em</span>
                   </Link>
                 </div>
               )}
@@ -99,7 +100,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <div className="hidden md:flex items-center gap-4">
                   <Link
                     to="/contact"
-                    className="block text-[11px] font-bold text-apple-gray-300 transition-colors hover:text-apple-gray-500"
+                    className="text-[11px] font-bold text-apple-gray-300 transition-colors hover:text-apple-gray-500"
                   >
                     Contact
                   </Link>
@@ -107,13 +108,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <div className="flex items-center gap-2">
                       <Link
                         to="/profile"
-                        className="block rounded-full bg-apple-gray-500 px-5 py-2 text-[13px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
+                        className="rounded-full bg-apple-gray-500 px-4 py-1.5 text-[11px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
                       >
                         Profile
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="block p-1.5 text-apple-gray-300 transition-colors hover:text-red-500"
+                        className="p-1.5 text-apple-gray-300 transition-colors hover:text-red-500"
                         title="Logout"
                       >
                         <LogOut className="h-4 w-4" />
@@ -122,7 +123,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   ) : (
                     <Link
                       to="/auth"
-                      className="block rounded-full bg-apple-gray-500 px-6 py-2.5 text-[13px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
+                      className="rounded-full bg-apple-gray-500 px-5 py-1.5 text-[11px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
                     >
                       Get Started
                     </Link>
@@ -145,6 +146,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </div>
+        </div>
 
         <AnimatePresence>
           {isMenuOpen && (
@@ -318,15 +320,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </AnimatePresence>
       </nav>
 
-      <main className="w-full flex-grow block">
-        {children}
+      <main className="flex-grow">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {children}
+        </div>
       </main>
       <FloatingProxyTimer />
 
-      <footer className="w-full block bg-white border-t border-apple-gray-100 py-12">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div className="md:col-span-1">
+      <footer className="bg-white border-t border-apple-gray-100 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="space-y-8">
+            <div>
               <Link to="/" className="text-xl font-bold tracking-tight text-apple-gray-500">
                 Pick'em
               </Link>
@@ -352,7 +356,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <li className="hover:text-blue-600 cursor-pointer transition-colors">Privacy Policy</li>
               </ul>
             </div>
-            <div className="pt-6 md:pt-0 border-t md:border-t-0 border-apple-gray-100 text-[11px] text-apple-gray-200 font-medium">
+            <div className="border-t border-apple-gray-100 pt-6 text-[11px] text-apple-gray-200 font-medium">
               &copy; {new Date().getFullYear()} Cratebux and Logistics. All rights reserved.
             </div>
           </div>
