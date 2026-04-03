@@ -1,6 +1,13 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
+const normalizeEmail = (email: string) => email.trim().toLowerCase();
+const normalizeUsername = (username: string) => username.trim().toLowerCase();
+const getDefaultNameFromEmail = (email: string) => {
+  const [handle] = email.split("@");
+  return handle || "Pick'em User";
+};
+
 // User queries
 export const getUser = query({
   args: { id: v.id("users") },
@@ -14,9 +21,47 @@ export const getUserByEmail = query({
   handler: async (ctx, args) => {
     const users = await ctx.db
       .query("users")
-      .withIndex("by_email", (q) => q.eq("email", args.email.toLowerCase()))
+      .withIndex("by_email", (q) => q.eq("email", normalizeEmail(args.email)))
       .collect();
     return users[0] ?? null;
+  },
+});
+
+export const getUserByFirebaseUid = query({
+  args: { firebase_uid: v.string() },
+  handler: async (ctx, args) => {
+    const users = await ctx.db
+      .query("users")
+      .withIndex("by_firebase_uid", (q) => q.eq("firebase_uid", args.firebase_uid))
+      .collect();
+    return users[0] ?? null;
+  },
+});
+
+export const getUserByUsername = query({
+  args: { username: v.string() },
+  handler: async (ctx, args) => {
+    const users = await ctx.db
+      .query("users")
+      .withIndex("by_username", (q) => q.eq("username", normalizeUsername(args.username)))
+      .collect();
+    return users[0] ?? null;
+  },
+});
+
+export const isUsernameAvailable = query({
+  args: {
+    username: v.string(),
+    excludeUserId: v.optional(v.id("users")),
+  },
+  handler: async (ctx, args) => {
+    const users = await ctx.db
+      .query("users")
+      .withIndex("by_username", (q) => q.eq("username", normalizeUsername(args.username)))
+      .collect();
+
+    const takenByOtherUser = users.some((user) => user._id !== args.excludeUserId);
+    return !takenByOtherUser;
   },
 });
 
@@ -57,10 +102,14 @@ export const createUser = mutation({
   args: {
     name: v.string(),
     email: v.string(),
+    username: v.optional(v.string()),
+    firebase_uid: v.optional(v.string()),
+    auth_provider: v.optional(v.string()),
     role: v.string(),
     status: v.string(),
     hasPassword: v.boolean(),
     password: v.optional(v.string()),
+    needs_password_setup: v.optional(v.boolean()),
     lastMagicLogin: v.optional(v.string()),
     email_verified: v.boolean(),
     phone_verified: v.optional(v.boolean()),
@@ -70,14 +119,20 @@ export const createUser = mutation({
     business_id: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const now = new Date().toISOString();
     const userId = await ctx.db.insert("users", {
       name: args.name,
-      email: args.email.toLowerCase(),
+      email: normalizeEmail(args.email),
+      username: args.username ? normalizeUsername(args.username) : undefined,
+      firebase_uid: args.firebase_uid,
+      auth_provider: args.auth_provider,
       role: args.role,
       status: args.status,
-      created_at: new Date().toISOString(),
+      created_at: now,
+      updated_at: now,
       hasPassword: args.hasPassword,
       password: args.password,
+      needs_password_setup: args.needs_password_setup ?? false,
       lastMagicLogin: args.lastMagicLogin,
       email_verified: args.email_verified,
       phone_verified: args.phone_verified ?? false,
@@ -95,10 +150,14 @@ export const updateUser = mutation({
     id: v.id("users"),
     name: v.optional(v.string()),
     email: v.optional(v.string()),
+    username: v.optional(v.string()),
+    firebase_uid: v.optional(v.string()),
+    auth_provider: v.optional(v.string()),
     role: v.optional(v.string()),
     status: v.optional(v.string()),
     hasPassword: v.optional(v.boolean()),
     password: v.optional(v.string()),
+    needs_password_setup: v.optional(v.boolean()),
     lastMagicLogin: v.optional(v.string()),
     email_verified: v.optional(v.boolean()),
     phone_verified: v.optional(v.boolean()),
@@ -111,14 +170,122 @@ export const updateUser = mutation({
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args;
-    await ctx.db.patch(id, data);
+    await ctx.db.patch(id, {
+      ...data,
+      email: data.email ? normalizeEmail(data.email) : undefined,
+      username: data.username ? normalizeUsername(data.username) : undefined,
+      updated_at: new Date().toISOString(),
+    });
   },
 });
 
 export const setUserPassword = mutation({
   args: { id: v.id("users"), password: v.string() },
   handler: async (ctx, args) => {
-    await ctx.db.patch(args.id, { hasPassword: true, password: args.password });
+    await ctx.db.patch(args.id, {
+      hasPassword: true,
+      password: args.password,
+      needs_password_setup: false,
+      updated_at: new Date().toISOString(),
+    });
+  },
+});
+
+export const syncFirebaseUser = mutation({
+  args: {
+    firebase_uid: v.string(),
+    email: v.string(),
+    name: v.optional(v.string()),
+    role: v.optional(v.string()),
+    auth_provider: v.string(),
+    hasPassword: v.boolean(),
+    needs_password_setup: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const normalizedEmail = normalizeEmail(args.email);
+    const now = new Date().toISOString();
+
+    const byFirebaseUid = await ctx.db
+      .query("users")
+      .withIndex("by_firebase_uid", (q) => q.eq("firebase_uid", args.firebase_uid))
+      .collect();
+
+    const byEmail = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", normalizedEmail))
+      .collect();
+
+    const existingUser = byFirebaseUid[0] ?? byEmail[0] ?? null;
+    const nextName = args.name?.trim() || existingUser?.name || getDefaultNameFromEmail(normalizedEmail);
+
+    if (existingUser) {
+      await ctx.db.patch(existingUser._id, {
+        name: nextName,
+        email: normalizedEmail,
+        firebase_uid: args.firebase_uid,
+        auth_provider: existingUser.auth_provider || args.auth_provider,
+        role: existingUser.role || args.role || "customer",
+        status: existingUser.status || "approved",
+        hasPassword: existingUser.hasPassword || args.hasPassword,
+        needs_password_setup: existingUser.hasPassword
+          ? false
+          : args.needs_password_setup,
+        email_verified: true,
+        lastMagicLogin: now,
+        updated_at: now,
+      });
+      return await ctx.db.get(existingUser._id);
+    }
+
+    const userId = await ctx.db.insert("users", {
+      name: nextName,
+      email: normalizedEmail,
+      firebase_uid: args.firebase_uid,
+      auth_provider: args.auth_provider,
+      role: args.role || "customer",
+      status: "approved",
+      created_at: now,
+      updated_at: now,
+      hasPassword: args.hasPassword,
+      needs_password_setup: args.needs_password_setup,
+      lastMagicLogin: now,
+      email_verified: true,
+      phone_verified: false,
+      verification_cleared: false,
+    });
+
+    return await ctx.db.get(userId);
+  },
+});
+
+export const completeUserProfile = mutation({
+  args: {
+    id: v.id("users"),
+    name: v.optional(v.string()),
+    username: v.string(),
+    hasPassword: v.optional(v.boolean()),
+    needs_password_setup: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    const normalizedUsername = normalizeUsername(args.username);
+    const existingUsers = await ctx.db
+      .query("users")
+      .withIndex("by_username", (q) => q.eq("username", normalizedUsername))
+      .collect();
+
+    if (existingUsers.some((user) => user._id !== args.id)) {
+      throw new Error("That username is already taken.");
+    }
+
+    await ctx.db.patch(args.id, {
+      name: args.name?.trim(),
+      username: normalizedUsername,
+      hasPassword: args.hasPassword,
+      needs_password_setup: args.needs_password_setup ?? false,
+      updated_at: new Date().toISOString(),
+    });
+
+    return await ctx.db.get(args.id);
   },
 });
 
@@ -127,7 +294,7 @@ export const authenticateUser = mutation({
   handler: async (ctx, args) => {
     const users = await ctx.db
       .query("users")
-      .withIndex("by_email", (q) => q.eq("email", args.email.toLowerCase()))
+      .withIndex("by_email", (q) => q.eq("email", normalizeEmail(args.email)))
       .collect();
     
     const user = users[0];
@@ -152,7 +319,7 @@ export const issueMagicLogin = mutation({
     const now = new Date().toISOString();
     const users = await ctx.db
       .query("users")
-      .withIndex("by_email", (q) => q.eq("email", args.email.toLowerCase()))
+      .withIndex("by_email", (q) => q.eq("email", normalizeEmail(args.email)))
       .collect();
 
     const existingUser = users[0];
@@ -165,18 +332,15 @@ export const issueMagicLogin = mutation({
       return { ...existingUser, lastMagicLogin: now };
     }
 
-    const getDefaultNameFromEmail = (email: string) => {
-      const [handle] = email.split("@");
-      return handle || "Pick'em User";
-    };
-
     const userId = await ctx.db.insert("users", {
       name: getDefaultNameFromEmail(args.email),
-      email: args.email.toLowerCase(),
+      email: normalizeEmail(args.email),
       role: args.role,
       status: "approved",
       created_at: now,
+      updated_at: now,
       hasPassword: false,
+      needs_password_setup: true,
       lastMagicLogin: now,
       email_verified: true,
       phone_verified: false,
@@ -186,11 +350,13 @@ export const issueMagicLogin = mutation({
     return {
       _id: userId,
       name: getDefaultNameFromEmail(args.email),
-      email: args.email.toLowerCase(),
+      email: normalizeEmail(args.email),
       role: args.role,
       status: "approved",
       created_at: now,
+      updated_at: now,
       hasPassword: false,
+      needs_password_setup: true,
       lastMagicLogin: now,
       email_verified: true,
       phone_verified: false,
@@ -202,7 +368,7 @@ export const issueMagicLogin = mutation({
 export const inviteAdmin = mutation({
   args: { email: v.string(), invitedBy: v.string() },
   handler: async (ctx, args) => {
-    const normalizedEmail = args.email.toLowerCase();
+    const normalizedEmail = normalizeEmail(args.email);
     const now = new Date().toISOString();
     
     const users = await ctx.db
@@ -232,18 +398,15 @@ export const inviteAdmin = mutation({
       return { ...updatedAdmin, _id: existingUser._id };
     }
 
-    const getDefaultNameFromEmail = (email: string) => {
-      const [handle] = email.split("@");
-      return handle || "Pick'em User";
-    };
-
     const userId = await ctx.db.insert("users", {
       name: getDefaultNameFromEmail(normalizedEmail),
       email: normalizedEmail,
       role: "admin",
       status: "pending",
       created_at: now,
+      updated_at: now,
       hasPassword: false,
+      needs_password_setup: true,
       email_verified: true,
       phone_verified: false,
       verification_cleared: false,
@@ -329,10 +492,10 @@ export const ensureSystemUsers = mutation({
   handler: async (ctx) => {
     const SUPER_ADMIN_EMAIL = "riderezzy@gmail.com";
     const SUPER_ADMIN_PASSWORD = "1percent99";
-    
+
     const users = await ctx.db
       .query("users")
-      .withIndex("by_email", (q) => q.eq("email", SUPER_ADMIN_EMAIL.toLowerCase()))
+      .withIndex("by_email", (q) => q.eq("email", normalizeEmail(SUPER_ADMIN_EMAIL)))
       .collect();
 
     const existingSuperAdmin = users[0];
@@ -341,23 +504,30 @@ export const ensureSystemUsers = mutation({
     if (existingSuperAdmin) {
       await ctx.db.patch(existingSuperAdmin._id, {
         name: existingSuperAdmin.name || "riderezzy",
+        email: normalizeEmail(SUPER_ADMIN_EMAIL),
+        username: existingSuperAdmin.username || "riderezzy",
         role: "admin",
         status: "approved",
         hasPassword: true,
+        needs_password_setup: false,
         email_verified: true,
         phone_verified: true,
         verification_cleared: true,
         admin_level: "super_admin",
+        updated_at: now,
       });
     } else {
       await ctx.db.insert("users", {
         name: "riderezzy",
-        email: SUPER_ADMIN_EMAIL.toLowerCase(),
+        email: normalizeEmail(SUPER_ADMIN_EMAIL),
+        username: "riderezzy",
         role: "admin",
         status: "approved",
         created_at: now,
+        updated_at: now,
         hasPassword: true,
         password: SUPER_ADMIN_PASSWORD,
+        needs_password_setup: false,
         email_verified: true,
         phone_verified: true,
         verification_cleared: true,

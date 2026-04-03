@@ -6,11 +6,16 @@ export default defineSchema({
   users: defineTable({
     name: v.string(),
     email: v.string(),
+    username: v.optional(v.string()),
+    firebase_uid: v.optional(v.string()),
+    auth_provider: v.optional(v.string()),
     role: v.string(),
     status: v.string(),
     created_at: v.string(),
+    updated_at: v.optional(v.string()),
     hasPassword: v.boolean(),
     password: v.optional(v.string()),
+    needs_password_setup: v.optional(v.boolean()),
     lastMagicLogin: v.optional(v.string()),
     email_verified: v.boolean(),
     phone_verified: v.boolean(),
@@ -25,6 +30,8 @@ export default defineSchema({
     ban_reason: v.optional(v.string()),
   })
     .index("by_email", ["email"])
+    .index("by_username", ["username"])
+    .index("by_firebase_uid", ["firebase_uid"])
     .index("by_role", ["role"])
     .index("by_status", ["status"])
     .index("by_role_and_status", ["role", "status"]),

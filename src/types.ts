@@ -32,6 +32,11 @@ export interface User {
   role: UserRole;
   status: UserStatus;
   created_at: string;
+  updated_at?: string;
+  username?: string;
+  firebase_uid?: string;
+  auth_provider?: 'password' | 'google' | 'apple';
+  needs_password_setup?: boolean;
   hasPassword?: boolean;
   password?: string;
   lastMagicLogin?: string;

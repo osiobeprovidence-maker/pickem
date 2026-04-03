@@ -172,8 +172,8 @@ export const api = {
     const users = ensureSeededUsers();
     const newUser = {
       ...user,
-      id: crypto.randomUUID(),
-      created_at: new Date().toISOString(),
+      id: user.id || crypto.randomUUID(),
+      created_at: user.created_at || new Date().toISOString(),
       status: user.status || 'approved',
       email: normalizeEmail(user.email || ''),
       hasPassword: user.hasPassword || false,

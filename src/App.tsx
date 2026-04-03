@@ -18,6 +18,7 @@ import BusinessDashboard from './pages/BusinessDashboard';
 import Storefront from './pages/Storefront';
 import Contact from './pages/Contact';
 import Auth from './pages/Auth';
+import CompleteProfile from './pages/CompleteProfile';
 import CustomerDashboard from './pages/CustomerDashboard';
 import BuyDeliverDashboard from './pages/BuyDeliverDashboard';
 import ProxyDashboard from './pages/ProxyDashboard';
@@ -27,10 +28,21 @@ import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, needsProfileCompletion } = useAuth();
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   if (!user) return <Navigate to="/auth" />;
+  if (needsProfileCompletion) return <Navigate to="/complete-profile" />;
+
+  return <>{children}</>;
+}
+
+function CompletionRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading, needsProfileCompletion } = useAuth();
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (!user) return <Navigate to="/auth" />;
+  if (!needsProfileCompletion) return <Navigate to="/dashboard" />;
 
   return <>{children}</>;
 }
@@ -84,6 +96,14 @@ function AppContent() {
           <Route path="/store/:id" element={<Storefront />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/auth" element={<Auth />} />
+          <Route
+            path="/complete-profile"
+            element={
+              <CompletionRoute>
+                <CompleteProfile />
+              </CompletionRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={
