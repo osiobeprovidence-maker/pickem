@@ -77,8 +77,8 @@ export default function HowItWorks() {
               <img 
                 src={step.image} 
                 alt={step.title} 
-                crossOrigin="anonymous"
                 className="rounded-[3rem] shadow-2xl w-full aspect-video object-cover"
+                referrerPolicy="no-referrer"
               />
             </div>
           </motion.div>

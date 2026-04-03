@@ -20,8 +20,6 @@ db.exec(`
     email TEXT UNIQUE NOT NULL,
     role TEXT NOT NULL, -- customer, business, runner, admin
     status TEXT DEFAULT 'approved', -- pending, approved
-    has_password INTEGER DEFAULT 0,
-    last_magic_login DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -55,21 +53,9 @@ db.exec(`
   );
 `);
 
-const userColumns = new Set(
-  db.prepare("PRAGMA table_info(users)").all().map((column: any) => column.name),
-);
-
-if (!userColumns.has("has_password")) {
-  db.exec("ALTER TABLE users ADD COLUMN has_password INTEGER DEFAULT 0");
-}
-
-if (!userColumns.has("last_magic_login")) {
-  db.exec("ALTER TABLE users ADD COLUMN last_magic_login DATETIME");
-}
-
 async function startServer() {
   const app = express();
-  const PORT = Number(process.env.PORT || 3000);
+  const PORT = 3000;
 
   app.use(express.json());
 
@@ -80,26 +66,11 @@ async function startServer() {
 
   // User routes
   app.post("/api/users", (req, res) => {
-    const { id, name, email, role, has_password, last_magic_login } = req.body;
+    const { id, name, email, role } = req.body;
     try {
-      const stmt = db.prepare("INSERT INTO users (id, name, email, role, has_password, last_magic_login) VALUES (?, ?, ?, ?, ?, ?)");
-      stmt.run(id, name, email, role, has_password ? 1 : 0, last_magic_login || null);
-      res.status(201).json({ id, name, email, role, hasPassword: !!has_password, lastMagicLogin: last_magic_login });
-    } catch (error: any) {
-      res.status(400).json({ error: error.message });
-    }
-  });
-
-  app.patch("/api/users/:id", (req, res) => {
-    const { has_password, last_magic_login } = req.body;
-    try {
-      if (has_password !== undefined) {
-        db.prepare("UPDATE users SET has_password = ? WHERE id = ?").run(has_password ? 1 : 0, req.params.id);
-      }
-      if (last_magic_login !== undefined) {
-        db.prepare("UPDATE users SET last_magic_login = ? WHERE id = ?").run(last_magic_login, req.params.id);
-      }
-      res.json({ success: true });
+      const stmt = db.prepare("INSERT INTO users (id, name, email, role) VALUES (?, ?, ?, ?)");
+      stmt.run(id, name, email, role);
+      res.status(201).json({ id, name, email, role });
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }

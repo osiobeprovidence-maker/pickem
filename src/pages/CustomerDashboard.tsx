@@ -19,134 +19,162 @@ export default function CustomerDashboard() {
     }
   }, [user]);
 
-  const activeDeliveries = deliveries.filter(d => d.status !== 'delivered' && d.status !== 'cancelled');
+  const stats = [
+    { label: 'Active', value: deliveries.filter(d => d.status !== 'delivered' && d.status !== 'cancelled').length, icon: Clock, color: 'text-blue-600' },
+    { label: 'Completed', value: deliveries.filter(d => d.status === 'delivered').length, icon: CheckCircle2, color: 'text-emerald-600' },
+  ];
+
+  const dashboardLinks = [
+    {
+      title: "Standard Delivery",
+      description: "Send or receive a package across campus.",
+      path: "/request",
+      icon: Package,
+      color: "bg-blue-50 text-blue-600"
+    },
+    {
+      title: "Buy & Deliver",
+      description: "Start shopping and get items delivered.",
+      path: "/buy-and-deliver",
+      icon: ShoppingBag,
+      color: "bg-emerald-50 text-emerald-600"
+    },
+    {
+      title: "Proxy Pickup",
+      description: "Set up a secure proxy for your items.",
+      path: "/proxy-pickup",
+      icon: ShieldCheck,
+      color: "bg-indigo-50 text-indigo-600"
+    }
+  ];
 
   return (
-    <div className="min-h-[80vh] bg-white flex flex-col items-center justify-center py-12 px-4 sm:px-0">
-      <div className="max-w-6xl w-full mx-auto space-y-16 text-center">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
+    <div className="space-y-12">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-apple-gray-500">Hello, {user?.name}!</h1>
+          <p className="text-apple-gray-300 font-medium">Welcome to your campus logistics hub.</p>
+        </div>
+        <Link
+          to="/request"
+          className="bg-apple-gray-500 text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-sm"
         >
-          <h1 className="text-6xl font-black tracking-tighter text-apple-gray-500 leading-none">Pick’em</h1>
-          <p className="text-2xl font-bold text-apple-gray-300">
-            What's the plan for today, {user?.name?.split(' ')[0]}?
-          </p>
-        </motion.div>
+          <Plus className="w-5 h-5" /> New Request
+        </Link>
+      </div>
 
-        {/* Main Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
+      {/* Dashboard Hub */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {dashboardLinks.map((link, i) => (
+          <Link
+            key={i}
+            to={link.path}
+            className="group bg-white p-8 rounded-[2.5rem] border border-apple-gray-100 shadow-sm hover:shadow-xl transition-all"
           >
-            <Link
-              to="/request"
-              className="group flex flex-col items-center gap-6 p-10 rounded-[3rem] bg-apple-gray-50 border-2 border-apple-gray-50 hover:border-apple-gray-500 transition-all shadow-sm hover:shadow-xl h-full"
-            >
-              <div className="w-20 h-20 bg-apple-gray-500 text-white rounded-[1.5rem] flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                <Package className="w-10 h-10" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-2xl font-black text-apple-gray-500">Send Items</h3>
-                <p className="text-sm font-bold text-apple-gray-200 uppercase tracking-widest">Courier Service</p>
-              </div>
-            </Link>
-          </motion.div>
+            <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform", link.color)}>
+              <link.icon className="w-7 h-7" />
+            </div>
+            <h3 className="text-xl font-bold text-apple-gray-500 mb-2">{link.title}</h3>
+            <p className="text-apple-gray-300 text-sm font-medium leading-relaxed">{link.description}</p>
+          </Link>
+        ))}
+      </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Link
-              to="/buy-and-deliver"
-              className="group flex flex-col items-center gap-6 p-10 rounded-[3rem] bg-apple-gray-50 border-2 border-apple-gray-50 hover:border-apple-gray-500 transition-all shadow-sm hover:shadow-xl h-full"
-            >
-              <div className="w-20 h-20 bg-apple-gray-500 text-white rounded-[1.5rem] flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                <ShoppingBag className="w-10 h-10" />
+      {/* Stats & List */}
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-apple-gray-500">Recent Activity</h2>
+          <div className="flex gap-4">
+            {stats.map((stat, i) => (
+              <div key={i} className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-apple-gray-100 text-sm font-bold">
+                <stat.icon className={cn("w-4 h-4", stat.color)} />
+                <span className="text-apple-gray-500">{stat.value} {stat.label}</span>
               </div>
-              <div className="space-y-2">
-                <h3 className="text-2xl font-black text-apple-gray-500">Request Shopping</h3>
-                <p className="text-sm font-bold text-apple-gray-200 uppercase tracking-widest">Personal Shopper</p>
-              </div>
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Link
-              to="/proxy-request"
-              className="group flex flex-col items-center gap-6 p-10 rounded-[3rem] bg-apple-gray-50 border-2 border-apple-gray-50 hover:border-apple-gray-500 transition-all shadow-sm hover:shadow-xl h-full"
-            >
-              <div className="w-20 h-20 bg-apple-gray-500 text-white rounded-[1.5rem] flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                <ShieldCheck className="w-10 h-10" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-2xl font-black text-apple-gray-500">Proxy Pickup</h3>
-                <p className="text-sm font-bold text-apple-gray-200 uppercase tracking-widest">Secure Handover</p>
-              </div>
-            </Link>
-          </motion.div>
+            ))}
+          </div>
         </div>
 
-        {/* Tracking Menu / Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="pt-12"
-        >
-          <div className="inline-flex items-center gap-3 px-8 py-4 bg-white border-2 border-apple-gray-50 rounded-full shadow-sm">
-            <Clock className="w-5 h-5 text-apple-gray-300" />
-            <h2 className="text-lg font-black text-apple-gray-500">Track your items</h2>
-            {activeDeliveries.length > 0 && (
-              <span className="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">
-                {activeDeliveries.length} ACTIVE
-              </span>
-            )}
+        <div className="bg-white rounded-[2.5rem] border border-apple-gray-100 shadow-sm overflow-hidden">
+          <div className="p-8 border-b border-apple-gray-100 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-apple-gray-500">All Deliveries</h2>
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-apple-gray-200" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="pl-9 pr-4 py-2 bg-apple-gray-50 border-none rounded-full text-sm focus:ring-2 focus:ring-blue-600 outline-none font-medium"
+              />
+            </div>
           </div>
 
-          <div className="mt-8 max-w-3xl mx-auto space-y-4">
-            {isLoading ? (
-              <div className="py-10 text-apple-gray-200 font-bold">Checking status...</div>
-            ) : activeDeliveries.length === 0 ? (
-              <p className="text-apple-gray-200 font-bold italic">No active deliveries at the moment.</p>
-            ) : (
-              <div className="grid grid-cols-1 gap-4">
-                {activeDeliveries.slice(0, 3).map((delivery) => (
-                  <Link
-                    key={delivery.id}
-                    to={delivery.type === 'buy_deliver' ? '/buy-and-deliver?step=tracking' : '/request?step=tracking'}
-                    className="flex items-center justify-between p-6 bg-white rounded-3xl border border-apple-gray-50 hover:border-apple-gray-100 transition-all text-left shadow-sm group"
-                  >
-                    <div className="flex items-center gap-5">
-                      <div className="w-12 h-12 bg-apple-gray-50 rounded-2xl flex items-center justify-center text-apple-gray-300 group-hover:bg-apple-gray-500 group-hover:text-white transition-colors">
-                        <Package className="w-6 h-6" />
+          {isLoading ? (
+            <div className="p-20 text-center text-apple-gray-200 font-medium">Loading activity...</div>
+          ) : deliveries.length === 0 ? (
+            <div className="p-20 text-center">
+              <div className="w-20 h-20 bg-apple-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Package className="w-10 h-10 text-apple-gray-200" />
+              </div>
+              <h3 className="text-2xl font-bold text-apple-gray-500 mb-2">No activity yet</h3>
+              <p className="text-apple-gray-300 mb-8 font-medium">Start by creating your first delivery request.</p>
+              <Link
+                to="/request"
+                className="text-blue-600 font-bold hover:underline text-lg"
+              >
+                Create Request
+              </Link>
+            </div>
+          ) : (
+            <div className="divide-y divide-apple-gray-100">
+              {deliveries.map((delivery) => (
+                <div key={delivery.id} className="p-8 hover:bg-apple-gray-50 transition-colors">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="flex items-start gap-6">
+                      <div className={cn(
+                        "w-14 h-14 rounded-2xl flex items-center justify-center shrink-0",
+                        delivery.status === 'delivered' ? "bg-emerald-50 text-emerald-600" : "bg-blue-50 text-blue-600"
+                      )}>
+                        <Package className="w-7 h-7" />
                       </div>
                       <div>
-                        <h4 className="font-black text-apple-gray-500 truncate max-w-[200px] sm:max-w-md">{delivery.item_description}</h4>
-                        <p className="text-xs font-bold text-apple-gray-200 uppercase tracking-widest">{delivery.status}</p>
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className="font-bold uppercase text-[10px] tracking-widest text-apple-gray-200">
+                            {delivery.type.replace('_', ' ')}
+                          </span>
+                          <span className={cn(
+                            "px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider",
+                            delivery.status === 'delivered' ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700"
+                          )}>
+                            {delivery.status}
+                          </span>
+                        </div>
+                        <h3 className="font-bold text-xl text-apple-gray-500 mb-3">{delivery.item_description}</h3>
+                        <div className="flex flex-col gap-2 text-[14px] text-apple-gray-300 font-medium">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4" /> From: {delivery.pickup_location}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4" /> To: {delivery.drop_location}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <ArrowRight className="w-5 h-5 text-apple-gray-100 group-hover:text-apple-gray-500 transition-colors" />
-                  </Link>
-                ))}
-                {activeDeliveries.length > 3 && (
-                  <button className="text-apple-gray-300 font-black text-sm hover:text-apple-gray-500 transition-colors">
-                    View all active requests
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        </motion.div>
+                    <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-4">
+                      <div className="text-2xl font-bold text-apple-gray-500">₦{delivery.fee}</div>
+                      <div className="text-xs text-apple-gray-200 font-medium">
+                        {format(new Date(delivery.created_at), 'MMM d, h:mm a')}
+                      </div>
+                      {delivery.proxy_code && (
+                        <div className="bg-apple-gray-500 text-white px-4 py-1.5 rounded-xl text-xs font-mono font-bold">
+                          Proxy: {delivery.proxy_code}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

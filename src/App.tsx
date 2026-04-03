@@ -12,47 +12,22 @@ import HowItWorks from './pages/HowItWorks';
 import Businesses from './pages/Businesses';
 import BecomeRunner from './pages/BecomeRunner';
 import ProxyPickup from './pages/ProxyPickup';
-import ProxyRequest from './pages/ProxyRequest';
 import BuyAndDeliver from './pages/BuyAndDeliver';
-import BusinessDashboard from './pages/BusinessDashboard';
-import Storefront from './pages/Storefront';
 import Contact from './pages/Contact';
 import Auth from './pages/Auth';
-import CompleteProfile from './pages/CompleteProfile';
 import CustomerDashboard from './pages/CustomerDashboard';
 import BuyDeliverDashboard from './pages/BuyDeliverDashboard';
 import ProxyDashboard from './pages/ProxyDashboard';
 import RunnerDashboard from './pages/RunnerDashboard';
+import BusinessDashboard from './pages/BusinessDashboard';
 import RequestDelivery from './pages/RequestDelivery';
 import Profile from './pages/Profile';
-import AdminDashboard from './pages/AdminDashboard';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading, needsProfileCompletion } = useAuth();
-
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  if (!user) return <Navigate to="/auth" />;
-  if (needsProfileCompletion) return <Navigate to="/complete-profile" />;
-
-  return <>{children}</>;
-}
-
-function CompletionRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading, needsProfileCompletion } = useAuth();
-
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  if (!user) return <Navigate to="/auth" />;
-  if (!needsProfileCompletion) return <Navigate to="/dashboard" />;
-
-  return <>{children}</>;
-}
-
-function AdminRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   if (!user) return <Navigate to="/auth" />;
-  if (user.role !== 'admin' || user.status !== 'approved') return <Navigate to="/dashboard" />;
 
   return <>{children}</>;
 }
@@ -61,8 +36,7 @@ function DashboardRouter() {
   const { user } = useAuth();
 
   if (user?.role === 'runner') return <RunnerDashboard />;
-  // For business users, /dashboard shows the customer view (buying/sending)
-  // while /dashboard/business shows the merchant view
+  if (user?.role === 'business') return <BusinessDashboard />;
   return <CustomerDashboard />;
 }
 
@@ -77,33 +51,8 @@ function AppContent() {
           <Route path="/buy-and-deliver" element={<BuyAndDeliver />} />
           <Route path="/become-runner" element={<BecomeRunner />} />
           <Route path="/proxy-pickup" element={<ProxyPickup />} />
-          <Route
-            path="/proxy-request"
-            element={
-              <ProtectedRoute>
-                <ProxyRequest />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/business"
-            element={
-              <ProtectedRoute>
-                <BusinessDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/store/:id" element={<Storefront />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/auth" element={<Auth />} />
-          <Route
-            path="/complete-profile"
-            element={
-              <CompletionRoute>
-                <CompleteProfile />
-              </CompletionRoute>
-            }
-          />
           <Route
             path="/dashboard"
             element={
@@ -144,14 +93,6 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/dashboard/admin"
-            element={
-              <AdminRoute>
-                <AdminDashboard />
-              </AdminRoute>
-            }
-          />
         </Routes>
       </Layout>
     </Router>
@@ -165,3 +106,4 @@ export default function App() {
     </AuthProvider>
   );
 }
+
