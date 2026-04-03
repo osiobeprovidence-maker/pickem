@@ -100,7 +100,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <div className="hidden md:flex items-center gap-4">
                   <Link
                     to="/contact"
-                    className="text-[11px] font-bold text-apple-gray-300 transition-colors hover:text-apple-gray-500"
+                    className="text-sm font-bold text-apple-gray-300 transition-colors hover:text-apple-gray-500"
                   >
                     Contact
                   </Link>
@@ -108,7 +108,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <div className="flex items-center gap-2">
                       <Link
                         to="/profile"
-                        className="rounded-full bg-apple-gray-500 px-4 py-1.5 text-[11px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
+                        className="rounded-full bg-apple-gray-500 px-5 py-2 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90"
                       >
                         Profile
                       </Link>
@@ -123,7 +123,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   ) : (
                     <Link
                       to="/auth"
-                      className="rounded-full bg-apple-gray-500 px-5 py-1.5 text-[11px] font-bold text-white shadow-sm transition-opacity hover:opacity-90"
+                      className="rounded-full bg-apple-gray-500 px-5 py-2 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90"
                     >
                       Get Started
                     </Link>

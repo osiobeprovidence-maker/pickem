@@ -19,6 +19,7 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -41,6 +42,7 @@ export default function Auth() {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
+    setStatus(null);
 
     try {
       if (mode === 'signin') {
@@ -60,6 +62,7 @@ export default function Auth() {
   const handleSocialAuth = async (provider: 'google' | 'apple') => {
     setIsLoading(true);
     setError(null);
+    setStatus(null);
 
     try {
       if (provider === 'google') {
@@ -79,15 +82,17 @@ export default function Auth() {
   const handlePasswordReset = async () => {
     if (!email) {
       setError('Enter your email address first, then try reset password again.');
+      setStatus(null);
       return;
     }
 
     setIsLoading(true);
     setError(null);
+    setStatus(null);
 
     try {
       await sendPasswordReset(email);
-      setError('Password reset email sent. Check your inbox.');
+      setStatus('Password reset email sent. Check your inbox.');
     } catch (err: any) {
       setError(err.message || 'Could not send password reset email.');
     } finally {
@@ -208,13 +213,14 @@ export default function Auth() {
                   required
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  placeholder="••••••••"
+                  placeholder="********"
                   className="w-full rounded-full border-none bg-apple-gray-50 py-5 pl-16 pr-8 font-medium text-apple-gray-500 outline-none ring-0 placeholder:text-apple-gray-200 shadow-sm focus:ring-2 focus:ring-apple-gray-500"
                 />
               </div>
             </div>
 
             {error && <p className="ml-6 text-sm font-bold text-red-500">{error}</p>}
+            {status && <p className="ml-6 text-sm font-bold text-emerald-600">{status}</p>}
 
             <button
               type="submit"
