@@ -69,10 +69,12 @@ export default function Home() {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
-              className="mt-6 text-5xl font-black leading-[0.95] tracking-tighter text-apple-gray-500 sm:text-6xl lg:text-[5.4rem]"
+              className="mt-6 max-w-[10ch] text-[3.75rem] font-black leading-[0.96] tracking-[-0.055em] text-apple-gray-500 sm:text-[4.5rem] lg:text-[4.75rem] xl:text-[5.05rem]"
             >
-              Move anything
-              <span className="mt-2 block text-apple-gray-300">across campus, instantly.</span>
+              <span className="block">Move anything</span>
+              <span className="mt-3 block text-[0.64em] leading-[1.02] text-apple-gray-300">
+                across campus, instantly.
+              </span>
             </motion.h1>
 
             <motion.p
