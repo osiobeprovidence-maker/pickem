@@ -93,6 +93,7 @@ export const convexProfiles = {
     id: string;
     name?: string;
     username: string;
+    role: UserRole;
     hasPassword?: boolean;
     needsPasswordSetup?: boolean;
   }) {
@@ -101,6 +102,7 @@ export const convexProfiles = {
       id: input.id as any,
       name: input.name,
       username: input.username,
+      role: input.role,
       hasPassword: input.hasPassword,
       needs_password_setup: input.needsPasswordSetup,
     });

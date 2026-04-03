@@ -263,6 +263,7 @@ export const completeUserProfile = mutation({
     id: v.id("users"),
     name: v.optional(v.string()),
     username: v.string(),
+    role: v.string(),
     hasPassword: v.optional(v.boolean()),
     needs_password_setup: v.optional(v.boolean()),
   },
@@ -280,6 +281,7 @@ export const completeUserProfile = mutation({
     await ctx.db.patch(args.id, {
       name: args.name?.trim(),
       username: normalizedUsername,
+      role: args.role,
       hasPassword: args.hasPassword,
       needs_password_setup: args.needs_password_setup ?? false,
       updated_at: new Date().toISOString(),

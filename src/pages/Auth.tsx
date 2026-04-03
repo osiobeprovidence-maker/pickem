@@ -1,7 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { ArrowRight, Lock, Mail, Package, Store, Truck } from 'lucide-react';
+import { ArrowRight, Lock, Mail } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { stackConfig } from '../lib/env';
 import type { UserRole } from '../types';
@@ -9,13 +8,15 @@ import { cn } from '../lib/utils';
 
 type AuthMode = 'signin' | 'signup';
 
+const validIntentRoles: UserRole[] = ['customer', 'runner', 'business'];
+
 export default function Auth() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const initialRole = (searchParams.get('role') as UserRole) || 'customer';
+  const requestedRole = searchParams.get('role') as UserRole | null;
+  const preferredRole = requestedRole && validIntentRoles.includes(requestedRole) ? requestedRole : undefined;
 
   const [mode, setMode] = useState<AuthMode>('signin');
-  const [role, setRole] = useState<UserRole>(initialRole);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -31,31 +32,6 @@ export default function Auth() {
   } = useAuth();
   const stackIssues = stackConfig.issues;
 
-  const roles = useMemo(
-    () =>
-      [
-        {
-          id: 'customer' as const,
-          title: 'Customer',
-          icon: Package,
-          description: 'Send items or request shopping across campus.',
-        },
-        {
-          id: 'runner' as const,
-          title: 'Runner',
-          icon: Truck,
-          description: 'Earn money by completing delivery jobs on campus.',
-        },
-        {
-          id: 'business' as const,
-          title: 'Business',
-          icon: Store,
-          description: 'Streamline your shop deliveries to students.',
-        },
-      ],
-    [],
-  );
-
   const resetFeedback = () => {
     setError(null);
     setStatus(null);
@@ -68,9 +44,9 @@ export default function Auth() {
 
     try {
       if (mode === 'signin') {
-        await signIn(email, password, role);
+        await signIn(email, password);
       } else {
-        await signUp(email, password, role);
+        await signUp(email, password, preferredRole);
       }
       navigate('/dashboard');
     } catch (err: any) {
@@ -86,9 +62,9 @@ export default function Auth() {
 
     try {
       if (provider === 'google') {
-        await signInWithGoogle(role);
+        await signInWithGoogle(mode === 'signup' ? preferredRole : undefined);
       } else {
-        await signInWithApple(role);
+        await signInWithApple(mode === 'signup' ? preferredRole : undefined);
       }
       navigate('/dashboard');
     } catch (err: any) {
@@ -119,18 +95,23 @@ export default function Auth() {
   };
 
   return (
-    <div className="mx-auto flex min-h-[80vh] max-w-7xl items-center px-4 py-12">
-      <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="rounded-[2.5rem] border border-apple-gray-100 bg-white p-8 shadow-sm md:p-10">
+    <div className="min-h-[80vh] bg-[radial-gradient(circle_at_top,_rgba(29,29,31,0.06),_transparent_45%),linear-gradient(180deg,#f7f6f2_0%,#ffffff_55%)] px-4 py-10 sm:py-14">
+      <div className="mx-auto max-w-2xl">
+        <div className="overflow-hidden rounded-[2.5rem] border border-apple-gray-100 bg-white/95 p-8 shadow-[0_24px_70px_rgba(29,29,31,0.08)] backdrop-blur md:p-10">
           <div className="inline-flex items-center gap-2 rounded-full bg-apple-gray-50 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-apple-gray-300">
             Pick&apos;em Access
           </div>
-          <h1 className="mt-6 text-4xl font-black tracking-tight text-apple-gray-500">
-            {mode === 'signin' ? 'Welcome back' : 'Create your account'}
-          </h1>
-          <p className="mt-4 max-w-md text-base font-medium leading-relaxed text-apple-gray-300">
-            Connect this page to the logistics platform with Firebase authentication and Convex-backed user profiles.
-          </p>
+
+          <div className="mt-6 max-w-xl">
+            <h1 className="text-4xl font-black tracking-tight text-apple-gray-500 sm:text-5xl">
+              {mode === 'signin' ? 'Welcome back' : 'Create your account'}
+            </h1>
+            <p className="mt-4 text-base font-medium leading-relaxed text-apple-gray-300 sm:text-lg">
+              {mode === 'signin'
+                ? 'Sign in to continue with your campus delivery, shopping, and business operations.'
+                : 'Create your account first. Right after registration, we will ask you to choose your base role in the platform.'}
+            </p>
+          </div>
 
           {stackIssues.length > 0 && (
             <div className="mt-6 rounded-[1.5rem] border border-amber-200 bg-amber-50 p-4 text-sm font-medium text-amber-900">
@@ -143,12 +124,29 @@ export default function Auth() {
             </div>
           )}
 
+          {mode === 'signup' && (
+            <div className="mt-6 rounded-[1.75rem] border border-apple-gray-100 bg-apple-gray-50/80 p-5">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-apple-gray-300">Onboarding flow</p>
+              <p className="mt-2 text-sm font-medium leading-relaxed text-apple-gray-400">
+                Registration comes first. After that, every new account chooses a base role:
+                {' '}
+                <span className="font-bold text-apple-gray-500">Customer</span>
+                ,
+                {' '}
+                <span className="font-bold text-apple-gray-500">Runner</span>
+                ,
+                {' '}
+                <span className="font-bold text-apple-gray-500">Business</span>.
+              </p>
+            </div>
+          )}
+
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             <button
               type="button"
               onClick={() => setMode('signin')}
               className={cn(
-                'rounded-full px-5 py-3 text-sm font-bold transition-colors',
+                'rounded-full px-5 py-3.5 text-sm font-bold transition-colors',
                 mode === 'signin'
                   ? 'bg-apple-gray-500 text-white shadow-sm'
                   : 'bg-apple-gray-50 text-apple-gray-500 hover:bg-apple-gray-100',
@@ -160,7 +158,7 @@ export default function Auth() {
               type="button"
               onClick={() => setMode('signup')}
               className={cn(
-                'rounded-full px-5 py-3 text-sm font-bold transition-colors',
+                'rounded-full px-5 py-3.5 text-sm font-bold transition-colors',
                 mode === 'signup'
                   ? 'bg-apple-gray-500 text-white shadow-sm'
                   : 'bg-apple-gray-50 text-apple-gray-500 hover:bg-apple-gray-100',
@@ -170,38 +168,7 @@ export default function Auth() {
             </button>
           </div>
 
-          <div className="mt-8 grid gap-4">
-            {roles.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                onClick={() => setRole(option.id)}
-                className={cn(
-                  'flex items-center gap-4 rounded-[1.75rem] border p-4 text-left transition-all',
-                  role === option.id
-                    ? 'border-apple-gray-500 bg-apple-gray-50'
-                    : 'border-apple-gray-100 bg-white hover:border-apple-gray-200',
-                )}
-              >
-                <div
-                  className={cn(
-                    'flex h-12 w-12 items-center justify-center rounded-2xl',
-                    role === option.id ? 'bg-apple-gray-500 text-white' : 'bg-apple-gray-50 text-apple-gray-300',
-                  )}
-                >
-                  <option.icon className="h-6 w-6" />
-                </div>
-                <div>
-                  <div className="text-base font-black text-apple-gray-500">{option.title}</div>
-                  <div className="text-sm font-medium text-apple-gray-300">{option.description}</div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-[2.5rem] border border-apple-gray-100 bg-white p-8 shadow-sm md:p-10">
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             <div className="space-y-2">
               <label className="ml-6 text-xs font-bold uppercase tracking-widest text-apple-gray-300">Email</label>
               <div className="relative">
@@ -233,8 +200,8 @@ export default function Auth() {
               </div>
             </div>
 
-            {error && <p className="ml-6 text-sm font-bold text-red-500">{error}</p>}
-            {status && <p className="ml-6 text-sm font-bold text-emerald-600">{status}</p>}
+            {error && <p className="ml-2 text-sm font-bold text-red-500">{error}</p>}
+            {status && <p className="ml-2 text-sm font-bold text-emerald-600">{status}</p>}
 
             <button
               type="submit"
@@ -273,10 +240,10 @@ export default function Auth() {
             >
               Forgot your password?
             </button>
-            <p className="text-xs font-bold text-apple-gray-300">
+            <p className="max-w-lg text-xs font-bold leading-relaxed text-apple-gray-300">
               {mode === 'signin'
-                ? "New social users can sign in with Google or Apple and add a password during profile completion."
-                : 'Email accounts are created with password sign-in right away.'}
+                ? 'Existing users go straight back into their saved dashboard after sign-in.'
+                : 'New users from Google or Apple will still choose a base role and finish profile setup before entering the platform.'}
             </p>
           </div>
         </div>

@@ -19,16 +19,17 @@ import { getStackIssue } from '../lib/env';
 type CompleteProfileInput = {
   name?: string;
   username: string;
+  role: UserRole;
 };
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   needsProfileCompletion: boolean;
-  signIn: (email: string, password: string, role: UserRole) => Promise<void>;
-  signUp: (email: string, password: string, role: UserRole) => Promise<void>;
-  signInWithGoogle: (role: UserRole) => Promise<void>;
-  signInWithApple: (role: UserRole) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, preferredRole?: UserRole) => Promise<void>;
+  signInWithGoogle: (preferredRole?: UserRole) => Promise<void>;
+  signInWithApple: (preferredRole?: UserRole) => Promise<void>;
   sendPasswordReset: (email: string) => Promise<void>;
   completeProfile: (input: CompleteProfileInput) => Promise<void>;
   setPassword: (password: string) => Promise<void>;
@@ -136,35 +137,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
-  const signIn = async (email: string, password: string, role: UserRole) => {
+  const signIn = async (email: string, password: string) => {
     requireFirebaseSetup();
-    localStorage.setItem(PREFERRED_ROLE_KEY, role);
     const credential = await signInWithEmailAndPassword(auth, email, password);
-    await syncFirebaseProfile(credential.user, role);
+    await syncFirebaseProfile(credential.user);
     localStorage.removeItem(PREFERRED_ROLE_KEY);
   };
 
-  const signUp = async (email: string, password: string, role: UserRole) => {
+  const signUp = async (email: string, password: string, preferredRole?: UserRole) => {
     requireFirebaseSetup();
-    localStorage.setItem(PREFERRED_ROLE_KEY, role);
+    if (preferredRole) {
+      localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
+    }
     const credential = await createUserWithEmailAndPassword(auth, email, password);
-    await syncFirebaseProfile(credential.user, role);
+    await syncFirebaseProfile(credential.user, preferredRole);
     localStorage.removeItem(PREFERRED_ROLE_KEY);
   };
 
-  const signInWithGoogle = async (role: UserRole) => {
+  const signInWithGoogle = async (preferredRole?: UserRole) => {
     requireFirebaseSetup();
-    localStorage.setItem(PREFERRED_ROLE_KEY, role);
+    if (preferredRole) {
+      localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
+    }
     const credential = await signInWithPopup(auth, googleProvider);
-    await syncFirebaseProfile(credential.user, role);
+    await syncFirebaseProfile(credential.user, preferredRole);
     localStorage.removeItem(PREFERRED_ROLE_KEY);
   };
 
-  const signInWithApple = async (role: UserRole) => {
+  const signInWithApple = async (preferredRole?: UserRole) => {
     requireFirebaseSetup();
-    localStorage.setItem(PREFERRED_ROLE_KEY, role);
+    if (preferredRole) {
+      localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
+    }
     const credential = await signInWithPopup(auth, appleProvider);
-    await syncFirebaseProfile(credential.user, role);
+    await syncFirebaseProfile(credential.user, preferredRole);
     localStorage.removeItem(PREFERRED_ROLE_KEY);
   };
 
@@ -186,6 +192,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       id: user.id,
       name: input.name?.trim() || user.name,
       username: input.username.trim(),
+      role: input.role,
       hasPassword: currentHasPassword,
       needsPasswordSetup: !currentHasPassword,
     });
