@@ -1,8 +1,9 @@
 import { ConvexHttpClient } from 'convex/browser';
 import { anyApi } from 'convex/server';
 import type { User, UserRole } from '../types';
+import { getStackIssue, publicEnv } from './env';
 
-const convexUrl = import.meta.env.VITE_CONVEX_URL;
+const convexUrl = publicEnv.convex.url;
 
 const convex = convexUrl
   ? new ConvexHttpClient(convexUrl, { logger: false })
@@ -41,7 +42,7 @@ const toAppUser = (record: any): User | null => {
 
 const requireConvex = () => {
   if (!convex) {
-    throw new Error('Convex is not configured. Add VITE_CONVEX_URL to continue.');
+    throw new Error(getStackIssue('convex') || 'Convex is not configured. Add VITE_CONVEX_URL to continue.');
   }
 
   return convex;

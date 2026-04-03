@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowRight, Lock, Mail, Package, Store, Truck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { stackConfig } from '../lib/env';
 import type { UserRole } from '../types';
 import { cn } from '../lib/utils';
 
@@ -28,6 +29,7 @@ export default function Auth() {
     signInWithApple,
     sendPasswordReset,
   } = useAuth();
+  const stackIssues = stackConfig.issues;
 
   const roles = useMemo(
     () =>
@@ -129,6 +131,17 @@ export default function Auth() {
           <p className="mt-4 max-w-md text-base font-medium leading-relaxed text-apple-gray-300">
             Connect this page to the logistics platform with Firebase authentication and Convex-backed user profiles.
           </p>
+
+          {stackIssues.length > 0 && (
+            <div className="mt-6 rounded-[1.5rem] border border-amber-200 bg-amber-50 p-4 text-sm font-medium text-amber-900">
+              <p className="font-black uppercase tracking-[0.14em] text-amber-700">Stack setup needed</p>
+              <div className="mt-2 space-y-1">
+                {stackIssues.map((issue) => (
+                  <p key={issue}>{issue}</p>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             <button

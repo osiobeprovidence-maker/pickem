@@ -14,6 +14,7 @@ import {
 import type { User, UserRole, AuthProvider as AppAuthProvider } from '../types';
 import { auth, appleProvider, firebaseConfigured, googleProvider } from '../lib/firebase';
 import { convexProfiles } from '../lib/convex';
+import { getStackIssue } from '../lib/env';
 
 type CompleteProfileInput = {
   name?: string;
@@ -51,6 +52,18 @@ const getProviderFromFirebaseUser = (firebaseUser: FirebaseUser): AppAuthProvide
 const hasPasswordProvider = (firebaseUser: FirebaseUser) =>
   firebaseUser.providerData.some((provider) => provider.providerId === 'password');
 
+const requireFirebaseSetup = () => {
+  if (!firebaseConfigured) {
+    throw new Error(getStackIssue('firebase') || 'Firebase is not configured. Add the required VITE_FIREBASE_* values.');
+  }
+};
+
+const requireConvexSetup = () => {
+  if (!convexProfiles.isConfigured()) {
+    throw new Error(getStackIssue('convex') || 'Convex is not configured. Add VITE_CONVEX_URL to continue.');
+  }
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -65,13 +78,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const syncFirebaseProfile = async (firebaseUser: FirebaseUser, preferredRole?: UserRole) => {
-    if (!firebaseConfigured) {
-      throw new Error('Firebase is not configured. Add the required VITE_FIREBASE_* values.');
-    }
-
-    if (!convexProfiles.isConfigured()) {
-      throw new Error('Convex is not configured. Add VITE_CONVEX_URL to continue.');
-    }
+    requireFirebaseSetup();
+    requireConvexSetup();
 
     if (!firebaseUser.email) {
       throw new Error('This account does not have an email address.');
@@ -129,6 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string, role: UserRole) => {
+    requireFirebaseSetup();
     localStorage.setItem(PREFERRED_ROLE_KEY, role);
     const credential = await signInWithEmailAndPassword(auth, email, password);
     await syncFirebaseProfile(credential.user, role);
@@ -136,6 +145,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signUp = async (email: string, password: string, role: UserRole) => {
+    requireFirebaseSetup();
     localStorage.setItem(PREFERRED_ROLE_KEY, role);
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     await syncFirebaseProfile(credential.user, role);
@@ -143,6 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithGoogle = async (role: UserRole) => {
+    requireFirebaseSetup();
     localStorage.setItem(PREFERRED_ROLE_KEY, role);
     const credential = await signInWithPopup(auth, googleProvider);
     await syncFirebaseProfile(credential.user, role);
@@ -150,6 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithApple = async (role: UserRole) => {
+    requireFirebaseSetup();
     localStorage.setItem(PREFERRED_ROLE_KEY, role);
     const credential = await signInWithPopup(auth, appleProvider);
     await syncFirebaseProfile(credential.user, role);
@@ -157,10 +169,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const sendPasswordReset = async (email: string) => {
+    requireFirebaseSetup();
     await sendPasswordResetEmail(auth, email);
   };
 
   const completeProfile = async (input: CompleteProfileInput) => {
+    requireConvexSetup();
     if (!user) {
       throw new Error('You must be signed in to complete your profile.');
     }
@@ -180,6 +194,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const setPassword = async (password: string) => {
+    requireFirebaseSetup();
+    requireConvexSetup();
     const currentUser = auth.currentUser;
     if (!currentUser || !currentUser.email) {
       throw new Error('No authenticated user found.');

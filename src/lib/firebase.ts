@@ -1,23 +1,13 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
 import { getAnalytics, type Analytics } from 'firebase/analytics';
+import { publicEnv, stackConfig } from './env';
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-};
+const firebaseConfig = publicEnv.firebase;
 
 // Validate required Firebase config
 const isFirebaseConfigValid = () => {
-  return !!(
-    firebaseConfig.apiKey &&
-    firebaseConfig.projectId
-  );
+  return !!(firebaseConfig.apiKey && firebaseConfig.projectId);
 };
 
 // Initialize Firebase
@@ -26,7 +16,7 @@ let auth: Auth;
 let analytics: Analytics | null = null;
 
 if (!isFirebaseConfigValid()) {
-  console.error('Firebase config is invalid. Please check your .env file.');
+  console.error(stackConfig.issues.find((issue) => issue.startsWith('Firebase')) || 'Firebase config is invalid. Please check your environment variables.');
   console.error('API Key present:', !!firebaseConfig.apiKey);
   console.error('Project ID:', firebaseConfig.projectId);
   // Create dummy objects to prevent crashes
@@ -41,7 +31,7 @@ if (!isFirebaseConfigValid()) {
     auth = getAuth(app);
 
     // Analytics is only available in browser
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && firebaseConfig.measurementId) {
       analytics = getAnalytics(app);
     }
   } catch (error) {

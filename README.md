@@ -1,20 +1,33 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Pick'em
 
-# Run and deploy your AI Studio app
+Pick'em is a Vite + React app set up to use Firebase Authentication for sign-in and Convex for app data and storage-backed workflows.
 
-This contains everything you need to run your app locally.
+## Local Setup
 
-View your app in AI Studio: https://ai.studio/apps/a8d8d421-0d46-47ae-9c0e-4036a57ad77d
+1. Install dependencies with `npm install`.
+2. Copy [.env.example](.env.example) to `.env.local`.
+3. Fill in your Firebase web app values and Convex deployment URL.
+4. Run `npm run dev`.
 
-## Run Locally
+## Vercel Setup
 
-**Prerequisites:**  Node.js
+1. Import this repo into Vercel.
+2. Add every variable from [.env.example](.env.example) in Project Settings -> Environment Variables.
+3. Deploy. Vercel will use [vercel.json](vercel.json) to build the Vite app and rewrite SPA routes to `index.html`.
 
+## Firebase Auth Setup
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. In Firebase Console -> Authentication -> Settings -> Authorized domains, add your Vercel domain.
+2. Keep `VITE_FIREBASE_AUTH_DOMAIN` set to your Firebase web app auth domain unless you have configured a custom auth domain in Firebase.
+3. Enable the providers you use, such as Email/Password, Google, and Apple.
+
+## Convex Setup
+
+1. Run `npx convex dev` or `npx convex deploy` against the deployment you want this app to use.
+2. Copy the deployment URL into `VITE_CONVEX_URL`.
+3. If you use Convex site functions, also set `VITE_CONVEX_SITE_URL`.
+
+## Notes
+
+- `firebase` and `convex` are now declared as app dependencies so Vercel installs them during build.
+- The auth screen will surface missing stack configuration instead of failing silently.
