@@ -55,8 +55,8 @@ export default function Home() {
   ];
 
   return (
-    <div className="-mx-4 -mt-8 flex flex-col bg-white sm:-mx-6 lg:-mx-8">
-      <section className="relative flex min-h-[85vh] flex-col items-center justify-center overflow-hidden bg-white px-4 pb-12 pt-24">
+    <div className="flex flex-col bg-white">
+      <section className="relative flex min-h-[85vh] flex-col items-center justify-center overflow-hidden bg-white px-4 pb-12 pt-16 sm:pt-24">
         <div className="z-10 mx-auto max-w-5xl text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -72,15 +72,14 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-6 text-4xl font-bold leading-[1.1] tracking-tight text-apple-gray-500 sm:mb-8 sm:text-6xl sm:leading-[1.05] md:text-8xl"
           >
-            Move anything across <br />
-            <span className="text-apple-gray-300">campus, instantly.</span>
+            Move anything across <span className="text-apple-gray-300">campus, instantly.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mx-auto mb-10 max-w-3xl px-4 text-lg font-medium leading-relaxed text-apple-gray-300 sm:mb-12 sm:px-0 sm:text-xl md:text-2xl"
+            className="mx-auto mb-10 max-w-3xl text-base font-medium leading-relaxed text-apple-gray-300 sm:mb-12 sm:text-lg md:text-xl"
           >
             Send packages, collect items, and deliver goods across campus using Pick'em&apos;s network of trusted runners.
           </motion.p>
@@ -89,17 +88,17 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex flex-col justify-center gap-4 px-4 sm:flex-row sm:gap-6"
+            className="flex flex-col justify-center gap-4 sm:flex-row sm:gap-6"
           >
             <Link
               to="/request"
-              className="rounded-full bg-apple-gray-500 px-10 py-4 text-center text-lg font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+              className="rounded-full bg-apple-gray-500 px-8 py-3.5 text-center text-base font-semibold text-white shadow-sm transition-opacity hover:opacity-90 sm:px-10 sm:py-4 sm:text-lg"
             >
               Send Something
             </Link>
             <Link
               to="/become-runner"
-              className="rounded-full border-2 border-apple-gray-500 bg-white px-10 py-4 text-center text-lg font-semibold text-apple-gray-500 shadow-sm transition-all hover:bg-apple-gray-50"
+              className="rounded-full border-2 border-apple-gray-500 bg-white px-8 py-3.5 text-center text-base font-semibold text-apple-gray-500 shadow-sm transition-all hover:bg-apple-gray-50 sm:px-10 sm:py-4 sm:text-lg"
             >
               Become a Runner
             </Link>
@@ -110,7 +109,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="mt-12 w-full max-w-6xl px-4 sm:mt-20 sm:px-6"
+          className="mt-12 w-full max-w-6xl sm:mt-20"
         >
           <div className="relative overflow-hidden rounded-[2rem] border border-apple-gray-100 shadow-2xl sm:rounded-[3rem]">
             <img
@@ -123,7 +122,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:py-40">
+      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:py-24 lg:py-32">
         <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
           {features.map((feature, i) => (
             <motion.div
@@ -132,35 +131,35 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="group rounded-[2rem] border border-apple-gray-100 bg-apple-gray-50 p-8 transition-all hover:shadow-xl sm:rounded-[3rem] sm:p-12"
+              className="group rounded-[2rem] border border-apple-gray-100 bg-apple-gray-50 p-6 transition-all hover:shadow-xl sm:rounded-[3rem] sm:p-8 lg:p-12"
             >
-              <div className={cn('mb-8 flex h-12 w-12 items-center justify-center rounded-2xl sm:mb-10 sm:h-14 sm:w-14', feature.color)}>
+              <div className={cn('mb-6 flex h-12 w-12 items-center justify-center rounded-2xl sm:mb-8 sm:h-14 sm:w-14', feature.color)}>
                 <feature.icon className="h-6 w-6 sm:h-7 sm:w-7" />
               </div>
-              <h3 className="mb-4 text-2xl font-bold tracking-tight sm:text-3xl">{feature.title}</h3>
-              <p className="text-base font-medium leading-relaxed text-apple-gray-300 sm:text-lg">{feature.description}</p>
+              <h3 className="mb-3 text-xl font-bold tracking-tight sm:mb-4 sm:text-2xl lg:text-3xl">{feature.title}</h3>
+              <p className="text-sm font-medium leading-relaxed text-apple-gray-300 sm:text-base lg:text-lg">{feature.description}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      <section className="bg-apple-gray-50 py-20 sm:py-40">
+      <section className="bg-apple-gray-50 py-16 sm:py-24 lg:py-32">
         <div className="mx-auto max-w-7xl px-4">
-          <div className="grid grid-cols-1 items-center gap-12 sm:gap-24 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-center gap-8 sm:gap-16 lg:grid-cols-2">
             <div className="text-center lg:text-left">
-              <div className="mb-4 text-xs font-bold uppercase tracking-widest text-blue-600 sm:mb-6 sm:text-sm">New Service</div>
-              <h2 className="mb-6 text-4xl font-bold tracking-tight sm:mb-8 sm:text-5xl md:text-6xl">
+              <div className="mb-3 text-xs font-bold uppercase tracking-widest text-blue-600 sm:mb-4 sm:text-sm">New Service</div>
+              <h2 className="mb-4 text-3xl font-bold tracking-tight sm:mb-6 sm:text-4xl md:text-5xl">
                 Buy & Deliver. <br /> We&apos;ve got you.
               </h2>
-              <p className="mb-8 text-lg font-medium leading-relaxed text-apple-gray-300 sm:mb-12 sm:text-xl">
+              <p className="mb-6 text-sm font-medium leading-relaxed text-apple-gray-300 sm:mb-8 sm:text-base lg:text-lg">
                 Can&apos;t leave your room? Need something from the campus store? Request a runner to shop for you and deliver it instantly.
               </p>
               <Link
                 to="/buy-and-deliver"
-                className="inline-flex items-center gap-2 rounded-full bg-apple-gray-500 px-8 py-4 text-lg font-semibold text-white transition-opacity hover:opacity-90"
+                className="inline-flex items-center gap-2 rounded-full bg-apple-gray-500 px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 sm:px-8 sm:py-4 sm:text-lg"
               >
                 Explore Buy & Deliver
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
             </div>
             <div className="relative order-first lg:order-last">
@@ -175,16 +174,16 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-20 text-center sm:py-40">
-        <h2 className="mb-16 text-3xl font-bold tracking-tight sm:mb-24 sm:text-4xl md:text-5xl">Simple. Fast. Secure.</h2>
-        <div className="grid grid-cols-1 gap-16 sm:gap-20 md:grid-cols-3">
+      <section className="mx-auto w-full max-w-7xl px-4 py-16 text-center sm:py-24 lg:py-32">
+        <h2 className="mb-10 text-2xl font-bold tracking-tight sm:mb-16 sm:text-3xl md:text-4xl">Simple. Fast. Secure.</h2>
+        <div className="grid grid-cols-1 gap-10 sm:gap-16 md:grid-cols-3">
           {steps.map((step, i) => (
             <div key={i} className="relative">
-              <div className="absolute left-1/2 top-[-3rem] -z-10 -translate-x-1/2 text-7xl font-bold text-apple-gray-100 opacity-50 sm:top-[-5rem] sm:text-9xl">
+              <div className="absolute left-1/2 top-[-2.5rem] -z-10 -translate-x-1/2 text-6xl font-bold text-apple-gray-100 opacity-50 sm:top-[-4rem] sm:text-8xl">
                 {i + 1}
               </div>
-              <h3 className="mb-4 text-xl font-bold sm:text-2xl">{step.title}</h3>
-              <p className="text-base font-medium text-apple-gray-300 sm:text-lg">{step.description}</p>
+              <h3 className="mb-3 text-lg font-bold sm:text-xl">{step.title}</h3>
+              <p className="text-sm font-medium text-apple-gray-300 sm:text-base">{step.description}</p>
             </div>
           ))}
         </div>
