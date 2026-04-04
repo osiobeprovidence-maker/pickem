@@ -7,7 +7,7 @@ Pick'em is a Vite + React app set up to use Firebase Authentication for sign-in 
 1. Install dependencies with `npm install`.
 2. Copy [.env.example](.env.example) to `.env.local`.
 3. Fill in your Firebase web app values and Convex deployment URL.
-4. Run `npm run dev`.
+4. Run `npm run dev` and open `http://localhost:3000`.
 
 ## Vercel Setup
 
@@ -17,9 +17,10 @@ Pick'em is a Vite + React app set up to use Firebase Authentication for sign-in 
 
 ## Firebase Auth Setup
 
-1. In Firebase Console -> Authentication -> Settings -> Authorized domains, add your Vercel domain.
-2. Keep `VITE_FIREBASE_AUTH_DOMAIN` set to your Firebase web app auth domain unless you have configured a custom auth domain in Firebase.
-3. Enable the providers you use, such as Email/Password, Google, and Apple.
+1. In Firebase Console -> Authentication -> Settings -> Authorized domains, add `localhost`, `127.0.0.1`, and your Vercel domain.
+2. Keep `VITE_FIREBASE_AUTH_DOMAIN` set to your Firebase web app auth domain unless you have configured a custom auth domain in Firebase. Example: `pick-em-6b10a.firebaseapp.com`.
+3. Do not set `VITE_FIREBASE_AUTH_DOMAIN` to Google API hosts such as `identitytoolkit.googleapis.com`.
+4. Enable the providers you use, such as Email/Password, Google, and Apple.
 
 ## Convex Setup
 

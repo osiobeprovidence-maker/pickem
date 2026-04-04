@@ -4,11 +4,18 @@ const readEnv = (value: string | undefined) => {
 };
 
 const trimTrailingSlash = (value: string | undefined) => value?.replace(/\/+$/, '');
+const toHost = (value: string | undefined) => value?.replace(/^https?:\/\//i, '').replace(/\/.*$/, '');
+
+const firebaseAuthDomainRaw = readEnv(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN);
+const firebaseAuthDomain = toHost(firebaseAuthDomainRaw);
+const appUrl =
+  trimTrailingSlash(readEnv(import.meta.env.VITE_APP_URL)) ??
+  (typeof window !== 'undefined' ? window.location.origin : undefined);
 
 export const publicEnv = {
   firebase: {
     apiKey: readEnv(import.meta.env.VITE_FIREBASE_API_KEY),
-    authDomain: readEnv(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN),
+    authDomain: firebaseAuthDomain,
     projectId: readEnv(import.meta.env.VITE_FIREBASE_PROJECT_ID),
     storageBucket: readEnv(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET),
     messagingSenderId: readEnv(import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID),
@@ -19,13 +26,17 @@ export const publicEnv = {
     url: trimTrailingSlash(readEnv(import.meta.env.VITE_CONVEX_URL)),
     siteUrl: trimTrailingSlash(readEnv(import.meta.env.VITE_CONVEX_SITE_URL)),
   },
-  appUrl: trimTrailingSlash(readEnv(import.meta.env.VITE_APP_URL)) ?? (typeof window !== 'undefined' ? window.location.origin : undefined),
+  appUrl,
 };
 
 const issues: string[] = [];
 
-if (!publicEnv.firebase.apiKey || !publicEnv.firebase.projectId) {
-  issues.push('Firebase is missing `VITE_FIREBASE_API_KEY` or `VITE_FIREBASE_PROJECT_ID`.');
+if (!publicEnv.firebase.apiKey || !publicEnv.firebase.projectId || !publicEnv.firebase.authDomain) {
+  issues.push('Firebase is missing `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, or `VITE_FIREBASE_PROJECT_ID`.');
+}
+
+if (publicEnv.firebase.authDomain?.includes('googleapis.com')) {
+  issues.push('Firebase `VITE_FIREBASE_AUTH_DOMAIN` must be your Firebase auth host such as `pick-em-6b10a.firebaseapp.com`, not a Google API host like `identitytoolkit.googleapis.com`.');
 }
 
 if (!publicEnv.convex.url) {

@@ -15,6 +15,7 @@ import type { User, UserRole, AuthProvider as AppAuthProvider } from '../types';
 import { auth, appleProvider, firebaseConfigured, googleProvider } from '../lib/firebase';
 import { convexProfiles } from '../lib/convex';
 import { getStackIssue } from '../lib/env';
+import { toFirebaseAuthMessage } from '../lib/firebaseAuthErrors';
 
 type CompleteProfileInput = {
   name?: string;
@@ -139,44 +140,64 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     requireFirebaseSetup();
-    const credential = await signInWithEmailAndPassword(auth, email, password);
-    await syncFirebaseProfile(credential.user);
-    localStorage.removeItem(PREFERRED_ROLE_KEY);
+    try {
+      const credential = await signInWithEmailAndPassword(auth, email, password);
+      await syncFirebaseProfile(credential.user);
+      localStorage.removeItem(PREFERRED_ROLE_KEY);
+    } catch (error) {
+      throw new Error(toFirebaseAuthMessage(error, 'signin'));
+    }
   };
 
   const signUp = async (email: string, password: string, preferredRole?: UserRole) => {
     requireFirebaseSetup();
-    if (preferredRole) {
-      localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
+    try {
+      if (preferredRole) {
+        localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
+      }
+      const credential = await createUserWithEmailAndPassword(auth, email, password);
+      await syncFirebaseProfile(credential.user, preferredRole);
+      localStorage.removeItem(PREFERRED_ROLE_KEY);
+    } catch (error) {
+      throw new Error(toFirebaseAuthMessage(error, 'signup'));
     }
-    const credential = await createUserWithEmailAndPassword(auth, email, password);
-    await syncFirebaseProfile(credential.user, preferredRole);
-    localStorage.removeItem(PREFERRED_ROLE_KEY);
   };
 
   const signInWithGoogle = async (preferredRole?: UserRole) => {
     requireFirebaseSetup();
-    if (preferredRole) {
-      localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
+    try {
+      if (preferredRole) {
+        localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
+      }
+      const credential = await signInWithPopup(auth, googleProvider);
+      await syncFirebaseProfile(credential.user, preferredRole);
+      localStorage.removeItem(PREFERRED_ROLE_KEY);
+    } catch (error) {
+      throw new Error(toFirebaseAuthMessage(error, 'google'));
     }
-    const credential = await signInWithPopup(auth, googleProvider);
-    await syncFirebaseProfile(credential.user, preferredRole);
-    localStorage.removeItem(PREFERRED_ROLE_KEY);
   };
 
   const signInWithApple = async (preferredRole?: UserRole) => {
     requireFirebaseSetup();
-    if (preferredRole) {
-      localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
+    try {
+      if (preferredRole) {
+        localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
+      }
+      const credential = await signInWithPopup(auth, appleProvider);
+      await syncFirebaseProfile(credential.user, preferredRole);
+      localStorage.removeItem(PREFERRED_ROLE_KEY);
+    } catch (error) {
+      throw new Error(toFirebaseAuthMessage(error, 'apple'));
     }
-    const credential = await signInWithPopup(auth, appleProvider);
-    await syncFirebaseProfile(credential.user, preferredRole);
-    localStorage.removeItem(PREFERRED_ROLE_KEY);
   };
 
   const sendPasswordReset = async (email: string) => {
     requireFirebaseSetup();
-    await sendPasswordResetEmail(auth, email);
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+      throw new Error(toFirebaseAuthMessage(error, 'reset'));
+    }
   };
 
   const completeProfile = async (input: CompleteProfileInput) => {
@@ -208,20 +229,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error('No authenticated user found.');
     }
 
-    if (hasPasswordProvider(currentUser)) {
-      await updatePassword(currentUser, password);
-    } else {
-      const credential = EmailAuthProvider.credential(currentUser.email, password);
-      await linkWithCredential(currentUser, credential);
-    }
+    try {
+      if (hasPasswordProvider(currentUser)) {
+        await updatePassword(currentUser, password);
+      } else {
+        const credential = EmailAuthProvider.credential(currentUser.email, password);
+        await linkWithCredential(currentUser, credential);
+      }
 
-    if (user) {
-      await convexProfiles.markPasswordSet(user.id);
-      setStoredUser({
-        ...user,
-        hasPassword: true,
-        needs_password_setup: false,
-      });
+      if (user) {
+        await convexProfiles.markPasswordSet(user.id);
+        setStoredUser({
+          ...user,
+          hasPassword: true,
+          needs_password_setup: false,
+        });
+      }
+    } catch (error) {
+      throw new Error(toFirebaseAuthMessage(error, 'password'));
     }
   };
 

@@ -7,7 +7,7 @@ const firebaseConfig = publicEnv.firebase;
 
 // Validate required Firebase config
 const isFirebaseConfigValid = () => {
-  return !!(firebaseConfig.apiKey && firebaseConfig.projectId);
+  return !!(firebaseConfig.apiKey && firebaseConfig.authDomain && firebaseConfig.projectId);
 };
 
 // Initialize Firebase
@@ -18,6 +18,7 @@ let analytics: Analytics | null = null;
 if (!isFirebaseConfigValid()) {
   console.error(stackConfig.issues.find((issue) => issue.startsWith('Firebase')) || 'Firebase config is invalid. Please check your environment variables.');
   console.error('API Key present:', !!firebaseConfig.apiKey);
+  console.error('Auth domain:', firebaseConfig.authDomain);
   console.error('Project ID:', firebaseConfig.projectId);
   // Create dummy objects to prevent crashes
   app = {} as FirebaseApp;
