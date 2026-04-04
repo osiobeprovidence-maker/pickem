@@ -3,6 +3,8 @@ const readEnv = (value: string | undefined) => {
   return normalized ? normalized : undefined;
 };
 
+const trimTrailingSlash = (value: string | undefined) => value?.replace(/\/+$/, '');
+
 export const publicEnv = {
   firebase: {
     apiKey: readEnv(import.meta.env.VITE_FIREBASE_API_KEY),
@@ -14,10 +16,10 @@ export const publicEnv = {
     measurementId: readEnv(import.meta.env.VITE_FIREBASE_MEASUREMENT_ID),
   },
   convex: {
-    url: readEnv(import.meta.env.VITE_CONVEX_URL),
-    siteUrl: readEnv(import.meta.env.VITE_CONVEX_SITE_URL),
+    url: trimTrailingSlash(readEnv(import.meta.env.VITE_CONVEX_URL)),
+    siteUrl: trimTrailingSlash(readEnv(import.meta.env.VITE_CONVEX_SITE_URL)),
   },
-  appUrl: readEnv(import.meta.env.VITE_APP_URL) ?? (typeof window !== 'undefined' ? window.location.origin : undefined),
+  appUrl: trimTrailingSlash(readEnv(import.meta.env.VITE_APP_URL)) ?? (typeof window !== 'undefined' ? window.location.origin : undefined),
 };
 
 const issues: string[] = [];
