@@ -1,6 +1,7 @@
 import { addDays, differenceInCalendarDays, format } from 'date-fns';
+import type { BusinessSubscriptionStatus } from '../types';
 
-export type BusinessPlanStatus = 'registered' | 'trial' | 'expired' | 'active';
+export type BusinessPlanStatus = BusinessSubscriptionStatus;
 
 export type BusinessRegistrationInput = {
   businessName: string;
@@ -89,7 +90,7 @@ export function registerBusiness(input: BusinessRegistrationInput) {
     id: existing?.id ?? crypto.randomUUID(),
     createdAt: existing?.createdAt ?? now,
     updatedAt: now,
-    status: existing?.status ?? 'registered',
+    status: existing?.status ?? 'inactive',
     trialStartDate: existing?.trialStartDate,
     trialEndDate: existing?.trialEndDate,
     nextBillingDate: existing?.nextBillingDate,
@@ -105,8 +106,6 @@ export function registerBusiness(input: BusinessRegistrationInput) {
   return nextRecord;
 }
 
-// Trial and subscription state are stored client-side for now so the business dashboard can
-// reflect onboarding progress before a real billing backend is introduced.
 export function startBusinessTrial(email: string) {
   const record = getBusinessRecordByEmail(email);
   if (!record) return null;
@@ -206,8 +205,8 @@ export function getBusinessPlanSummary(email?: string | null): BusinessPlanSumma
 
   return {
     record: normalized,
-    status: 'registered',
-    currentPlanLabel: 'Registered',
+    status: 'inactive',
+    currentPlanLabel: 'Inactive',
     daysRemaining: 7,
     nextBillingLabel: `Start your 7-day free trial, then continue at ₦${BUSINESS_MONTHLY_PRICE.toLocaleString()}/month.`,
     locked: false,

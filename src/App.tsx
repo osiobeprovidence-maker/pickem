@@ -27,6 +27,7 @@ import RunnerDashboard from './pages/RunnerDashboard';
 import BusinessDashboard from './pages/BusinessDashboard';
 import RequestDelivery from './pages/RequestDelivery';
 import Profile from './pages/Profile';
+import Storefront from './pages/Storefront';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading, needsProfileCompletion } = useAuth();
@@ -75,6 +76,7 @@ function AppContent() {
           <Route path="/become-runner" element={<BecomeRunner />} />
           <Route path="/proxy-pickup" element={<ProxyPickup />} />
           <Route path="/proxy-request" element={<ProxyRequest />} />
+          <Route path="/storefront/:slug" element={<Storefront />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />

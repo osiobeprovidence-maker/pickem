@@ -56,3 +56,84 @@ export interface Notification {
   read: boolean;
   created_at: string;
 }
+
+export type BusinessSubscriptionStatus = 'inactive' | 'trial' | 'active' | 'expired';
+export type StorefrontStatus = 'draft' | 'published' | 'hidden';
+export type StorefrontOpenStatus = 'open' | 'closed';
+export type ProductStatus = 'draft' | 'published' | 'hidden' | 'out_of_stock';
+export type OrderStatus = 'pending' | 'accepted' | 'preparing' | 'in_transit' | 'completed' | 'cancelled';
+export type PaymentStatus = 'pending' | 'paid' | 'refunded';
+
+export interface Business {
+  id: string;
+  business_name: string;
+  category: string;
+  owner_name: string;
+  owner_email: string;
+  owner_phone: string;
+  email: string;
+  phone: string;
+  address: string;
+  city_state: string;
+  description: string;
+  onboarding_complete: boolean;
+  subscription_status: BusinessSubscriptionStatus;
+  trial_start_date?: string;
+  trial_end_date?: string;
+}
+
+export interface Storefront {
+  id: string;
+  business_id: string;
+  storefront_name: string;
+  slug: string;
+  logo?: string;
+  banner?: string;
+  tagline: string;
+  service_area: string;
+  opening_hours: string;
+  delivery_enabled: boolean;
+  pickup_enabled: boolean;
+  storefront_status: StorefrontStatus;
+  open_status: StorefrontOpenStatus;
+}
+
+export interface Product {
+  id: string;
+  business_id: string;
+  storefront_id: string;
+  name: string;
+  category: string;
+  description: string;
+  price: number;
+  discount_price?: number;
+  images: string[];
+  stock: number;
+  status: ProductStatus;
+  featured: boolean;
+  delivery_available: boolean;
+  pickup_available: boolean;
+  visible_in_marketplace: boolean;
+  estimated_preparation_time?: string;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OrderItem {
+  product_id: string;
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  id: string;
+  business_id: string;
+  customer_name: string;
+  items: OrderItem[];
+  amount: number;
+  payment_status: PaymentStatus;
+  status: OrderStatus;
+  created_at: string;
+}

@@ -1,303 +1,293 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { api } from '../services/api';
-import { Business, Product } from '../types';
-import { motion, AnimatePresence } from 'motion/react';
-import {
-  MapPin,
-  ShieldCheck,
-  Star,
-  Phone,
-  Plus,
-  Globe,
-  Package,
-  Mail,
-  MessageCircle,
-  Instagram,
-} from 'lucide-react';
-import { cn } from '../lib/utils';
-import { format } from 'date-fns';
-
-type StoreTab = 'products' | 'about' | 'policy';
+import React from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Clock3, MapPin, Package, Search, ShoppingBag } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { getBusinessWorkspace, getPublicStorefrontBySlug } from '../lib/businessWorkspace';
+import type { Product } from '../types';
+import { Button } from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
+import { Modal } from '../components/ui/Modal';
+import { EmptyState } from '../components/business/EmptyState';
+import { StatusBadge } from '../components/business/StatusBadge';
 
 export default function Storefront() {
-  const { id } = useParams<{ id: string }>();
-  const [business, setBusiness] = useState<Business | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<StoreTab>('products');
+  const { slug = '' } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const { user } = useAuth();
+  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
+  const [query, setQuery] = React.useState('');
+  const [category, setCategory] = React.useState('all');
+  const [ownWorkspace, setOwnWorkspace] = React.useState(() => getBusinessWorkspace(user));
 
-  useEffect(() => {
-    if (id) {
-      void loadStore(id);
-    }
-  }, [id]);
+  const previewMode = searchParams.get('preview') === '1';
 
-  const loadStore = async (businessId: string) => {
-    setIsLoading(true);
-    try {
-      const [businessResult, productsResult] = await Promise.all([
-        api.getBusiness(businessId),
-        api.getProducts(businessId),
-      ]);
-      setBusiness(businessResult);
-      setProducts(productsResult);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  React.useEffect(() => {
+    setOwnWorkspace(getBusinessWorkspace(user));
+  }, [user]);
 
-  if (isLoading) {
-    return <div className="p-10 text-center text-sm font-black uppercase tracking-[0.2em]">Opening Storefront...</div>;
+  const canPreviewOwnStorefront =
+    previewMode && user?.role === 'business' && ownWorkspace?.storefront?.slug === slug;
+
+  const publicData = getPublicStorefrontBySlug(slug);
+  const data = canPreviewOwnStorefront
+    ? {
+        business: ownWorkspace!.business,
+        storefront: ownWorkspace!.storefront!,
+        products: ownWorkspace!.products.filter((product) => product.status !== 'hidden'),
+      }
+    : publicData;
+
+  const categories = React.useMemo(
+    () => ['all', ...new Set((data?.products ?? []).map((product) => product.category))],
+    [data?.products],
+  );
+
+  const filteredProducts = React.useMemo(
+    () =>
+      (data?.products ?? []).filter((product) => {
+        const matchesQuery =
+          !query.trim() ||
+          product.name.toLowerCase().includes(query.toLowerCase()) ||
+          product.description.toLowerCase().includes(query.toLowerCase());
+        const matchesCategory = category === 'all' || product.category === category;
+        return matchesQuery && matchesCategory;
+      }),
+    [category, data?.products, query],
+  );
+
+  if (!data?.storefront) {
+    return (
+      <div className="mx-auto flex min-h-[60vh] max-w-4xl items-center px-4 py-12 sm:px-6">
+        <div className="w-full">
+          <EmptyState
+            icon={ShoppingBag}
+            title="Storefront not available"
+            description="This storefront is not published yet, or the link may be incorrect."
+          />
+        </div>
+      </div>
+    );
   }
 
-  if (!business) {
-    return <div className="p-10 text-center text-sm font-black uppercase tracking-[0.2em]">Store not found.</div>;
-  }
-
-  const contactCards = [
-    business.email ? { id: 'email', icon: Mail, value: business.email, accent: 'text-brand-600' } : null,
-    business.phone ? { id: 'phone', icon: Phone, value: business.phone, accent: 'text-emerald-500' } : null,
-    business.whatsapp
-      ? { id: 'whatsapp', icon: MessageCircle, value: business.whatsapp, accent: 'text-green-500' }
-      : null,
-    business.instagram
-      ? { id: 'instagram', icon: Instagram, value: business.instagram, accent: 'text-pink-500' }
-      : null,
-    business.website ? { id: 'website', icon: Globe, value: business.website, accent: 'text-apple-gray-500' } : null,
-  ].filter(Boolean) as Array<{ id: string; icon: React.ComponentType<{ className?: string }>; value: string; accent: string }>;
+  const { business, storefront } = data;
 
   return (
-    <div className="min-h-screen overflow-x-clip bg-white">
+    <div className="min-h-screen overflow-x-clip bg-[linear-gradient(180deg,#ffffff_0%,#f7f8fa_100%)]">
       <div className="relative">
-        <div className="h-[28vh] min-h-[220px] bg-apple-gray-500 sm:h-[35vh] md:h-[42vh]">
-          {business.banner ? (
-            <img src={business.banner} alt="" className="h-full w-full object-cover opacity-80" />
+        <div className="h-[30vh] min-h-[240px] bg-apple-gray-500 sm:h-[38vh]">
+          {storefront.banner ? (
+            <img src={storefront.banner} alt="" className="h-full w-full object-cover" />
           ) : (
-            <div className="h-full w-full bg-[linear-gradient(135deg,#1d1d1f_0%,#5d5d65_100%)]" />
+            <div className="h-full w-full bg-[linear-gradient(135deg,#1d1d1f_0%,#2b2b31_40%,#0f5132_100%)]" />
           )}
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-          <div className="-mt-16 flex flex-col gap-6 border-b border-apple-gray-50 pb-8 sm:-mt-20 md:-mt-24 md:flex-row md:items-end md:gap-8">
-            <div className="z-10 flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-[2.25rem] border-8 border-white bg-white text-4xl font-black text-apple-gray-500 shadow-2xl sm:h-40 sm:w-40 sm:rounded-[2.75rem] md:h-44 md:w-44">
-              {business.logo ? (
-                <img src={business.logo} alt="" className="h-full w-full object-cover" />
-              ) : (
-                business.name[0]
-              )}
-            </div>
-
-            <div className="min-w-0 flex-1 space-y-4 md:pb-3">
-              <div className="flex flex-col gap-3 md:flex-row md:items-center">
-                <h1 className="break-words text-3xl font-black tracking-tight text-apple-gray-500 sm:text-4xl md:text-6xl">
-                  {business.name}
-                </h1>
-                {business.kyc_status === 'verified' && (
-                  <div className="inline-flex max-w-full items-center gap-2 self-start rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700 sm:text-xs">
-                    <ShieldCheck className="h-4 w-4" /> Verified Merchant
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <span className="inline-flex max-w-full items-start gap-2 rounded-full bg-apple-gray-50 px-4 py-2 text-sm font-bold text-apple-gray-300">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-                  <span className="break-words">
-                    {business.location_type.replace('_', ' ')} · {business.address}
-                  </span>
-                </span>
-                <span className="inline-flex items-center gap-2 self-start rounded-full bg-apple-gray-50 px-4 py-2 text-sm font-bold text-apple-gray-300">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" /> 4.9 Rating
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="sticky top-0 z-40 border-b border-apple-gray-50 bg-white/95 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-          <div className="grid grid-cols-3 gap-2 py-3 sm:flex sm:gap-8 sm:py-0">
-            {(['products', 'about', 'policy'] as StoreTab[]).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={cn(
-                  'relative rounded-full px-4 py-3 text-center text-[11px] font-black uppercase tracking-[0.16em] transition-colors sm:rounded-none sm:px-0 sm:py-6 sm:text-sm',
-                  activeTab === tab
-                    ? 'bg-apple-gray-500 text-white sm:bg-transparent sm:text-apple-gray-500'
-                    : 'bg-apple-gray-50 text-apple-gray-300 hover:text-apple-gray-500 sm:bg-transparent',
-                )}
-              >
-                {tab}
-                {activeTab === tab && (
-                  <motion.div
-                    layoutId="storefront-tab"
-                    className="absolute inset-x-3 bottom-1 h-1 rounded-full bg-white sm:inset-x-0 sm:bottom-0 sm:bg-apple-gray-500"
-                  />
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-20">
-        <AnimatePresence mode="wait">
-          {activeTab === 'products' && (
-            <motion.div
-              key="products"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-8"
-            >
-              {products.length === 0 ? (
-                <div className="col-span-full rounded-[2rem] border border-dashed border-apple-gray-100 bg-apple-gray-50 px-6 py-14 text-center sm:rounded-[2.5rem]">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-apple-gray-300 shadow-sm">
-                    <Package className="h-7 w-7" />
+          <div className="-mt-20 pb-8 sm:-mt-24">
+            <Card className="overflow-hidden">
+              <div className="p-6 sm:p-8">
+                {canPreviewOwnStorefront ? (
+                  <div className="mb-5 rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm font-medium text-brand-800">
+                    Preview mode is on. You are viewing your storefront before it is fully public.
                   </div>
-                  <h2 className="mt-5 text-2xl font-black text-apple-gray-500">No products yet</h2>
-                  <p className="mx-auto mt-3 max-w-xl text-sm font-medium leading-relaxed text-apple-gray-300 sm:text-base">
-                    This store has not published products yet. Check back soon or contact the merchant directly.
-                  </p>
-                </div>
-              ) : (
-                products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="overflow-hidden rounded-[2rem] border border-apple-gray-100 bg-white p-5 shadow-sm transition-all hover:shadow-xl sm:rounded-[2.75rem] sm:p-7"
-                  >
-                    <div className="relative mb-6 aspect-square overflow-hidden rounded-[1.75rem] bg-apple-gray-50 sm:rounded-[2.25rem]">
-                      {product.video ? (
-                        <video
-                          src={product.video}
-                          poster={product.image}
-                          className="h-full w-full object-cover"
-                          muted
-                          loop
-                          autoPlay
-                          playsInline
-                        />
-                      ) : product.image ? (
-                        <img src={product.image} alt="" crossOrigin="anonymous" className="h-full w-full object-cover" />
-                      ) : (
-                        <div className="flex h-full items-center justify-center gap-3 text-apple-gray-200">
-                          <Package className="h-6 w-6" />
-                          <span className="text-sm font-bold">No media uploaded</span>
-                        </div>
-                      )}
+                ) : null}
 
-                      <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] shadow-sm backdrop-blur-md sm:left-5 sm:top-5">
-                        {product.type}
-                      </div>
-                      {product.video && (
-                        <div className="absolute bottom-4 left-4 rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700 shadow-sm backdrop-blur-md sm:bottom-5 sm:left-5">
-                          Video
-                        </div>
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                  <div className="flex min-w-0 flex-1 items-start gap-4 sm:gap-6">
+                    <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-[1.75rem] bg-apple-gray-50 text-2xl font-black text-apple-gray-500 shadow-sm sm:h-24 sm:w-24">
+                      {storefront.logo ? (
+                        <img src={storefront.logo} alt="" className="h-full w-full object-cover" />
+                      ) : (
+                        storefront.storefront_name.charAt(0)
                       )}
                     </div>
 
-                    <div className="space-y-4">
-                      <h3 className="text-2xl font-black leading-tight text-apple-gray-500 sm:text-3xl">
-                        {product.name}
-                      </h3>
-                      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="text-3xl font-black tracking-tight text-apple-gray-500 sm:text-4xl">
-                          N{product.price.toLocaleString()}
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap gap-2">
+                        <StatusBadge status={storefront.storefront_status} />
+                        <StatusBadge status={storefront.open_status} />
+                        <StatusBadge status={storefront.delivery_enabled ? 'yes' : 'no'} label={storefront.delivery_enabled ? 'Delivery' : 'Delivery off'} />
+                        <StatusBadge status={storefront.pickup_enabled ? 'yes' : 'no'} label={storefront.pickup_enabled ? 'Pickup' : 'Pickup off'} />
+                      </div>
+                      <h1 className="mt-4 break-words text-3xl font-black tracking-tight text-apple-gray-500 sm:text-5xl">
+                        {storefront.storefront_name}
+                      </h1>
+                      <p className="mt-3 max-w-3xl text-base font-medium leading-relaxed text-apple-gray-300 sm:text-lg">
+                        {storefront.tagline || business.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2 lg:w-[360px]">
+                    <div className="rounded-2xl border border-apple-gray-100 bg-apple-gray-50 p-4">
+                      <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-apple-gray-300">
+                        <MapPin className="h-4 w-4" />
+                        Service area
+                      </div>
+                      <div className="mt-2 text-sm font-bold text-apple-gray-500">{storefront.service_area || business.city_state}</div>
+                    </div>
+                    <div className="rounded-2xl border border-apple-gray-100 bg-apple-gray-50 p-4">
+                      <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-apple-gray-300">
+                        <Clock3 className="h-4 w-4" />
+                        Hours
+                      </div>
+                      <div className="mt-2 text-sm font-bold text-apple-gray-500">{storefront.opening_hours || 'Contact store'}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+                  <div className="rounded-[1.75rem] border border-apple-gray-100 bg-apple-gray-50 p-5">
+                    <div className="text-[11px] font-black uppercase tracking-[0.16em] text-apple-gray-300">About this business</div>
+                    <p className="mt-3 text-sm font-medium leading-relaxed text-apple-gray-400 sm:text-base">{business.description}</p>
+                  </div>
+                  <div className="rounded-[1.75rem] border border-apple-gray-100 bg-white p-5">
+                    <div className="text-[11px] font-black uppercase tracking-[0.16em] text-apple-gray-300">Category</div>
+                    <div className="mt-3 text-lg font-bold text-apple-gray-500">{business.category}</div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-10">
+        <Card className="p-6 sm:p-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-[0.16em] text-apple-gray-300">Marketplace</p>
+              <h2 className="mt-2 text-2xl font-black text-apple-gray-500">Browse products</h2>
+              <p className="mt-2 text-sm font-medium leading-relaxed text-apple-gray-300">
+                Discover what is available now and place an order through Pick&apos;em.
+              </p>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_220px] lg:w-[540px]">
+              <label className="relative">
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-apple-gray-200" />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search products"
+                  className="w-full rounded-full border border-apple-gray-100 bg-apple-gray-50 py-3 pl-10 pr-4 text-sm font-medium text-apple-gray-500 outline-none transition-all focus:border-brand-200 focus:bg-white focus:ring-2 focus:ring-brand-500/30"
+                />
+              </label>
+              <select
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+                className="w-full rounded-full border border-apple-gray-100 bg-apple-gray-50 px-4 py-3 text-sm font-medium text-apple-gray-500 outline-none transition-all focus:border-brand-200 focus:bg-white focus:ring-2 focus:ring-brand-500/30"
+              >
+                {categories.map((option) => (
+                  <option key={option} value={option}>
+                    {option === 'all' ? 'All categories' : option}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            {filteredProducts.length === 0 ? (
+              <EmptyState
+                icon={Package}
+                title="No products available"
+                description={
+                  query || category !== 'all'
+                    ? 'Try adjusting your search or filter to find matching products.'
+                    : 'This storefront has not published any products yet.'
+                }
+              />
+            ) : (
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {filteredProducts.map((product) => (
+                  <Card key={product.id} className="flex h-full flex-col overflow-hidden">
+                    <div className="aspect-[1.05] overflow-hidden bg-apple-gray-50">
+                      {product.images[0] ? (
+                        <img src={product.images[0]} alt="" className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-apple-gray-200">
+                          <Package className="h-8 w-8" />
                         </div>
-                        <Link
-                          to={`/buy-and-deliver?item=${product.id}`}
-                          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-apple-gray-500 px-5 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 sm:self-start"
-                        >
-                          <Plus className="h-5 w-5" />
-                          Add to Order
+                      )}
+                    </div>
+                    <div className="flex flex-1 flex-col p-6">
+                      <div className="flex flex-wrap gap-2">
+                        <StatusBadge status={product.status} />
+                        {product.featured ? <StatusBadge status="trial" label="Featured" /> : null}
+                      </div>
+                      <h3 className="mt-4 text-2xl font-black text-apple-gray-500">{product.name}</h3>
+                      <p className="mt-2 flex-1 text-sm font-medium leading-relaxed text-apple-gray-300">{product.description}</p>
+                      <div className="mt-5 flex items-end justify-between gap-4">
+                        <div>
+                          <div className="text-2xl font-black text-apple-gray-500">₦{product.price.toLocaleString()}</div>
+                          {product.discount_price ? (
+                            <div className="mt-1 text-sm font-medium text-apple-gray-300">
+                              Discount ₦{product.discount_price.toLocaleString()}
+                            </div>
+                          ) : null}
+                        </div>
+                        <div className="text-right text-xs font-bold uppercase tracking-[0.14em] text-apple-gray-300">
+                          Stock
+                          <div className="mt-1 text-sm text-apple-gray-500">{product.stock}</div>
+                        </div>
+                      </div>
+                      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                        <Button variant="secondary" className="w-full" onClick={() => setSelectedProduct(product)}>
+                          View Product
+                        </Button>
+                        <Link to={`/buy-and-deliver?product=${encodeURIComponent(product.name)}`} className="w-full">
+                          <Button className="w-full" disabled={product.status !== 'published' || product.stock <= 0}>
+                            Order Now
+                          </Button>
                         </Link>
                       </div>
                     </div>
-                  </div>
-                ))
-              )}
-            </motion.div>
-          )}
-
-          {activeTab === 'about' && (
-            <motion.div
-              key="about"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="max-w-4xl space-y-10 sm:space-y-14"
-            >
-              <div className="space-y-4">
-                <h2 className="text-3xl font-black tracking-tight text-apple-gray-500 sm:text-5xl">About Us</h2>
-                <p className="text-lg font-bold italic leading-relaxed text-apple-gray-300 sm:text-2xl">
-                  "{business.description}"
-                </p>
+                  </Card>
+                ))}
               </div>
-
-              <div className="grid grid-cols-1 gap-6 border-t border-apple-gray-50 pt-8 sm:grid-cols-2 sm:gap-10 sm:pt-12">
-                <div className="space-y-2">
-                  <div className="text-[10px] font-black uppercase tracking-[0.18em] text-apple-gray-200">Location</div>
-                  <div className="flex items-start gap-2 text-lg font-black text-apple-gray-500 sm:text-xl">
-                    <MapPin className="mt-1 h-5 w-5 shrink-0 text-apple-gray-200" />
-                    <span className="break-words">{business.address}</span>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="text-[10px] font-black uppercase tracking-[0.18em] text-apple-gray-200">
-                    Operating Since
-                  </div>
-                  <div className="text-lg font-black text-apple-gray-500 sm:text-xl">
-                    {format(new Date(business.created_at), 'MMMM yyyy')}
-                  </div>
-                </div>
-              </div>
-
-              {contactCards.length > 0 && (
-                <div className="space-y-5">
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.18em] text-apple-gray-200">
-                    Contact and Socials
-                  </h3>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    {contactCards.map((card) => (
-                      <div
-                        key={card.id}
-                        className="flex items-start gap-4 rounded-[1.75rem] border border-apple-gray-100 bg-apple-gray-50 p-5"
-                      >
-                        <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm', card.accent)}>
-                          <card.icon className="h-6 w-6" />
-                        </div>
-                        <div className="min-w-0 break-words text-sm font-bold leading-relaxed text-apple-gray-500 sm:text-base">
-                          {card.value}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          )}
-
-          {activeTab === 'policy' && (
-            <motion.div
-              key="policy"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="max-w-4xl space-y-6 sm:space-y-8"
-            >
-              <h2 className="text-3xl font-black tracking-tight text-apple-gray-500 sm:text-4xl">Store Policy</h2>
-              <p className="whitespace-pre-line text-base font-bold leading-relaxed text-apple-gray-300 sm:text-lg">
-                {business.store_policy?.trim() || `No business policy has been published by ${business.name} yet.`}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </div>
+        </Card>
       </div>
+
+      <Modal open={Boolean(selectedProduct)} onClose={() => setSelectedProduct(null)} title={selectedProduct?.name ?? 'Product'}>
+        {selectedProduct ? (
+          <div className="space-y-6">
+            <div className="aspect-video overflow-hidden rounded-[1.75rem] bg-apple-gray-50">
+              {selectedProduct.images[0] ? (
+                <img src={selectedProduct.images[0]} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full items-center justify-center text-apple-gray-200">
+                  <Package className="h-10 w-10" />
+                </div>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <StatusBadge status={selectedProduct.status} />
+              <span className="rounded-full bg-apple-gray-50 px-3 py-1 text-xs font-bold text-apple-gray-400">
+                {selectedProduct.category}
+              </span>
+            </div>
+            <p className="text-sm font-medium leading-relaxed text-apple-gray-400">{selectedProduct.description}</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Card className="p-4">
+                <div className="text-[11px] font-black uppercase tracking-[0.16em] text-apple-gray-300">Price</div>
+                <div className="mt-2 text-2xl font-black text-apple-gray-500">₦{selectedProduct.price.toLocaleString()}</div>
+              </Card>
+              <Card className="p-4">
+                <div className="text-[11px] font-black uppercase tracking-[0.16em] text-apple-gray-300">Availability</div>
+                <div className="mt-2 text-2xl font-black text-apple-gray-500">{selectedProduct.stock} in stock</div>
+              </Card>
+            </div>
+            <Link to={`/buy-and-deliver?product=${encodeURIComponent(selectedProduct.name)}`}>
+              <Button className="w-full" disabled={selectedProduct.status !== 'published' || selectedProduct.stock <= 0}>
+                Order Now
+              </Button>
+            </Link>
+          </div>
+        ) : null}
+      </Modal>
     </div>
   );
 }
