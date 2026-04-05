@@ -10,10 +10,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const isDashboardSurface =
+  const isProtectedAppRoute =
     location.pathname.startsWith('/dashboard') ||
     location.pathname === '/request' ||
     location.pathname === '/profile';
+  const isLoggedInSurface = Boolean(user) || location.pathname === '/complete-profile';
 
   const handleLogout = () => {
     logout();
@@ -35,7 +36,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <nav
         className={cn(
           'sticky top-0 z-50 border-b border-stone-100 bg-white shadow-[0_1px_0_rgba(29,29,31,0.04)]',
-          isDashboardSurface ? 'backdrop-blur-none' : 'lg:bg-white/90 lg:backdrop-blur-md',
+          isLoggedInSurface ? 'backdrop-blur-none' : 'lg:bg-white/90 lg:backdrop-blur-md',
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -177,7 +178,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {children}
+          {isProtectedAppRoute ? (
+            <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+              {children}
+            </div>
+          ) : (
+            children
+          )}
         </motion.div>
       </main>
 

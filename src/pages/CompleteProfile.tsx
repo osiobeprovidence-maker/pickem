@@ -91,7 +91,7 @@ export default function CompleteProfile() {
   }
 
   return (
-    <div className="min-h-[80vh] bg-[radial-gradient(circle_at_top,_rgba(29,29,31,0.06),_transparent_45%),linear-gradient(180deg,#f7f6f2_0%,#ffffff_55%)] px-4 py-10 sm:py-14">
+    <div className="min-h-[80vh] overflow-x-clip bg-[radial-gradient(circle_at_top,_rgba(29,29,31,0.06),_transparent_45%),linear-gradient(180deg,#f7f6f2_0%,#ffffff_55%)] px-4 py-10 sm:py-14">
       <div className="mx-auto w-full max-w-3xl rounded-[2.5rem] border border-apple-gray-100 bg-white p-8 shadow-[0_24px_70px_rgba(29,29,31,0.08)] md:p-10">
         <div className="text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-apple-gray-50">
@@ -127,7 +127,7 @@ export default function CompleteProfile() {
                   >
                     <option.icon className="h-6 w-6" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <div className="text-base font-black text-apple-gray-500">{option.title}</div>
                     <div className="text-sm font-medium leading-relaxed text-apple-gray-300">{option.description}</div>
                   </div>
