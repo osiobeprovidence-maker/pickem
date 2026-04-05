@@ -76,6 +76,7 @@ function AppContent() {
           <Route path="/become-runner" element={<BecomeRunner />} />
           <Route path="/proxy-pickup" element={<ProxyPickup />} />
           <Route path="/proxy-request" element={<ProxyRequest />} />
+          <Route path="/store/:slug" element={<Storefront />} />
           <Route path="/storefront/:slug" element={<Storefront />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<TermsOfService />} />

@@ -80,22 +80,40 @@ export interface Business {
   subscription_status: BusinessSubscriptionStatus;
   trial_start_date?: string;
   trial_end_date?: string;
+  storefront_id?: string;
+}
+
+export interface StorefrontSocialLinks {
+  instagram?: string;
+  whatsapp?: string;
+  website?: string;
+  x?: string;
 }
 
 export interface Storefront {
-  id: string;
+  storefront_id: string;
   business_id: string;
   storefront_name: string;
   slug: string;
-  logo?: string;
-  banner?: string;
+  logo_url?: string;
+  banner_url?: string;
   tagline: string;
+  description: string;
+  category: string;
+  contact_email: string;
+  contact_phone: string;
+  address: string;
+  campus_location?: string;
   service_area: string;
   opening_hours: string;
   delivery_enabled: boolean;
   pickup_enabled: boolean;
+  social_links?: StorefrontSocialLinks;
   storefront_status: StorefrontStatus;
+  is_public: boolean;
   open_status: StorefrontOpenStatus;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Product {

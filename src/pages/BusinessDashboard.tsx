@@ -3,73 +3,139 @@ import { format } from 'date-fns';
 import { ReceiptText } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import {
-  completeBusinessRegistration,
   deleteProduct,
   getBusinessStats,
-  getBusinessWorkspace,
   getMarketplaceEligibility,
   getOnboardingChecklist,
-  setStorefrontStatus,
-  toggleProductMarketplaceVisibility,
   updateOrderStatus,
   updateProductStatus,
   upsertProduct,
+  toggleProductMarketplaceVisibility,
   type BusinessRegistrationSetupInput,
 } from '../lib/businessWorkspace';
+import { storefrontService, type StorefrontSettingsPayload } from '../lib/storefrontService';
 import {
   activateBusinessSubscription,
   getBusinessPlanSummary,
   startBusinessTrial,
 } from '../lib/businessOnboarding';
+import { useBusinessStorefront } from '../hooks/useBusinessStorefront';
 import type { Order, Product } from '../types';
 import { BusinessDashboardHeader } from '../components/business/BusinessDashboardHeader';
 import { SubscriptionStatusCard } from '../components/business/SubscriptionStatusCard';
 import { OnboardingChecklist } from '../components/business/OnboardingChecklist';
 import { BusinessStatsCards } from '../components/business/BusinessStatsCards';
-import { StorefrontOverviewCard } from '../components/business/StorefrontOverviewCard';
 import { ProductListTable } from '../components/business/ProductListTable';
 import { OrdersTable } from '../components/business/OrdersTable';
 import { MarketplaceEligibilityCard } from '../components/business/MarketplaceEligibilityCard';
 import { TrialClaimCard } from '../components/business/TrialClaimCard';
 import { ProductForm } from '../components/business/ProductForm';
-import { BusinessSetupFlow } from '../components/business/BusinessSetupFlow';
+import { StorefrontSettingsForm } from '../components/business/StorefrontSettingsForm';
+import { StorefrontPreviewCard } from '../components/business/StorefrontPreviewCard';
+import { StorefrontShareCard } from '../components/business/StorefrontShareCard';
 import { Modal } from '../components/ui/Modal';
 import { Card } from '../components/ui/Card';
+import { Button } from '../components/ui/Button';
 import { StatusBadge } from '../components/business/StatusBadge';
+
+const toRegistrationInput = (
+  payload: StorefrontSettingsPayload,
+  fallbackEmail: string,
+  fallbackOwnerName: string,
+): BusinessRegistrationSetupInput => ({
+  businessName: payload.business.business_name ?? '',
+  category: payload.business.category ?? payload.storefront.category ?? '',
+  businessEmail: payload.business.email ?? payload.storefront.contact_email ?? fallbackEmail,
+  businessPhone: payload.business.phone ?? payload.storefront.contact_phone ?? '',
+  address: payload.business.address ?? payload.storefront.address ?? '',
+  cityState: payload.business.city_state ?? payload.storefront.campus_location ?? payload.storefront.service_area ?? '',
+  description: payload.business.description ?? payload.storefront.description ?? '',
+  ownerName: payload.business.owner_name ?? fallbackOwnerName,
+  ownerEmail: payload.business.owner_email ?? payload.business.email ?? payload.storefront.contact_email ?? fallbackEmail,
+  ownerPhone: payload.business.owner_phone ?? payload.business.phone ?? payload.storefront.contact_phone ?? '',
+  storefrontName: payload.storefront.storefront_name ?? payload.business.business_name ?? '',
+  slug: payload.storefront.slug ?? payload.storefront.storefront_name ?? payload.business.business_name ?? '',
+  logoUrl: payload.storefront.logo_url,
+  bannerUrl: payload.storefront.banner_url,
+  tagline: payload.storefront.tagline ?? '',
+  serviceArea: payload.storefront.service_area ?? payload.business.city_state ?? '',
+  openingHours: payload.storefront.opening_hours ?? '',
+  deliveryEnabled: payload.storefront.delivery_enabled ?? true,
+  pickupEnabled: payload.storefront.pickup_enabled ?? true,
+  openStatus: payload.storefront.open_status ?? 'open',
+  socialLinks: payload.storefront.social_links,
+});
 
 export default function BusinessDashboard() {
   const { user } = useAuth();
-  const [workspace, setWorkspace] = React.useState(() => getBusinessWorkspace(user));
+  const {
+    workspace,
+    loading,
+    saving,
+    saveMessage,
+    saveError,
+    logoUpload,
+    bannerUpload,
+    load,
+    saveSettings,
+    uploadMedia,
+    updateStatus,
+    validateSlug,
+    copyPublicUrl,
+    sharePublicUrl,
+    showFeedback,
+    publicUrl,
+    publicPath,
+    previewPath,
+  } = useBusinessStorefront(user);
+
   const [planSummary, setPlanSummary] = React.useState(() => getBusinessPlanSummary(user?.email));
-  const [isSetupOpen, setIsSetupOpen] = React.useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
   const [isProductOpen, setIsProductOpen] = React.useState(false);
   const [editingProduct, setEditingProduct] = React.useState<Product | null>(null);
   const [selectedOrder, setSelectedOrder] = React.useState<Order | null>(null);
   const subscriptionRef = React.useRef<HTMLDivElement | null>(null);
 
-  const refreshWorkspace = React.useCallback(() => {
-    setWorkspace(getBusinessWorkspace(user));
+  const refreshPlan = React.useCallback(() => {
     setPlanSummary(getBusinessPlanSummary(user?.email));
-  }, [user]);
+  }, [user?.email]);
 
   React.useEffect(() => {
-    refreshWorkspace();
-  }, [refreshWorkspace]);
+    refreshPlan();
+  }, [refreshPlan, workspace?.business.subscription_status]);
+
+  const refreshAll = React.useCallback(async () => {
+    await load();
+    refreshPlan();
+  }, [load, refreshPlan]);
 
   const eligibility = getMarketplaceEligibility(workspace);
   const checklist = getOnboardingChecklist(workspace);
   const stats = getBusinessStats(workspace);
   const businessName = workspace?.business.business_name ?? user?.name ?? 'Business';
-  const storefrontHref = workspace?.storefront
-    ? workspace.storefront.storefront_status === 'published'
-      ? `/storefront/${workspace.storefront.slug}`
-      : `/storefront/${workspace.storefront.slug}?preview=1`
-    : undefined;
+  const storefrontStatus = workspace?.storefront?.storefront_status ?? 'draft';
 
-  const openSetup = () => setIsSetupOpen(true);
+  const handleSaveStorefront = async (payload: StorefrontSettingsPayload) => {
+    if (!user) return null;
+
+    if (!workspace?.business.onboarding_complete) {
+      await storefrontService.createOrUpdateRegistration(
+        user,
+        toRegistrationInput(payload, user.email, user.name),
+      );
+      await refreshAll();
+      showFeedback('Storefront setup saved successfully.');
+      return null;
+    }
+
+    await saveSettings(payload);
+    refreshPlan();
+    return null;
+  };
+
   const openProductForm = (product?: Product | null) => {
     if (!workspace?.business.onboarding_complete || !workspace.storefront) {
-      setIsSetupOpen(true);
+      setIsSettingsOpen(true);
       return;
     }
 
@@ -77,77 +143,59 @@ export default function BusinessDashboard() {
     setIsProductOpen(true);
   };
 
-  const handleSetupSubmit = (input: BusinessRegistrationSetupInput) => {
-    if (!user) return;
-    completeBusinessRegistration(user, input);
-    refreshWorkspace();
-  };
-
-  const handleStartTrial = () => {
+  const handleStartTrial = async () => {
     if (!user?.email) return;
     startBusinessTrial(user.email);
-    refreshWorkspace();
+    await refreshAll();
   };
 
-  const handleSubscribe = () => {
+  const handleSubscribe = async () => {
     if (!user?.email) return;
     activateBusinessSubscription(user.email);
-    refreshWorkspace();
+    await refreshAll();
   };
 
-  const handlePublishStorefront = () => {
-    if (!user || !workspace?.storefront) return;
-    setStorefrontStatus(user, 'published');
-    refreshWorkspace();
-  };
-
-  const handleUnpublishStorefront = () => {
-    if (!user || !workspace?.storefront) return;
-    setStorefrontStatus(user, 'hidden');
-    refreshWorkspace();
-  };
-
-  const handleProductSubmit = (input: Parameters<typeof upsertProduct>[1]) => {
+  const handleProductSubmit = async (input: Parameters<typeof upsertProduct>[1]) => {
     if (!user) return;
     upsertProduct(user, input, editingProduct?.id);
     setEditingProduct(null);
-    refreshWorkspace();
+    await refreshAll();
   };
 
-  const handleDeleteProduct = (product: Product) => {
+  const handleDeleteProduct = async (product: Product) => {
     if (!user) return;
     deleteProduct(user, product.id);
-    refreshWorkspace();
+    await refreshAll();
   };
 
-  const handlePublishProduct = (product: Product) => {
+  const handlePublishProduct = async (product: Product) => {
     if (!user) return;
     updateProductStatus(user, product.id, 'published');
-    refreshWorkspace();
+    await refreshAll();
   };
 
-  const handleUnpublishProduct = (product: Product) => {
+  const handleUnpublishProduct = async (product: Product) => {
     if (!user) return;
     updateProductStatus(user, product.id, 'hidden');
-    refreshWorkspace();
+    await refreshAll();
   };
 
-  const handleMarkOutOfStock = (product: Product) => {
+  const handleMarkOutOfStock = async (product: Product) => {
     if (!user) return;
     updateProductStatus(user, product.id, 'out_of_stock');
-    refreshWorkspace();
+    await refreshAll();
   };
 
-  const handleToggleVisibility = (product: Product, visible: boolean) => {
+  const handleToggleVisibility = async (product: Product, visible: boolean) => {
     if (!user) return;
     toggleProductMarketplaceVisibility(user, product.id, visible);
-    refreshWorkspace();
+    await refreshAll();
   };
 
-  const handleOrderStatusUpdate = (order: Order, status: Order['status']) => {
+  const handleOrderStatusUpdate = async (order: Order, status: Order['status']) => {
     if (!user) return;
     updateOrderStatus(user, order.id, status);
-    refreshWorkspace();
+    await refreshAll();
     if (selectedOrder?.id === order.id) {
       setSelectedOrder((current) => (current ? { ...current, status } : current));
     }
@@ -157,17 +205,28 @@ export default function BusinessDashboard() {
     subscriptionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  if (loading && !workspace) {
+    return (
+      <Card className="p-8">
+        <h1 className="text-2xl font-black text-apple-gray-500">Loading storefront workspace...</h1>
+        <p className="mt-2 text-sm font-medium text-apple-gray-300">
+          We&apos;re loading your storefront settings, products, and sharing data.
+        </p>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-6 overflow-x-clip md:space-y-8">
       <BusinessDashboardHeader
         businessName={businessName}
         subtitle="Manage your storefront, products, and campus orders from one place."
         category={workspace?.business.category ?? 'Campus Retail'}
-        storefrontStatus={workspace?.storefront?.storefront_status}
+        storefrontStatus={storefrontStatus}
         subscriptionStatus={workspace?.business.subscription_status ?? 'inactive'}
-        storefrontHref={storefrontHref}
+        storefrontHref={previewPath ?? undefined}
         onAddProduct={() => openProductForm()}
-        onEditStorefront={openSetup}
+        onEditStorefront={() => setIsSettingsOpen(true)}
         onManageSubscription={handleManageSubscription}
       />
 
@@ -183,34 +242,80 @@ export default function BusinessDashboard() {
             onSubscribe={handleSubscribe}
           />
         </div>
-        <OnboardingChecklist items={checklist} onOpenSetup={openSetup} />
+        <OnboardingChecklist items={checklist} onOpenSetup={() => setIsSettingsOpen(true)} />
       </div>
 
       <BusinessStatsCards stats={stats} />
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,380px)]">
-        <StorefrontOverviewCard
-          business={workspace?.business ?? {
-            id: '',
-            business_name: '',
-            category: '',
-            owner_name: '',
-            owner_email: '',
-            owner_phone: '',
-            email: '',
-            phone: '',
-            address: '',
-            city_state: '',
-            description: '',
-            onboarding_complete: false,
-            subscription_status: 'inactive',
-          }}
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
+        <StorefrontPreviewCard
+          business={
+            workspace?.business ?? {
+              id: '',
+              business_name: '',
+              category: '',
+              owner_name: '',
+              owner_email: '',
+              owner_phone: '',
+              email: '',
+              phone: '',
+              address: '',
+              city_state: '',
+              description: '',
+              onboarding_complete: false,
+              subscription_status: 'inactive',
+            }
+          }
           storefront={workspace?.storefront ?? null}
-          onEdit={openSetup}
-          onPublish={handlePublishStorefront}
-          onUnpublish={handleUnpublishStorefront}
-          previewHref={storefrontHref}
+          productCount={workspace?.products.length ?? 0}
+          previewPath={previewPath}
         />
+        <StorefrontShareCard
+          publicUrl={publicUrl}
+          publicPath={publicPath}
+          previewPath={previewPath}
+          status={storefrontStatus}
+          onCopyLink={copyPublicUrl}
+          onShareLink={sharePublicUrl}
+        />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,380px)]">
+        <Card className="p-6 sm:p-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-[0.16em] text-apple-gray-300">Storefront controls</p>
+              <h3 className="mt-2 text-2xl font-black text-apple-gray-500">Publishing and visibility</h3>
+              <p className="mt-2 text-sm font-medium leading-relaxed text-apple-gray-300">
+                Draft storefronts stay private, published storefronts are public, and hidden storefronts stay off the marketplace.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="secondary" onClick={() => setIsSettingsOpen(true)}>
+                Edit Settings
+              </Button>
+              <Button onClick={() => void updateStatus('published')} disabled={saving}>
+                Publish
+              </Button>
+              <Button variant="ghost" onClick={() => void updateStatus('hidden')} disabled={saving}>
+                Hide
+              </Button>
+              <Button variant="ghost" onClick={() => void updateStatus('draft')} disabled={saving}>
+                Save as Draft
+              </Button>
+            </div>
+          </div>
+          {saveMessage ? (
+            <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+              {saveMessage}
+            </div>
+          ) : null}
+          {saveError ? (
+            <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+              {saveError}
+            </div>
+          ) : null}
+        </Card>
         <MarketplaceEligibilityCard eligibility={eligibility} />
       </div>
 
@@ -242,11 +347,20 @@ export default function BusinessDashboard() {
         initialProduct={editingProduct}
       />
 
-      <BusinessSetupFlow
-        open={isSetupOpen}
-        onClose={() => setIsSetupOpen(false)}
+      <StorefrontSettingsForm
+        open={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
         workspace={workspace}
-        onSubmit={handleSetupSubmit}
+        saving={saving}
+        saveMessage={saveMessage}
+        saveError={saveError}
+        logoUpload={logoUpload}
+        bannerUpload={bannerUpload}
+        publicPath={publicPath}
+        onSave={handleSaveStorefront}
+        onUploadLogo={(file) => void uploadMedia('logo', file)}
+        onUploadBanner={(file) => void uploadMedia('banner', file)}
+        onValidateSlug={validateSlug}
       />
 
       <Modal open={Boolean(selectedOrder)} onClose={() => setSelectedOrder(null)} title="Order details" className="max-w-3xl">

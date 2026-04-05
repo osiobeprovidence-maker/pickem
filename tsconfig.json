@@ -38,7 +38,6 @@
     "src/lib/rbac.ts",
     "src/pages/AdminDashboard.tsx",
     "src/pages/AdminDashboard2.tsx",
-    "src/pages/Storefront.tsx",
     "src/components/AdminDrawer.tsx",
     "src/components/AdminSidebar.tsx"
   ]
