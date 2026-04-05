@@ -42,10 +42,10 @@ export default function ProxyPickup() {
           >
             {user ? (
               <Link
-                to="/dashboard/proxy"
+                to="/proxy-request"
                 className="flex w-full items-center justify-center gap-2 rounded-full bg-apple-gray-500 px-8 py-4 text-lg font-semibold text-white transition-opacity hover:opacity-90 sm:w-auto sm:px-10"
               >
-                <LayoutDashboard className="h-5 w-5" /> Go to Proxy Dashboard
+                <LayoutDashboard className="h-5 w-5" /> Create Proxy Request
               </Link>
             ) : (
               <div className="inline-flex w-full flex-col items-center gap-4 rounded-[2rem] border border-apple-gray-100 bg-apple-gray-50 px-5 py-4 sm:w-auto sm:flex-row sm:rounded-full sm:px-6 sm:py-2">

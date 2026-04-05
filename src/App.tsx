@@ -16,6 +16,7 @@ import BuyAndDeliver from './pages/BuyAndDeliver';
 import Contact from './pages/Contact';
 import Auth from './pages/Auth';
 import CompleteProfile from './pages/CompleteProfile';
+import ProxyRequest from './pages/ProxyRequest';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import NotFound from './pages/NotFound';
@@ -73,6 +74,7 @@ function AppContent() {
           <Route path="/buy-and-deliver" element={<BuyAndDeliver />} />
           <Route path="/become-runner" element={<BecomeRunner />} />
           <Route path="/proxy-pickup" element={<ProxyPickup />} />
+          <Route path="/proxy-request" element={<ProxyRequest />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
