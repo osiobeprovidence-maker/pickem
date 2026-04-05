@@ -179,7 +179,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           transition={{ duration: 0.5 }}
         >
           {isProtectedAppRoute ? (
-            <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+            <div className="w-full px-4 py-6 sm:px-6 sm:py-8 lg:px-0 lg:py-0">
               {children}
             </div>
           ) : (
