@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, Package, User, LayoutDashboard, Bell, Menu, X, ShoppingBag, Store, Truck, ShieldCheck } from 'lucide-react';
+import { LogOut, User, LayoutDashboard, Menu, X, ShoppingBag, Store, Truck, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
 
@@ -68,6 +68,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     className="bg-apple-gray-500 text-white px-6 py-2.5 rounded-full text-[13px] font-bold hover:opacity-90 transition-opacity shadow-sm"
                   >
                     Dashboard
+                  </Link>
+                  <Link
+                    to="/profile"
+                    className={cn(
+                      'inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-bold transition-colors',
+                      location.pathname === '/profile'
+                        ? 'bg-apple-gray-100 text-apple-gray-500'
+                        : 'text-apple-gray-300 hover:bg-apple-gray-50 hover:text-apple-gray-500',
+                    )}
+                    title="Profile"
+                  >
+                    <User className="h-4 w-4" />
+                    Profile
                   </Link>
                   <button 
                     onClick={handleLogout}
