@@ -15,8 +15,39 @@
 }
 
 @layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   body {
     @apply text-apple-gray-500 antialiased selection:bg-blue-500/30;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  a,
+  button {
+    overflow-wrap: anywhere;
   }
 }

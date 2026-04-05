@@ -65,7 +65,7 @@ export default function FloatingProxyTimer() {
   if (!activeProxy) return null;
 
   return (
-    <div className="fixed bottom-10 left-10 z-[100]">
+    <div className="fixed inset-x-4 bottom-4 z-[100] sm:inset-x-auto sm:bottom-10 sm:left-10">
       <motion.div
         initial={{ opacity: 0, y: 50, scale: 0.9 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -75,7 +75,7 @@ export default function FloatingProxyTimer() {
         {/* Glowing Background Effect */}
         <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-[2.5rem] blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
         
-        <div className="relative bg-white p-6 rounded-[2.5rem] shadow-2xl border border-apple-gray-50 flex items-center gap-6 min-w-[320px]">
+        <div className="relative flex w-full min-w-0 items-center gap-4 rounded-[2rem] border border-apple-gray-50 bg-white p-4 shadow-2xl sm:min-w-[320px] sm:gap-6 sm:rounded-[2.5rem] sm:p-6">
           {/* Timer Circle */}
           <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
             <svg className="w-full h-full -rotate-90">
@@ -105,12 +105,12 @@ export default function FloatingProxyTimer() {
             </div>
           </div>
 
-          <div className="flex-grow space-y-1">
+          <div className="min-w-0 flex-grow space-y-1">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-500" />
               <span className="text-[10px] font-black uppercase tracking-widest text-apple-gray-300">Active Proxy</span>
             </div>
-            <h4 className="font-black text-apple-gray-500 leading-tight truncate max-w-[180px]">
+            <h4 className="max-w-full truncate font-black leading-tight text-apple-gray-500 sm:max-w-[180px]">
               {activeProxy.item_description}
             </h4>
             <div className="flex items-center gap-2 text-xs font-bold text-apple-gray-200">

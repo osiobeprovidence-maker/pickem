@@ -26,9 +26,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900 font-sans">
+    <div className="min-h-screen overflow-x-clip bg-stone-50 text-stone-900 font-sans">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white lg:bg-white/90 backdrop-blur-md border-b border-stone-100">
+      <nav className="sticky top-0 z-50 border-b border-stone-100 bg-white shadow-[0_1px_0_rgba(29,29,31,0.04)] lg:bg-white/90 lg:backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
@@ -105,7 +105,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                className="fixed right-0 top-0 bottom-0 w-[85%] max-w-sm bg-white z-50 lg:hidden shadow-2xl p-8 flex flex-col border-l border-stone-100"
+                className="fixed right-0 top-0 bottom-0 z-50 flex w-[85%] max-w-sm flex-col overflow-y-auto border-l border-stone-100 bg-white p-6 shadow-2xl lg:hidden sm:p-8"
               >
                 <div className="flex items-center justify-between mb-12">
                   <span className="text-2xl font-black tracking-tighter text-apple-gray-500">Pick’em</span>
@@ -161,7 +161,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </AnimatePresence>
       </nav>
 
-      <main className="flex-grow">
+      <main className="flex-grow overflow-x-clip">
         <motion.div
           key={location.pathname}
           initial={{ opacity: 0 }}
