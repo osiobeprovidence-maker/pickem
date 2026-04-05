@@ -16,6 +16,9 @@ import BuyAndDeliver from './pages/BuyAndDeliver';
 import Contact from './pages/Contact';
 import Auth from './pages/Auth';
 import CompleteProfile from './pages/CompleteProfile';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import NotFound from './pages/NotFound';
 import CustomerDashboard from './pages/CustomerDashboard';
 import BuyDeliverDashboard from './pages/BuyDeliverDashboard';
 import ProxyDashboard from './pages/ProxyDashboard';
@@ -71,6 +74,8 @@ function AppContent() {
           <Route path="/become-runner" element={<BecomeRunner />} />
           <Route path="/proxy-pickup" element={<ProxyPickup />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/auth" element={<AuthRoute />} />
           <Route path="/complete-profile" element={<CompleteProfileRoute />} />
           <Route
@@ -113,6 +118,7 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
     </Router>

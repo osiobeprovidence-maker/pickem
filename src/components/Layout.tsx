@@ -226,8 +226,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <ul className="space-y-4 text-[14px] text-apple-gray-300 font-medium">
                 <li><Link to="/how-it-works" className="hover:text-blue-600 transition-colors">How it Works</Link></li>
                 <li><Link to="/contact" className="hover:text-blue-600 transition-colors">Contact Us</Link></li>
-                <li className="hover:text-blue-600 cursor-pointer transition-colors">Terms of Service</li>
-                <li className="hover:text-blue-600 cursor-pointer transition-colors">Privacy Policy</li>
+                <li><Link to="/terms" className="hover:text-blue-600 transition-colors">Terms of Service</Link></li>
+                <li><Link to="/privacy" className="hover:text-blue-600 transition-colors">Privacy Policy</Link></li>
               </ul>
             </div>
           </div>
