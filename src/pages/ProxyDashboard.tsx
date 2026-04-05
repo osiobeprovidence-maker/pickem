@@ -72,7 +72,7 @@ export default function ProxyDashboard() {
 
         <Link
           to="/proxy-pickup"
-          className="inline-flex items-center justify-center gap-2 rounded-[1.5rem] bg-brand-500 px-6 py-4 text-base font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 xl:min-w-[220px]"
+          className="inline-flex items-center justify-center gap-2 rounded-[1.5rem] bg-apple-gray-500 px-6 py-4 text-base font-bold text-white shadow-sm shadow-brand-500/10 transition-colors hover:bg-black xl:min-w-[220px]"
         >
           <Plus className="h-5 w-5" /> New Proxy
         </Link>
@@ -126,7 +126,7 @@ export default function ProxyDashboard() {
             </p>
             <Link
               to="/proxy-pickup"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-500 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-apple-gray-500 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-brand-500/10 transition-colors hover:bg-black"
             >
               <Plus className="h-4 w-4" />
               Set Up a Proxy

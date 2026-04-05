@@ -79,7 +79,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const syncFirebaseProfile = async (firebaseUser: FirebaseUser, preferredRole?: UserRole) => {
+  const syncFirebaseProfile = async (
+    firebaseUser: FirebaseUser,
+    preferredRole?: UserRole,
+    lastSignInProvider?: AppAuthProvider,
+  ) => {
     requireFirebaseSetup();
     requireConvexSetup();
 
@@ -92,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email: firebaseUser.email,
       name: firebaseUser.displayName || toDefaultName(firebaseUser.email),
       role: preferredRole,
-      authProvider: getProviderFromFirebaseUser(firebaseUser),
+      authProvider: lastSignInProvider ?? getProviderFromFirebaseUser(firebaseUser),
       hasPassword: hasPasswordProvider(firebaseUser),
       needsPasswordSetup: !hasPasswordProvider(firebaseUser),
     });
@@ -142,7 +146,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     requireFirebaseSetup();
     try {
       const credential = await signInWithEmailAndPassword(auth, email, password);
-      await syncFirebaseProfile(credential.user);
+      await syncFirebaseProfile(credential.user, undefined, 'password');
       localStorage.removeItem(PREFERRED_ROLE_KEY);
     } catch (error) {
       throw new Error(toFirebaseAuthMessage(error, 'signin'));
@@ -156,7 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
       }
       const credential = await createUserWithEmailAndPassword(auth, email, password);
-      await syncFirebaseProfile(credential.user, preferredRole);
+      await syncFirebaseProfile(credential.user, preferredRole, 'password');
       localStorage.removeItem(PREFERRED_ROLE_KEY);
     } catch (error) {
       throw new Error(toFirebaseAuthMessage(error, 'signup'));
@@ -170,7 +174,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
       }
       const credential = await signInWithPopup(auth, googleProvider);
-      await syncFirebaseProfile(credential.user, preferredRole);
+      await syncFirebaseProfile(credential.user, preferredRole, 'google');
       localStorage.removeItem(PREFERRED_ROLE_KEY);
     } catch (error) {
       throw new Error(toFirebaseAuthMessage(error, 'google'));
@@ -184,7 +188,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(PREFERRED_ROLE_KEY, preferredRole);
       }
       const credential = await signInWithPopup(auth, appleProvider);
-      await syncFirebaseProfile(credential.user, preferredRole);
+      await syncFirebaseProfile(credential.user, preferredRole, 'apple');
       localStorage.removeItem(PREFERRED_ROLE_KEY);
     } catch (error) {
       throw new Error(toFirebaseAuthMessage(error, 'apple'));

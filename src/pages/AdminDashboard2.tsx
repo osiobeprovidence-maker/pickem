@@ -231,7 +231,7 @@ export default function AdminDashboard() {
                 className={cn(
                   'inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-black transition-all whitespace-nowrap',
                   activeTab === tab.id
-                    ? 'bg-brand-500 text-white shadow-sm shadow-brand-500/20'
+                    ? 'bg-apple-gray-500 text-white shadow-sm shadow-brand-500/10'
                     : 'bg-apple-gray-50 text-apple-gray-600 hover:bg-apple-gray-100'
                 )}
               >
@@ -627,7 +627,7 @@ export default function AdminDashboard() {
 
               <button
                 type="submit"
-                className="w-full rounded-full bg-brand-500 px-6 py-3 text-sm font-black text-white hover:bg-brand-600 transition-colors"
+                className="w-full rounded-full bg-apple-gray-500 px-6 py-3 text-sm font-black text-white hover:bg-black transition-colors"
               >
                 Send Invite
               </button>

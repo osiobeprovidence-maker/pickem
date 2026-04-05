@@ -107,7 +107,7 @@ export default function Contact() {
                   placeholder="How can we help you?"
                 />
               </div>
-              <button className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-500 py-5 text-lg font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600">
+              <button className="flex w-full items-center justify-center gap-2 rounded-2xl bg-apple-gray-500 py-5 text-lg font-bold text-white shadow-sm shadow-brand-500/10 transition-colors hover:bg-black">
                 Send Message <Send className="h-5 w-5" />
               </button>
             </form>

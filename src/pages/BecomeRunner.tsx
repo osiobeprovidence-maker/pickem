@@ -55,14 +55,14 @@ export default function BecomeRunner() {
             {user?.role === 'runner' ? (
               <Link
                 to="/dashboard"
-                className="mx-auto flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-brand-500 px-8 py-4 text-lg font-semibold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 sm:px-12 sm:py-5 sm:text-xl"
+                className="mx-auto flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-apple-gray-500 px-8 py-4 text-lg font-semibold text-white shadow-sm shadow-brand-500/10 transition-colors hover:bg-black sm:px-12 sm:py-5 sm:text-xl"
               >
                 <LayoutDashboard className="h-6 w-6" /> Runner Dashboard
               </Link>
             ) : (
               <Link
                 to="/auth?role=runner"
-                className="inline-block w-full rounded-full bg-brand-500 px-8 py-4 text-center text-lg font-semibold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 sm:w-auto sm:px-12 sm:py-5 sm:text-xl"
+                className="inline-block w-full rounded-full bg-apple-gray-500 px-8 py-4 text-center text-lg font-semibold text-white shadow-sm shadow-brand-500/10 transition-colors hover:bg-black sm:w-auto sm:px-12 sm:py-5 sm:text-xl"
               >
                 Apply to Run
               </Link>

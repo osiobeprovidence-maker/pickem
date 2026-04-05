@@ -85,13 +85,13 @@ export default function Home() {
           >
             <Link
               to="/request"
-              className="w-full rounded-full bg-brand-500 px-8 py-4 text-center text-base font-semibold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 sm:w-auto sm:px-10 sm:text-lg"
+              className="w-full rounded-full bg-apple-gray-500 px-8 py-4 text-center text-base font-semibold text-white shadow-sm shadow-brand-500/10 transition-colors hover:bg-black sm:w-auto sm:px-10 sm:text-lg"
             >
               Send Something
             </Link>
             <Link
               to="/become-runner"
-              className="w-full rounded-full border-2 border-brand-500 bg-white px-8 py-4 text-center text-base font-semibold text-brand-700 shadow-sm transition-all hover:bg-brand-50 sm:w-auto sm:px-10 sm:text-lg"
+              className="w-full rounded-full border-2 border-apple-gray-500 bg-white px-8 py-4 text-center text-base font-semibold text-apple-gray-500 shadow-sm transition-all hover:bg-brand-50 hover:text-brand-700 sm:w-auto sm:px-10 sm:text-lg"
             >
               Become a Runner
             </Link>
@@ -149,7 +149,7 @@ export default function Home() {
               </p>
               <Link
                 to="/buy-and-deliver"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-500 px-8 py-4 text-lg font-semibold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-apple-gray-500 px-8 py-4 text-lg font-semibold text-white shadow-sm shadow-brand-500/10 transition-colors hover:bg-black sm:w-auto"
               >
                 Explore Buy & Deliver <ArrowRight className="h-5 w-5" />
               </Link>

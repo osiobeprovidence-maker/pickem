@@ -1,12 +1,21 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Shield, Calendar, LogOut, Settings, Bell, CreditCard, Mail } from 'lucide-react';
+import { Shield, Calendar, LogOut, Settings, Bell, CreditCard, Mail, KeyRound } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function Profile() {
   const { user, logout } = useAuth();
 
   if (!user) return null;
+
+  const lastSignInLabel =
+    user.auth_provider === 'google'
+      ? 'Google'
+      : user.auth_provider === 'apple'
+        ? 'Apple'
+        : user.auth_provider === 'password'
+          ? 'Email & Password'
+          : 'Unknown';
 
   const sections = [
     { icon: Bell, label: 'Notifications', description: 'Manage your delivery alerts' },
@@ -46,6 +55,15 @@ export default function Profile() {
                 <Calendar className="h-3 w-3" /> Member Since
               </label>
               <div className="text-base font-medium sm:text-lg">{format(new Date(user.created_at), 'MMMM yyyy')}</div>
+            </div>
+            <div className="space-y-1 md:col-span-2">
+              <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400">
+                <KeyRound className="h-3 w-3" /> Last Sign-In
+              </label>
+              <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700">
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                {lastSignInLabel}
+              </div>
             </div>
           </section>
 

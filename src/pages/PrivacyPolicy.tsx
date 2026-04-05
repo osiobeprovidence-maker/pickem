@@ -77,7 +77,7 @@ export default function PrivacyPolicy() {
           </div>
           <Link
             to="/contact"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-500 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-apple-gray-500 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-brand-500/10 transition-colors hover:bg-black"
           >
             Contact Us
             <ArrowRight className="h-4 w-4" />

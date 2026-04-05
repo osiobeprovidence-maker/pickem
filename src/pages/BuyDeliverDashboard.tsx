@@ -72,7 +72,7 @@ export default function BuyDeliverDashboard() {
 
         <Link
           to="/buy-and-deliver"
-          className="inline-flex items-center justify-center gap-2 rounded-[1.5rem] bg-brand-500 px-6 py-4 text-base font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 xl:min-w-[220px]"
+          className="inline-flex items-center justify-center gap-2 rounded-[1.5rem] bg-apple-gray-500 px-6 py-4 text-base font-bold text-white shadow-sm shadow-brand-500/10 transition-colors hover:bg-black xl:min-w-[220px]"
         >
           <Plus className="h-5 w-5" /> New Order
         </Link>

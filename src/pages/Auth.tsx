@@ -148,7 +148,7 @@ export default function Auth() {
               className={cn(
                 'rounded-full px-5 py-3.5 text-sm font-bold transition-colors',
                 mode === 'signin'
-                  ? 'bg-brand-500 text-white shadow-sm shadow-brand-500/20'
+                  ? 'bg-apple-gray-500 text-white shadow-sm shadow-brand-500/10'
                   : 'bg-apple-gray-50 text-apple-gray-500 hover:bg-brand-50 hover:text-brand-700',
               )}
             >
@@ -160,7 +160,7 @@ export default function Auth() {
               className={cn(
                 'rounded-full px-5 py-3.5 text-sm font-bold transition-colors',
                 mode === 'signup'
-                  ? 'bg-brand-500 text-white shadow-sm shadow-brand-500/20'
+                  ? 'bg-apple-gray-500 text-white shadow-sm shadow-brand-500/10'
                   : 'bg-apple-gray-50 text-apple-gray-500 hover:bg-brand-50 hover:text-brand-700',
               )}
             >
@@ -206,7 +206,7 @@ export default function Auth() {
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-500 py-5 text-lg font-bold text-white shadow-lg shadow-brand-500/20 transition-colors hover:bg-brand-600 disabled:opacity-50"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-apple-gray-500 py-5 text-lg font-bold text-white shadow-lg shadow-brand-500/10 transition-colors hover:bg-black disabled:opacity-50"
             >
               {isLoading ? 'Please wait...' : mode === 'signin' ? 'Continue' : 'Create account'}
               {!isLoading && <ArrowRight className="h-5 w-5" />}

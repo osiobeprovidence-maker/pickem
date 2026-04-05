@@ -170,7 +170,7 @@ export default function RunnerDashboard() {
                       <div className="text-2xl font-bold text-emerald-600">N{job.fee}</div>
                       <button
                         onClick={() => handleAccept(job.id)}
-                        className="rounded-xl bg-brand-500 px-8 py-3 font-bold text-white transition-colors hover:bg-brand-600"
+                        className="rounded-xl bg-apple-gray-500 px-8 py-3 font-bold text-white transition-colors hover:bg-black"
                       >
                         Accept Job
                       </button>

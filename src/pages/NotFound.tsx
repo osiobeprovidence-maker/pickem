@@ -18,7 +18,7 @@ export default function NotFound() {
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             to="/"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-500 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 sm:w-auto"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-apple-gray-500 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-brand-500/10 transition-colors hover:bg-black sm:w-auto"
           >
             <Home className="h-4 w-4" />
             Go Home

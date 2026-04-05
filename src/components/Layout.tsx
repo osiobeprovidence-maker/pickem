@@ -65,7 +65,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <div className="flex items-center gap-4">
                   <Link
                     to="/dashboard"
-                    className="bg-brand-500 text-white px-6 py-2.5 rounded-full text-[13px] font-bold hover:bg-brand-600 transition-colors shadow-sm shadow-brand-500/20"
+                    className="bg-apple-gray-500 text-white px-6 py-2.5 rounded-full text-[13px] font-bold hover:bg-black transition-colors shadow-sm shadow-brand-500/10"
                   >
                     Dashboard
                   </Link>
@@ -93,7 +93,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               ) : (
                 <Link
                   to="/auth"
-                  className="bg-brand-500 text-white px-7 py-2.5 rounded-full text-[13px] font-bold hover:bg-brand-600 transition-colors shadow-sm shadow-brand-500/20"
+                  className="bg-apple-gray-500 text-white px-7 py-2.5 rounded-full text-[13px] font-bold hover:bg-black transition-colors shadow-sm shadow-brand-500/10"
                 >
                   Get Started
                 </Link>
@@ -149,7 +149,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       className={cn(
                         "flex items-center gap-4 px-6 py-5 rounded-2xl text-lg font-bold transition-all",
                         location.pathname === item.path 
-                          ? "bg-brand-500 text-white shadow-lg shadow-brand-500/20" 
+                          ? "bg-apple-gray-500 text-white shadow-lg shadow-brand-500/10" 
                           : "text-apple-gray-500 hover:bg-brand-50 hover:text-brand-700"
                       )}
                     >
@@ -172,7 +172,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <Link
                       to="/auth"
                       onClick={() => setIsMenuOpen(false)}
-                      className="block w-full text-center bg-brand-500 text-white py-5 rounded-2xl font-bold text-lg shadow-lg shadow-brand-500/20 hover:bg-brand-600 transition-colors"
+                      className="block w-full text-center bg-apple-gray-500 text-white py-5 rounded-2xl font-bold text-lg shadow-lg shadow-brand-500/10 hover:bg-black transition-colors"
                     >
                       Get Started
                     </Link>
