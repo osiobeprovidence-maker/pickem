@@ -1,8 +1,6 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { motion } from 'motion/react';
-import { User, Mail, Shield, Calendar, LogOut, Settings, Bell, CreditCard } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { Shield, Calendar, LogOut, Settings, Bell, CreditCard, Mail } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function Profile() {
@@ -17,40 +15,37 @@ export default function Profile() {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto py-8">
-      <div className="bg-white rounded-[2.5rem] border border-stone-100 shadow-sm overflow-hidden">
-        {/* Header */}
-        <div className="bg-stone-900 p-10 text-white relative overflow-hidden">
-          <div className="relative z-10 flex items-center gap-6">
-            <div className="w-24 h-24 bg-emerald-600 rounded-3xl flex items-center justify-center text-4xl font-bold shadow-xl">
+    <div className="mx-auto max-w-2xl overflow-x-clip py-6 sm:py-8">
+      <div className="overflow-hidden rounded-[2.5rem] border border-stone-100 bg-white shadow-sm">
+        <div className="relative overflow-hidden bg-stone-900 p-6 text-white sm:p-10">
+          <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-emerald-600 text-3xl font-bold shadow-xl sm:h-24 sm:w-24 sm:text-4xl">
               {user.name[0].toUpperCase()}
             </div>
-            <div>
-              <h1 className="text-3xl font-bold mb-1">{user.name}</h1>
-              <div className="flex items-center gap-2 text-stone-400 text-sm">
-                <Shield className="w-4 h-4" />
+            <div className="min-w-0">
+              <h1 className="break-words text-3xl font-bold sm:text-4xl">{user.name}</h1>
+              <div className="mt-1 flex items-center gap-2 text-sm text-stone-400">
+                <Shield className="h-4 w-4 shrink-0" />
                 <span className="capitalize">{user.role} Account</span>
               </div>
             </div>
           </div>
-          {/* Abstract background */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute right-0 top-0 h-64 w-64 -translate-y-1/2 translate-x-1/2 rounded-full bg-emerald-600/20 blur-3xl" />
         </div>
 
-        {/* Content */}
-        <div className="p-10 space-y-10">
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-8 p-6 sm:space-y-10 sm:p-10">
+          <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="space-y-1">
-              <label className="text-xs font-bold uppercase tracking-widest text-stone-400 flex items-center gap-2">
-                <Mail className="w-3 h-3" /> Email Address
+              <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400">
+                <Mail className="h-3 w-3" /> Email Address
               </label>
-              <div className="text-lg font-medium">{user.email}</div>
+              <div className="break-all text-base font-medium sm:text-lg">{user.email}</div>
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-bold uppercase tracking-widest text-stone-400 flex items-center gap-2">
-                <Calendar className="w-3 h-3" /> Member Since
+              <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400">
+                <Calendar className="h-3 w-3" /> Member Since
               </label>
-              <div className="text-lg font-medium">{format(new Date(user.created_at), 'MMMM yyyy')}</div>
+              <div className="text-base font-medium sm:text-lg">{format(new Date(user.created_at), 'MMMM yyyy')}</div>
             </div>
           </section>
 
@@ -59,34 +54,34 @@ export default function Profile() {
           <section className="space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-stone-400">Preferences</h2>
             <div className="grid grid-cols-1 gap-3">
-              {sections.map((section, i) => (
+              {sections.map((section) => (
                 <button
-                  key={i}
-                  className="flex items-center justify-between p-4 rounded-2xl border border-stone-100 hover:bg-stone-50 transition-colors text-left group"
+                  key={section.label}
+                  className="group flex flex-col gap-4 rounded-2xl border border-stone-100 p-4 text-left transition-colors hover:bg-stone-50 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-stone-50 flex items-center justify-center text-stone-400 group-hover:text-emerald-600 transition-colors">
-                      <section.icon className="w-5 h-5" />
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-stone-50 text-stone-400 transition-colors group-hover:text-emerald-600">
+                      <section.icon className="h-5 w-5" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <div className="font-bold text-stone-900">{section.label}</div>
                       <div className="text-xs text-stone-500">{section.description}</div>
                     </div>
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Settings className="w-4 h-4 text-stone-400" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-50 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
+                    <Settings className="h-4 w-4 text-stone-400" />
                   </div>
                 </button>
               ))}
             </div>
           </section>
 
-          <div className="pt-6">
+          <div className="pt-2 sm:pt-6">
             <button
               onClick={logout}
-              className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-red-50 text-red-600 font-bold hover:bg-red-100 transition-colors"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-red-50 p-4 font-bold text-red-600 transition-colors hover:bg-red-100"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="h-5 w-5" />
               Sign Out
             </button>
           </div>
@@ -94,8 +89,9 @@ export default function Profile() {
       </div>
 
       <div className="mt-8 text-center">
-        <p className="text-stone-400 text-xs">
-          Pick’em Logistics Platform v1.0.0<br />
+        <p className="text-xs text-stone-400">
+          Pick&apos;em Logistics Platform v1.0.0
+          <br />
           Campus Edition
         </p>
       </div>

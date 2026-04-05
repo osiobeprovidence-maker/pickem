@@ -3,8 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import { Delivery, DeliveryStatus } from '../types';
 import { motion } from 'motion/react';
-import { Package, MapPin, CheckCircle2, Clock, Search, Navigation, Phone } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { Package, MapPin, Clock, Search, Navigation, Phone } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function RunnerDashboard() {
@@ -31,8 +30,8 @@ export default function RunnerDashboard() {
     try {
       await api.updateDeliveryStatus(id, 'assigned', user.id);
       fetchDeliveries();
-    } catch (e) {
-      alert("Failed to accept delivery. It might have been taken.");
+    } catch (error) {
+      alert('Failed to accept delivery. It might have been taken.');
     }
   };
 
@@ -46,78 +45,79 @@ export default function RunnerDashboard() {
     fetchDeliveries();
   };
 
-  const availableJobs = deliveries.filter(d => d.status === 'requested');
-  const myJobs = deliveries.filter(d => d.runner_id === user?.id && d.status !== 'delivered');
-  const completedJobs = deliveries.filter(d => d.runner_id === user?.id && d.status === 'delivered');
+  const availableJobs = deliveries.filter((delivery) => delivery.status === 'requested');
+  const myJobs = deliveries.filter((delivery) => delivery.runner_id === user?.id && delivery.status !== 'delivered');
+  const completedJobs = deliveries.filter((delivery) => delivery.runner_id === user?.id && delivery.status === 'delivered');
 
   return (
-    <div className="space-y-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-8 overflow-x-clip md:space-y-12">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-3xl font-bold">Runner Dashboard</h1>
           <p className="text-stone-500">Find jobs and manage your active deliveries.</p>
         </div>
-        <div className="bg-emerald-600 text-white px-6 py-3 rounded-2xl">
-          <div className="text-xs uppercase font-bold opacity-80">Total Earnings</div>
-          <div className="text-2xl font-bold">₦{completedJobs.reduce((acc, curr) => acc + curr.fee * 0.8, 0).toFixed(2)}</div>
+        <div className="w-full rounded-2xl bg-emerald-600 px-6 py-3 text-white sm:w-auto">
+          <div className="text-xs font-bold uppercase opacity-80">Total Earnings</div>
+          <div className="break-words text-2xl font-bold">
+            N{completedJobs.reduce((accumulator, current) => accumulator + current.fee * 0.8, 0).toFixed(2)}
+          </div>
         </div>
       </div>
 
-      {/* My Active Jobs */}
       {myJobs.length > 0 && (
         <section className="space-y-6">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <Clock className="w-5 h-5 text-blue-600" /> Your Active Jobs
+          <h2 className="flex items-center gap-2 text-xl font-bold">
+            <Clock className="h-5 w-5 text-blue-600" /> Your Active Jobs
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
             {myJobs.map((job) => (
               <motion.div
                 key={job.id}
                 layoutId={job.id}
-                className="bg-white p-6 rounded-3xl border-2 border-blue-100 shadow-sm"
+                className="rounded-3xl border-2 border-blue-100 bg-white p-6 shadow-sm"
               >
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase">
+                <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
+                    <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase text-blue-700">
                       {job.status.replace('_', ' ')}
                     </span>
-                    <h3 className="text-xl font-bold mt-2">{job.item_description}</h3>
+                    <h3 className="mt-2 break-words text-xl font-bold">{job.item_description}</h3>
                   </div>
-                  <div className="text-2xl font-bold text-emerald-600">₦{job.fee}</div>
+                  <div className="shrink-0 text-2xl font-bold text-emerald-600">N{job.fee}</div>
                 </div>
 
-                <div className="space-y-4 mb-8">
+                <div className="mb-8 space-y-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center shrink-0">
-                      <MapPin className="w-4 h-4 text-stone-400" />
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-stone-50">
+                      <MapPin className="h-4 w-4 text-stone-400" />
                     </div>
-                    <div>
-                      <div className="text-xs text-stone-400 uppercase font-bold">Pickup</div>
-                      <div className="font-medium">{job.pickup_location}</div>
+                    <div className="min-w-0">
+                      <div className="text-xs font-bold uppercase text-stone-400">Pickup</div>
+                      <div className="break-words font-medium">{job.pickup_location}</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center shrink-0">
-                      <Navigation className="w-4 h-4 text-stone-400" />
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-stone-50">
+                      <Navigation className="h-4 w-4 text-stone-400" />
                     </div>
-                    <div>
-                      <div className="text-xs text-stone-400 uppercase font-bold">Dropoff</div>
-                      <div className="font-medium">{job.drop_location}</div>
+                    <div className="min-w-0">
+                      <div className="text-xs font-bold uppercase text-stone-400">Dropoff</div>
+                      <div className="break-words font-medium">{job.drop_location}</div>
                     </div>
                   </div>
                   {job.contact_details && (
-                    <div className="flex items-center gap-3 p-3 bg-stone-50 rounded-xl">
-                      <Phone className="w-4 h-4 text-stone-400" />
-                      <span className="text-sm">{job.contact_details}</span>
+                    <div className="flex flex-col gap-2 rounded-xl bg-stone-50 p-3 sm:flex-row sm:items-center">
+                      <Phone className="h-4 w-4 shrink-0 text-stone-400" />
+                      <span className="break-all text-sm">{job.contact_details}</span>
                     </div>
                   )}
                 </div>
 
                 <button
                   onClick={() => handleUpdateStatus(job.id, job.status)}
-                  className="w-full bg-emerald-600 text-white py-4 rounded-2xl font-bold hover:bg-emerald-700 transition-colors"
+                  className="w-full rounded-2xl bg-emerald-600 py-4 font-bold text-white transition-colors hover:bg-emerald-700"
                 >
-                  {job.status === 'assigned' ? "Mark as Picked Up" : "Mark as Delivered"}
+                  {job.status === 'assigned' ? 'Mark as Picked Up' : 'Mark as Delivered'}
                 </button>
               </motion.div>
             ))}
@@ -125,53 +125,52 @@ export default function RunnerDashboard() {
         </section>
       )}
 
-      {/* Available Jobs */}
       <section className="space-y-6">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-          <Package className="w-5 h-5 text-emerald-600" /> Available Jobs
+        <h2 className="flex items-center gap-2 text-xl font-bold">
+          <Package className="h-5 w-5 text-emerald-600" /> Available Jobs
         </h2>
-        <div className="bg-white rounded-3xl border border-stone-100 shadow-sm overflow-hidden">
+        <div className="overflow-hidden rounded-3xl border border-stone-100 bg-white shadow-sm">
           {isLoading ? (
             <div className="p-12 text-center text-stone-400">Searching for jobs...</div>
           ) : availableJobs.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-8 h-8 text-stone-300" />
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-stone-50">
+                <Search className="h-8 w-8 text-stone-300" />
               </div>
-              <h3 className="text-lg font-bold mb-2">No jobs available right now</h3>
-              <p className="text-stone-500">We'll notify you when new requests come in.</p>
+              <h3 className="mb-2 text-lg font-bold">No jobs available right now</h3>
+              <p className="text-stone-500">We&apos;ll notify you when new requests come in.</p>
             </div>
           ) : (
             <div className="divide-y divide-stone-100">
               {availableJobs.map((job) => (
-                <div key={job.id} className="p-6 hover:bg-stone-50 transition-colors">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold uppercase">
+                <div key={job.id} className="p-6 transition-colors hover:bg-stone-50">
+                  <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-2 flex flex-wrap items-center gap-2">
+                        <span className="rounded bg-stone-100 px-2 py-0.5 text-[10px] font-bold uppercase text-stone-600">
                           {job.type.replace('_', ' ')}
                         </span>
                         <span className="text-xs text-stone-400">
                           {format(new Date(job.created_at), 'h:mm a')}
                         </span>
                       </div>
-                      <h3 className="text-lg font-bold mb-3">{job.item_description}</h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                        <div className="flex items-center gap-2 text-stone-600">
-                          <MapPin className="w-4 h-4 text-emerald-600" />
-                          <span className="font-medium">{job.pickup_location}</span>
+                      <h3 className="mb-3 break-words text-lg font-bold">{job.item_description}</h3>
+                      <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 sm:gap-4">
+                        <div className="flex items-start gap-2 text-stone-600">
+                          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                          <span className="break-words font-medium">{job.pickup_location}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-stone-600">
-                          <Navigation className="w-4 h-4 text-blue-600" />
-                          <span className="font-medium">{job.drop_location}</span>
+                        <div className="flex items-start gap-2 text-stone-600">
+                          <Navigation className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
+                          <span className="break-words font-medium">{job.drop_location}</span>
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between md:flex-col md:items-end gap-4">
-                      <div className="text-2xl font-bold text-emerald-600">₦{job.fee}</div>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between md:items-end">
+                      <div className="text-2xl font-bold text-emerald-600">N{job.fee}</div>
                       <button
                         onClick={() => handleAccept(job.id)}
-                        className="bg-stone-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-stone-800 transition-colors"
+                        className="rounded-xl bg-stone-900 px-8 py-3 font-bold text-white transition-colors hover:bg-stone-800"
                       >
                         Accept Job
                       </button>

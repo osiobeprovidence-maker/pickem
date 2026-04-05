@@ -10,6 +10,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const isDashboardSurface =
+    location.pathname.startsWith('/dashboard') ||
+    location.pathname === '/request' ||
+    location.pathname === '/profile';
 
   const handleLogout = () => {
     logout();
@@ -28,7 +32,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen overflow-x-clip bg-stone-50 text-stone-900 font-sans">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b border-stone-100 bg-white shadow-[0_1px_0_rgba(29,29,31,0.04)] lg:bg-white/90 lg:backdrop-blur-md">
+      <nav
+        className={cn(
+          'sticky top-0 z-50 border-b border-stone-100 bg-white shadow-[0_1px_0_rgba(29,29,31,0.04)]',
+          isDashboardSurface ? 'backdrop-blur-none' : 'lg:bg-white/90 lg:backdrop-blur-md',
+        )}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
