@@ -67,18 +67,18 @@ export default function RunnerDashboard() {
       {myJobs.length > 0 && (
         <section className="space-y-6">
           <h2 className="flex items-center gap-2 text-xl font-bold">
-            <Clock className="h-5 w-5 text-blue-600" /> Your Active Jobs
+            <Clock className="h-5 w-5 text-brand-600" /> Your Active Jobs
           </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
             {myJobs.map((job) => (
               <motion.div
                 key={job.id}
                 layoutId={job.id}
-                className="rounded-3xl border-2 border-blue-100 bg-white p-6 shadow-sm"
+                className="rounded-3xl border-2 border-brand-100 bg-white p-6 shadow-sm"
               >
                 <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
-                    <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase text-blue-700">
+                    <span className="rounded-full bg-brand-100 px-3 py-1 text-xs font-bold uppercase text-brand-700">
                       {job.status.replace('_', ' ')}
                     </span>
                     <h3 className="mt-2 break-words text-xl font-bold">{job.item_description}</h3>
@@ -161,7 +161,7 @@ export default function RunnerDashboard() {
                           <span className="break-words font-medium">{job.pickup_location}</span>
                         </div>
                         <div className="flex items-start gap-2 text-stone-600">
-                          <Navigation className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
+                          <Navigation className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
                           <span className="break-words font-medium">{job.drop_location}</span>
                         </div>
                       </div>
@@ -170,7 +170,7 @@ export default function RunnerDashboard() {
                       <div className="text-2xl font-bold text-emerald-600">N{job.fee}</div>
                       <button
                         onClick={() => handleAccept(job.id)}
-                        className="rounded-xl bg-stone-900 px-8 py-3 font-bold text-white transition-colors hover:bg-stone-800"
+                        className="rounded-xl bg-brand-500 px-8 py-3 font-bold text-white transition-colors hover:bg-brand-600"
                       >
                         Accept Job
                       </button>

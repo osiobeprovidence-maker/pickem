@@ -58,7 +58,7 @@ export default function Storefront() {
   }
 
   const contactCards = [
-    business.email ? { id: 'email', icon: Mail, value: business.email, accent: 'text-blue-500' } : null,
+    business.email ? { id: 'email', icon: Mail, value: business.email, accent: 'text-brand-600' } : null,
     business.phone ? { id: 'phone', icon: Phone, value: business.phone, accent: 'text-emerald-500' } : null,
     business.whatsapp
       ? { id: 'whatsapp', icon: MessageCircle, value: business.whatsapp, accent: 'text-green-500' }

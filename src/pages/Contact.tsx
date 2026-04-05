@@ -10,7 +10,7 @@ export default function Contact() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 inline-block rounded-full bg-apple-gray-50 px-4 py-1.5 text-[13px] font-semibold text-apple-gray-300"
+            className="mb-6 inline-block rounded-full bg-brand-50 px-4 py-1.5 text-[13px] font-semibold text-brand-700"
           >
             Support
           </motion.div>
@@ -51,12 +51,12 @@ export default function Contact() {
                   transition={{ delay: i * 0.1 }}
                   className="space-y-4 rounded-[2rem] border border-apple-gray-100 bg-white p-6 shadow-sm sm:p-8"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-apple-gray-50">
-                    <item.icon className="h-6 w-6 text-apple-gray-500" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50">
+                    <item.icon className="h-6 w-6 text-brand-600" />
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-apple-gray-500">{item.title}</h3>
-                    <p className="break-words font-bold text-blue-600">{item.detail}</p>
+                    <p className="break-words font-bold text-brand-700">{item.detail}</p>
                     <p className="mt-2 text-sm font-medium text-apple-gray-300">{item.desc}</p>
                   </div>
                 </motion.div>
@@ -77,7 +77,7 @@ export default function Contact() {
                   <label className="ml-2 text-[13px] font-semibold text-apple-gray-300">Full Name</label>
                   <input
                     type="text"
-                    className="w-full rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-brand-500"
                     placeholder="John Doe"
                   />
                 </div>
@@ -85,14 +85,14 @@ export default function Contact() {
                   <label className="ml-2 text-[13px] font-semibold text-apple-gray-300">Email Address</label>
                   <input
                     type="email"
-                    className="w-full rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-brand-500"
                     placeholder="john@example.com"
                   />
                 </div>
               </div>
               <div className="space-y-2">
                 <label className="ml-2 text-[13px] font-semibold text-apple-gray-300">Subject</label>
-                <select className="w-full appearance-none rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select className="w-full appearance-none rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-brand-500">
                   <option>General Inquiry</option>
                   <option>Business Partnership</option>
                   <option>Runner Application</option>
@@ -103,11 +103,11 @@ export default function Contact() {
                 <label className="ml-2 text-[13px] font-semibold text-apple-gray-300">Message</label>
                 <textarea
                   rows={4}
-                  className="w-full rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-brand-500"
                   placeholder="How can we help you?"
                 />
               </div>
-              <button className="flex w-full items-center justify-center gap-2 rounded-2xl bg-apple-gray-500 py-5 text-lg font-bold text-white transition-opacity hover:opacity-90">
+              <button className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-500 py-5 text-lg font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600">
                 Send Message <Send className="h-5 w-5" />
               </button>
             </form>

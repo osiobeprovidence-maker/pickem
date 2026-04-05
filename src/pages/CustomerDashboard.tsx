@@ -29,14 +29,14 @@ export default function CustomerDashboard() {
       value: activeDeliveries,
       description: 'Jobs currently in progress across campus.',
       icon: Clock,
-      color: 'bg-blue-50 text-blue-600',
+      color: 'bg-brand-50 text-brand-600',
     },
     {
       label: 'Completed Orders',
       value: completedDeliveries,
       description: 'Deliveries you have successfully finished.',
       icon: CheckCircle2,
-      color: 'bg-emerald-50 text-emerald-600',
+      color: 'bg-apple-gray-50 text-apple-gray-500',
     },
   ];
 
@@ -46,21 +46,21 @@ export default function CustomerDashboard() {
       description: 'Send or receive a package across campus.',
       path: '/request',
       icon: Package,
-      color: 'bg-blue-50 text-blue-600',
+      color: 'bg-brand-50 text-brand-600',
     },
     {
       title: 'Buy & Deliver',
       description: 'Start shopping and get items delivered.',
       path: '/buy-and-deliver',
       icon: ShoppingBag,
-      color: 'bg-emerald-50 text-emerald-600',
+      color: 'bg-apple-gray-50 text-apple-gray-500',
     },
     {
       title: 'Proxy Pickup',
       description: 'Set up a secure proxy for your items.',
       path: '/proxy-pickup',
       icon: ShieldCheck,
-      color: 'bg-indigo-50 text-indigo-600',
+      color: 'bg-brand-100 text-brand-700',
     },
   ];
 
@@ -94,7 +94,7 @@ export default function CustomerDashboard() {
 
         <Link
           to="/request"
-          className="inline-flex items-center justify-center gap-2 rounded-[1.5rem] bg-apple-gray-500 px-6 py-4 text-base font-bold text-white shadow-sm transition-opacity hover:opacity-90 xl:min-w-[220px]"
+          className="inline-flex items-center justify-center gap-2 rounded-[1.5rem] bg-brand-500 px-6 py-4 text-base font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 xl:min-w-[220px]"
         >
           <Plus className="h-5 w-5" /> New Request
         </Link>
@@ -166,7 +166,7 @@ export default function CustomerDashboard() {
               <input
                 type="text"
                 placeholder="Search deliveries..."
-                className="w-full rounded-full border-none bg-apple-gray-50 py-2.5 pl-9 pr-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-600"
+                className="w-full rounded-full border-none bg-apple-gray-50 py-2.5 pl-9 pr-4 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
           </div>
@@ -202,7 +202,7 @@ export default function CustomerDashboard() {
                     <div
                       className={cn(
                         'flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl',
-                        delivery.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600',
+                        delivery.status === 'delivered' ? 'bg-apple-gray-50 text-apple-gray-500' : 'bg-brand-50 text-brand-600',
                       )}
                     >
                       <Package className="h-7 w-7" />
@@ -216,8 +216,8 @@ export default function CustomerDashboard() {
                           className={cn(
                             'rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider',
                             delivery.status === 'delivered'
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-blue-100 text-blue-700',
+                              ? 'bg-apple-gray-100 text-apple-gray-500'
+                              : 'bg-brand-100 text-brand-700',
                           )}
                         >
                           {delivery.status}

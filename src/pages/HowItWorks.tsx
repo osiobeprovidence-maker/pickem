@@ -32,7 +32,7 @@ export default function HowItWorks() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 inline-block rounded-full bg-apple-gray-50 px-4 py-1.5 text-[13px] font-semibold text-apple-gray-300"
+            className="mb-6 inline-block rounded-full bg-brand-50 px-4 py-1.5 text-[13px] font-semibold text-brand-700"
           >
             The Process
           </motion.div>
@@ -65,8 +65,8 @@ export default function HowItWorks() {
             className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-10 sm:gap-16 md:gap-20`}
           >
             <div className="flex-1 space-y-6 text-center md:space-y-8 md:text-left">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-apple-gray-50 md:mx-0">
-                <step.icon className="h-8 w-8 text-apple-gray-500" />
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-50 md:mx-0">
+                <step.icon className="h-8 w-8 text-brand-600" />
               </div>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{step.title}</h2>
               <p className="text-lg font-medium leading-relaxed text-apple-gray-300 sm:text-xl">{step.description}</p>
@@ -84,11 +84,11 @@ export default function HowItWorks() {
       </section>
 
       <section className="px-5 py-20 sm:px-6 sm:py-32">
-        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] bg-apple-gray-500 p-8 text-center text-white sm:rounded-[3rem] sm:p-12 md:p-24">
+        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] bg-brand-500 p-8 text-center text-white sm:rounded-[3rem] sm:p-12 md:p-24">
           <h2 className="relative z-10 mb-8 text-3xl font-bold tracking-tight sm:text-4xl md:text-6xl">Ready to try it out?</h2>
           <Link
             to="/auth"
-            className="relative z-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-bold text-apple-gray-500 transition-colors hover:bg-apple-gray-50 sm:w-auto sm:px-10"
+            className="relative z-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-bold text-brand-700 transition-colors hover:bg-brand-50 sm:w-auto sm:px-10"
           >
             Get Started Now <ArrowRight className="h-5 w-5" />
           </Link>

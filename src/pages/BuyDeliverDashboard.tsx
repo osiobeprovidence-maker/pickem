@@ -31,14 +31,14 @@ export default function BuyDeliverDashboard() {
       value: activeOrders,
       description: 'Shopping jobs currently being handled by runners.',
       icon: ShoppingCart,
-      color: 'bg-blue-50 text-blue-600',
+      color: 'bg-brand-50 text-brand-600',
     },
     {
       label: 'Completed Orders',
       value: completedOrders,
       description: 'Shopping requests that have already been fulfilled.',
       icon: CheckCircle2,
-      color: 'bg-emerald-50 text-emerald-600',
+      color: 'bg-apple-gray-50 text-apple-gray-500',
     },
   ];
 
@@ -72,7 +72,7 @@ export default function BuyDeliverDashboard() {
 
         <Link
           to="/buy-and-deliver"
-          className="inline-flex items-center justify-center gap-2 rounded-[1.5rem] bg-apple-gray-500 px-6 py-4 text-base font-bold text-white shadow-sm transition-opacity hover:opacity-90 xl:min-w-[220px]"
+          className="inline-flex items-center justify-center gap-2 rounded-[1.5rem] bg-brand-500 px-6 py-4 text-base font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 xl:min-w-[220px]"
         >
           <Plus className="h-5 w-5" /> New Order
         </Link>
@@ -147,8 +147,8 @@ export default function BuyDeliverDashboard() {
                           className={cn(
                             'rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider',
                             delivery.status === 'delivered'
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-blue-100 text-blue-700',
+                              ? 'bg-apple-gray-100 text-apple-gray-500'
+                              : 'bg-brand-100 text-brand-700',
                           )}
                         >
                           {delivery.status}
@@ -175,7 +175,7 @@ export default function BuyDeliverDashboard() {
 
                   <div className="flex flex-col gap-3 lg:items-end">
                     <div className="text-2xl font-bold text-apple-gray-500">N{delivery.fee}</div>
-                    <button className="inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:underline">
+                    <button className="inline-flex items-center gap-2 text-sm font-bold text-brand-700 hover:underline">
                       View Details
                       <ArrowRight className="h-4 w-4" />
                     </button>

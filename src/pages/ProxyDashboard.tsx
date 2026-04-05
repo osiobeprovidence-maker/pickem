@@ -31,14 +31,14 @@ export default function ProxyDashboard() {
       value: activeProxies,
       description: 'Pickup codes that are still waiting to be completed.',
       icon: Key,
-      color: 'bg-indigo-50 text-indigo-600',
+      color: 'bg-brand-50 text-brand-600',
     },
     {
       label: 'Completed Pickups',
       value: completedProxies,
       description: 'Proxy deliveries already collected and confirmed.',
       icon: CheckCircle2,
-      color: 'bg-emerald-50 text-emerald-600',
+      color: 'bg-apple-gray-50 text-apple-gray-500',
     },
   ];
 
@@ -72,7 +72,7 @@ export default function ProxyDashboard() {
 
         <Link
           to="/proxy-pickup"
-          className="inline-flex items-center justify-center gap-2 rounded-[1.5rem] bg-apple-gray-500 px-6 py-4 text-base font-bold text-white shadow-sm transition-opacity hover:opacity-90 xl:min-w-[220px]"
+          className="inline-flex items-center justify-center gap-2 rounded-[1.5rem] bg-brand-500 px-6 py-4 text-base font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 xl:min-w-[220px]"
         >
           <Plus className="h-5 w-5" /> New Proxy
         </Link>
@@ -126,7 +126,7 @@ export default function ProxyDashboard() {
             </p>
             <Link
               to="/proxy-pickup"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-apple-gray-500 px-6 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-500 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600"
             >
               <Plus className="h-4 w-4" />
               Set Up a Proxy
@@ -147,8 +147,8 @@ export default function ProxyDashboard() {
                           className={cn(
                             'rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider',
                             delivery.status === 'delivered'
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-indigo-100 text-indigo-700',
+                              ? 'bg-apple-gray-100 text-apple-gray-500'
+                              : 'bg-brand-100 text-brand-700',
                           )}
                         >
                           {delivery.status}

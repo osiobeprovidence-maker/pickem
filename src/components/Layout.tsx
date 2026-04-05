@@ -44,7 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link to="/" className="flex items-center group">
-                <span className="text-2xl font-black tracking-tighter text-apple-gray-500 group-hover:text-blue-600 transition-colors">
+                <span className="text-2xl font-black tracking-tighter text-apple-gray-500 group-hover:text-brand-600 transition-colors">
                   Pick’em
                 </span>
               </Link>
@@ -52,20 +52,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             {/* Desktop Nav - Centered */}
             <div className="hidden lg:flex items-center gap-10">
-              <Link to="/buy-and-deliver" className="text-[13px] font-bold text-apple-gray-300 hover:text-apple-gray-500 transition-colors">Buy & Deliver</Link>
-              <Link to="/businesses" className="text-[13px] font-bold text-apple-gray-300 hover:text-apple-gray-500 transition-colors">For Businesses</Link>
-              <Link to="/become-runner" className="text-[13px] font-bold text-apple-gray-300 hover:text-apple-gray-500 transition-colors">Become a Runner</Link>
-              <Link to="/proxy-pickup" className="text-[13px] font-bold text-apple-gray-300 hover:text-apple-gray-500 transition-colors">Proxy Pickup</Link>
+              <Link to="/buy-and-deliver" className="text-[13px] font-bold text-apple-gray-300 hover:text-brand-600 transition-colors">Buy & Deliver</Link>
+              <Link to="/businesses" className="text-[13px] font-bold text-apple-gray-300 hover:text-brand-600 transition-colors">For Businesses</Link>
+              <Link to="/become-runner" className="text-[13px] font-bold text-apple-gray-300 hover:text-brand-600 transition-colors">Become a Runner</Link>
+              <Link to="/proxy-pickup" className="text-[13px] font-bold text-apple-gray-300 hover:text-brand-600 transition-colors">Proxy Pickup</Link>
             </div>
 
             {/* Right Side - Actions */}
             <div className="hidden md:flex items-center gap-6">
-              <Link to="/contact" className="text-[13px] font-bold text-apple-gray-300 hover:text-apple-gray-500 transition-colors">Contact</Link>
+              <Link to="/contact" className="text-[13px] font-bold text-apple-gray-300 hover:text-brand-600 transition-colors">Contact</Link>
               {user ? (
                 <div className="flex items-center gap-4">
                   <Link
                     to="/dashboard"
-                    className="bg-apple-gray-500 text-white px-6 py-2.5 rounded-full text-[13px] font-bold hover:opacity-90 transition-opacity shadow-sm"
+                    className="bg-brand-500 text-white px-6 py-2.5 rounded-full text-[13px] font-bold hover:bg-brand-600 transition-colors shadow-sm shadow-brand-500/20"
                   >
                     Dashboard
                   </Link>
@@ -74,8 +74,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     className={cn(
                       'inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-bold transition-colors',
                       location.pathname === '/profile'
-                        ? 'bg-apple-gray-100 text-apple-gray-500'
-                        : 'text-apple-gray-300 hover:bg-apple-gray-50 hover:text-apple-gray-500',
+                        ? 'bg-brand-50 text-brand-700'
+                        : 'text-apple-gray-300 hover:bg-brand-50 hover:text-brand-700',
                     )}
                     title="Profile"
                   >
@@ -93,7 +93,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               ) : (
                 <Link
                   to="/auth"
-                  className="bg-apple-gray-500 text-white px-7 py-2.5 rounded-full text-[13px] font-bold hover:opacity-90 transition-opacity shadow-sm"
+                  className="bg-brand-500 text-white px-7 py-2.5 rounded-full text-[13px] font-bold hover:bg-brand-600 transition-colors shadow-sm shadow-brand-500/20"
                 >
                   Get Started
                 </Link>
@@ -149,8 +149,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       className={cn(
                         "flex items-center gap-4 px-6 py-5 rounded-2xl text-lg font-bold transition-all",
                         location.pathname === item.path 
-                          ? "bg-apple-gray-500 text-white shadow-lg shadow-apple-gray-500/20" 
-                          : "text-apple-gray-500 hover:bg-apple-gray-50"
+                          ? "bg-brand-500 text-white shadow-lg shadow-brand-500/20" 
+                          : "text-apple-gray-500 hover:bg-brand-50 hover:text-brand-700"
                       )}
                     >
                       <item.icon className="w-6 h-6" />
@@ -172,7 +172,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <Link
                       to="/auth"
                       onClick={() => setIsMenuOpen(false)}
-                      className="block w-full text-center bg-apple-gray-500 text-white py-5 rounded-2xl font-bold text-lg shadow-lg hover:opacity-90 transition-opacity"
+                      className="block w-full text-center bg-brand-500 text-white py-5 rounded-2xl font-bold text-lg shadow-lg shadow-brand-500/20 hover:bg-brand-600 transition-colors"
                     >
                       Get Started
                     </Link>
@@ -215,19 +215,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div>
               <h4 className="text-[13px] font-bold text-apple-gray-500 uppercase tracking-wider mb-6">Services</h4>
               <ul className="space-y-4 text-[14px] text-apple-gray-300 font-medium">
-                <li><Link to="/request" className="hover:text-blue-600 transition-colors">Send Item</Link></li>
-                <li><Link to="/businesses" className="hover:text-blue-600 transition-colors">Business Delivery</Link></li>
-                <li><Link to="/proxy-pickup" className="hover:text-blue-600 transition-colors">Pick’em Proxy</Link></li>
-                <li><Link to="/buy-and-deliver" className="hover:text-blue-600 transition-colors">Buy & Deliver</Link></li>
+                <li><Link to="/request" className="hover:text-brand-600 transition-colors">Send Item</Link></li>
+                <li><Link to="/businesses" className="hover:text-brand-600 transition-colors">Business Delivery</Link></li>
+                <li><Link to="/proxy-pickup" className="hover:text-brand-600 transition-colors">Pick’em Proxy</Link></li>
+                <li><Link to="/buy-and-deliver" className="hover:text-brand-600 transition-colors">Buy & Deliver</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-[13px] font-bold text-apple-gray-500 uppercase tracking-wider mb-6">Support</h4>
               <ul className="space-y-4 text-[14px] text-apple-gray-300 font-medium">
-                <li><Link to="/how-it-works" className="hover:text-blue-600 transition-colors">How it Works</Link></li>
-                <li><Link to="/contact" className="hover:text-blue-600 transition-colors">Contact Us</Link></li>
-                <li><Link to="/terms" className="hover:text-blue-600 transition-colors">Terms of Service</Link></li>
-                <li><Link to="/privacy" className="hover:text-blue-600 transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/how-it-works" className="hover:text-brand-600 transition-colors">How it Works</Link></li>
+                <li><Link to="/contact" className="hover:text-brand-600 transition-colors">Contact Us</Link></li>
+                <li><Link to="/terms" className="hover:text-brand-600 transition-colors">Terms of Service</Link></li>
+                <li><Link to="/privacy" className="hover:text-brand-600 transition-colors">Privacy Policy</Link></li>
               </ul>
             </div>
           </div>

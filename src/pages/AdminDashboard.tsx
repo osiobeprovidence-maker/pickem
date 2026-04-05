@@ -192,7 +192,7 @@ export default function AdminDashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="overflow-hidden rounded-[2.75rem] border border-apple-gray-100 bg-white shadow-sm"
         >
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-white md:px-10 md:py-12">
+          <div className="bg-gradient-to-r from-brand-500 to-brand-700 px-6 py-8 text-white md:px-10 md:py-12">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-[10px] font-black uppercase tracking-[0.35em]">
@@ -201,7 +201,7 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <h1 className="text-4xl font-black tracking-tighter md:text-6xl">Admin Control Center</h1>
-                  <p className="mt-3 max-w-2xl text-sm font-bold text-blue-100/90 md:text-base">
+                  <p className="mt-3 max-w-2xl text-sm font-bold text-brand-100/90 md:text-base">
                     Manage platform users, runners, businesses, deliveries, and system security from one control room.
                   </p>
                 </div>
@@ -212,7 +212,7 @@ export default function AdminDashboard() {
                   <button
                     type="button"
                     onClick={() => setIsInviteModalOpen(true)}
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-blue-600 shadow-sm hover:bg-blue-50 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-brand-700 shadow-sm hover:bg-brand-50 transition-colors"
                   >
                     <UserPlus className="h-4 w-4" />
                     Add Admin
@@ -232,7 +232,7 @@ export default function AdminDashboard() {
                 className={cn(
                   'inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-black transition-all whitespace-nowrap',
                   activeTab === tab.id
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-brand-500 text-white shadow-sm shadow-brand-500/20'
                     : 'bg-apple-gray-50 text-apple-gray-600 hover:bg-apple-gray-100'
                 )}
               >
@@ -264,7 +264,7 @@ export default function AdminDashboard() {
                     className="rounded-[2rem] border border-apple-gray-100 bg-white p-6 shadow-sm"
                   >
                     <div className={cn('inline-flex h-10 w-10 items-center justify-center rounded-lg', 
-                      stat.color === 'blue' ? 'bg-blue-100 text-blue-600' :
+                      stat.color === 'blue' ? 'bg-brand-100 text-brand-700' :
                       stat.color === 'green' ? 'bg-green-100 text-green-600' :
                       stat.color === 'purple' ? 'bg-purple-100 text-purple-600' :
                       'bg-orange-100 text-orange-600'
@@ -290,7 +290,7 @@ export default function AdminDashboard() {
                     <button
                       type="button"
                       onClick={() => openTab('admin-management')}
-                      className="inline-flex items-center gap-2 rounded-full bg-apple-gray-50 px-5 py-3 text-xs font-black uppercase tracking-widest text-apple-gray-500 hover:bg-blue-50 transition-colors"
+                      className="inline-flex items-center gap-2 rounded-full bg-apple-gray-50 px-5 py-3 text-xs font-black uppercase tracking-widest text-apple-gray-500 hover:bg-brand-50 transition-colors"
                     >
                       Open
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -308,7 +308,7 @@ export default function AdminDashboard() {
                     <button
                       type="button"
                       onClick={() => openTab('users')}
-                      className="inline-flex items-center gap-2 rounded-full bg-apple-gray-50 px-5 py-3 text-xs font-black uppercase tracking-widest text-apple-gray-500 hover:bg-blue-50 transition-colors"
+                      className="inline-flex items-center gap-2 rounded-full bg-apple-gray-50 px-5 py-3 text-xs font-black uppercase tracking-widest text-apple-gray-500 hover:bg-brand-50 transition-colors"
                     >
                       Open
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -348,7 +348,7 @@ export default function AdminDashboard() {
                       <h3 className="text-xl font-black text-apple-gray-500">{u.name}</h3>
                       <div className="text-sm font-bold text-apple-gray-400">{u.email}</div>
                       <div className="flex flex-wrap gap-2">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-xs font-black uppercase tracking-widest text-blue-700">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1 text-xs font-black uppercase tracking-widest text-brand-700">
                           {u.role}
                         </span>
                         <span className={cn(
@@ -607,7 +607,7 @@ export default function AdminDashboard() {
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="admin@email.com"
                   required
-                  className="w-full rounded-lg border border-apple-gray-100 px-4 py-3 text-apple-gray-500 outline-none focus:border-blue-500"
+                  className="w-full rounded-lg border border-apple-gray-100 px-4 py-3 text-apple-gray-500 outline-none focus:border-brand-500"
                 />
               </div>
 
@@ -616,7 +616,7 @@ export default function AdminDashboard() {
                 <select
                   value={selectedAdminLevel}
                   onChange={(e) => setSelectedAdminLevel(e.target.value as any)}
-                  className="w-full rounded-lg border border-apple-gray-100 px-4 py-3 text-apple-gray-500 outline-none focus:border-blue-500"
+                  className="w-full rounded-lg border border-apple-gray-100 px-4 py-3 text-apple-gray-500 outline-none focus:border-brand-500"
                 >
                   {AdminRBAC.getAllAdminLevels().map(level => (
                     <option key={level.level} value={level.level}>
@@ -628,7 +628,7 @@ export default function AdminDashboard() {
 
               <button
                 type="submit"
-                className="w-full rounded-full bg-blue-600 px-6 py-3 text-sm font-black text-white hover:bg-blue-700 transition-colors"
+                className="w-full rounded-full bg-brand-500 px-6 py-3 text-sm font-black text-white hover:bg-brand-600 transition-colors"
               >
                 Send Invite
               </button>

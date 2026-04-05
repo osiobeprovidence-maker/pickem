@@ -95,10 +95,10 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-[80vh] bg-[radial-gradient(circle_at_top,_rgba(29,29,31,0.06),_transparent_45%),linear-gradient(180deg,#f7f6f2_0%,#ffffff_55%)] px-4 py-10 sm:py-14">
+    <div className="min-h-[80vh] bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.14),_transparent_42%),linear-gradient(180deg,#f5f8f4_0%,#ffffff_58%)] px-4 py-10 sm:py-14">
       <div className="mx-auto max-w-2xl">
         <div className="overflow-hidden rounded-[2.5rem] border border-apple-gray-100 bg-white/95 p-8 shadow-[0_24px_70px_rgba(29,29,31,0.08)] backdrop-blur md:p-10">
-          <div className="inline-flex items-center gap-2 rounded-full bg-apple-gray-50 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-apple-gray-300">
+          <div className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-brand-700">
             Pick&apos;em Access
           </div>
 
@@ -125,18 +125,18 @@ export default function Auth() {
           )}
 
           {mode === 'signup' && (
-            <div className="mt-6 rounded-[1.75rem] border border-apple-gray-100 bg-apple-gray-50/80 p-5">
+            <div className="mt-6 rounded-[1.75rem] border border-brand-100 bg-brand-50/80 p-5">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-apple-gray-300">Onboarding flow</p>
               <p className="mt-2 text-sm font-medium leading-relaxed text-apple-gray-400">
                 Registration comes first. After that, every new account chooses a base role:
                 {' '}
-                <span className="font-bold text-apple-gray-500">Customer</span>
+                <span className="font-bold text-brand-700">Customer</span>
                 ,
                 {' '}
-                <span className="font-bold text-apple-gray-500">Runner</span>
+                <span className="font-bold text-brand-700">Runner</span>
                 ,
                 {' '}
-                <span className="font-bold text-apple-gray-500">Business</span>.
+                <span className="font-bold text-brand-700">Business</span>.
               </p>
             </div>
           )}
@@ -148,8 +148,8 @@ export default function Auth() {
               className={cn(
                 'rounded-full px-5 py-3.5 text-sm font-bold transition-colors',
                 mode === 'signin'
-                  ? 'bg-apple-gray-500 text-white shadow-sm'
-                  : 'bg-apple-gray-50 text-apple-gray-500 hover:bg-apple-gray-100',
+                  ? 'bg-brand-500 text-white shadow-sm shadow-brand-500/20'
+                  : 'bg-apple-gray-50 text-apple-gray-500 hover:bg-brand-50 hover:text-brand-700',
               )}
             >
               Sign In
@@ -160,8 +160,8 @@ export default function Auth() {
               className={cn(
                 'rounded-full px-5 py-3.5 text-sm font-bold transition-colors',
                 mode === 'signup'
-                  ? 'bg-apple-gray-500 text-white shadow-sm'
-                  : 'bg-apple-gray-50 text-apple-gray-500 hover:bg-apple-gray-100',
+                  ? 'bg-brand-500 text-white shadow-sm shadow-brand-500/20'
+                  : 'bg-apple-gray-50 text-apple-gray-500 hover:bg-brand-50 hover:text-brand-700',
               )}
             >
               Create Account
@@ -179,7 +179,7 @@ export default function Auth() {
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="you@campus.edu"
-                  className="w-full rounded-full border-none bg-apple-gray-50 py-5 pl-16 pr-8 font-medium text-apple-gray-500 shadow-sm outline-none focus:ring-2 focus:ring-apple-gray-500"
+                  className="w-full rounded-full border-none bg-apple-gray-50 py-5 pl-16 pr-8 font-medium text-apple-gray-500 shadow-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function Auth() {
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="********"
-                  className="w-full rounded-full border-none bg-apple-gray-50 py-5 pl-16 pr-8 font-medium text-apple-gray-500 shadow-sm outline-none focus:ring-2 focus:ring-apple-gray-500"
+                  className="w-full rounded-full border-none bg-apple-gray-50 py-5 pl-16 pr-8 font-medium text-apple-gray-500 shadow-sm outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
             </div>
@@ -206,7 +206,7 @@ export default function Auth() {
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-apple-gray-500 py-5 text-lg font-bold text-white shadow-lg shadow-apple-gray-500/10 transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-500 py-5 text-lg font-bold text-white shadow-lg shadow-brand-500/20 transition-colors hover:bg-brand-600 disabled:opacity-50"
             >
               {isLoading ? 'Please wait...' : mode === 'signin' ? 'Continue' : 'Create account'}
               {!isLoading && <ArrowRight className="h-5 w-5" />}
@@ -218,7 +218,7 @@ export default function Auth() {
               type="button"
               onClick={() => handleSocial('google')}
               disabled={isLoading}
-              className="rounded-full border border-apple-gray-200 bg-white px-5 py-4 text-sm font-bold text-apple-gray-500 transition-colors hover:bg-apple-gray-50 disabled:opacity-50"
+              className="rounded-full border border-apple-gray-200 bg-white px-5 py-4 text-sm font-bold text-apple-gray-500 transition-colors hover:border-brand-100 hover:bg-brand-50 hover:text-brand-700 disabled:opacity-50"
             >
               Continue with Google
             </button>
@@ -226,7 +226,7 @@ export default function Auth() {
               type="button"
               onClick={() => handleSocial('apple')}
               disabled={isLoading}
-              className="rounded-full border border-apple-gray-200 bg-white px-5 py-4 text-sm font-bold text-apple-gray-500 transition-colors hover:bg-apple-gray-50 disabled:opacity-50"
+              className="rounded-full border border-apple-gray-200 bg-white px-5 py-4 text-sm font-bold text-apple-gray-500 transition-colors hover:border-brand-100 hover:bg-brand-50 hover:text-brand-700 disabled:opacity-50"
             >
               Continue with Apple
             </button>
@@ -236,7 +236,7 @@ export default function Auth() {
             <button
               type="button"
               onClick={handleResetPassword}
-              className="text-sm font-bold text-apple-gray-400 transition-colors hover:text-apple-gray-500"
+              className="text-sm font-bold text-apple-gray-400 transition-colors hover:text-brand-700"
             >
               Forgot your password?
             </button>

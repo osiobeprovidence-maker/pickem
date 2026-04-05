@@ -40,7 +40,7 @@ export default function PrivacyPolicy() {
     <div className="min-h-screen overflow-x-clip bg-white">
       <section className="px-5 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-32">
         <div className="mx-auto max-w-4xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-apple-gray-50 px-4 py-1.5 text-[12px] font-semibold text-apple-gray-300">
+          <div className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-1.5 text-[12px] font-semibold text-brand-700">
             <ShieldCheck className="h-4 w-4" />
             Privacy
           </div>
@@ -68,7 +68,7 @@ export default function PrivacyPolicy() {
       </section>
 
       <section className="px-5 pb-20 sm:px-6 sm:pb-28">
-        <div className="mx-auto flex max-w-4xl flex-col gap-5 rounded-[2rem] bg-apple-gray-50 p-8 sm:flex-row sm:items-center sm:justify-between sm:rounded-[2.5rem] sm:p-10">
+        <div className="mx-auto flex max-w-4xl flex-col gap-5 rounded-[2rem] bg-brand-50 p-8 sm:flex-row sm:items-center sm:justify-between sm:rounded-[2.5rem] sm:p-10">
           <div>
             <h2 className="text-2xl font-bold text-apple-gray-500 sm:text-3xl">Questions about privacy?</h2>
             <p className="mt-2 max-w-xl text-sm font-medium leading-relaxed text-apple-gray-300 sm:text-base">
@@ -77,7 +77,7 @@ export default function PrivacyPolicy() {
           </div>
           <Link
             to="/contact"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-apple-gray-500 px-6 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-500 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600"
           >
             Contact Us
             <ArrowRight className="h-4 w-4" />

@@ -125,7 +125,7 @@ export default function BuyAndDeliver() {
           </div>
           <Link
             to="/dashboard/buy-deliver"
-            className="inline-flex w-full items-center justify-center rounded-full bg-apple-gray-500 px-6 py-4 text-base font-bold text-white transition-opacity hover:opacity-90"
+            className="inline-flex w-full items-center justify-center rounded-full bg-brand-500 px-6 py-4 text-base font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600"
           >
             Track in Dashboard
           </Link>
@@ -180,14 +180,14 @@ export default function BuyAndDeliver() {
                 >
                   <button
                     onClick={() => setStep('shopping')}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-apple-gray-500 px-6 py-4 text-base font-semibold text-white transition-opacity hover:opacity-90 sm:w-auto sm:px-10"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-500 px-6 py-4 text-base font-semibold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 sm:w-auto sm:px-10"
                   >
                     Start Shopping <ArrowRight className="h-5 w-5" />
                   </button>
                   {user && (
                     <Link
                       to="/dashboard/buy-deliver"
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-apple-gray-500 bg-white px-6 py-4 text-base font-semibold text-apple-gray-500 transition-colors hover:bg-apple-gray-50 sm:w-auto sm:px-10"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-brand-500 bg-white px-6 py-4 text-base font-semibold text-brand-700 transition-colors hover:bg-brand-50 sm:w-auto sm:px-10"
                     >
                       <LayoutDashboard className="h-5 w-5" /> Dashboard
                     </Link>
@@ -330,7 +330,7 @@ export default function BuyAndDeliver() {
                   </div>
                   <button
                     onClick={addToCart}
-                    className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-apple-gray-500 py-4 text-base font-bold text-white transition-opacity hover:opacity-90"
+                    className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-500 py-4 text-base font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600"
                   >
                     <Plus className="h-5 w-5" /> Add to List
                   </button>
@@ -360,7 +360,7 @@ export default function BuyAndDeliver() {
                       <p className="mt-1 text-sm font-medium text-apple-gray-300">{item.store}</p>
                       <button
                         onClick={() => addMarketplaceItem(item)}
-                        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-apple-gray-50 py-3 text-sm font-bold text-apple-gray-500 transition-colors hover:bg-apple-gray-500 hover:text-white"
+                        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-50 py-3 text-sm font-bold text-brand-700 transition-colors hover:bg-brand-500 hover:text-white"
                       >
                         <Plus className="h-4 w-4" /> Add to List
                       </button>
@@ -406,7 +406,7 @@ export default function BuyAndDeliver() {
 
                   <button
                     onClick={() => setStep('checkout')}
-                    className="inline-flex w-full items-center justify-center gap-3 rounded-[1.75rem] bg-apple-gray-500 px-6 py-4 text-base font-bold text-white shadow-xl transition-opacity hover:opacity-90 sm:rounded-[2rem] sm:py-5 sm:text-lg"
+                    className="inline-flex w-full items-center justify-center gap-3 rounded-[1.75rem] bg-brand-500 px-6 py-4 text-base font-bold text-white shadow-xl shadow-brand-500/20 transition-colors hover:bg-brand-600 sm:rounded-[2rem] sm:py-5 sm:text-lg"
                   >
                     Continue to Checkout <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6" />
                   </button>
@@ -479,7 +479,7 @@ export default function BuyAndDeliver() {
                 </div>
               </div>
 
-              <div className="space-y-5 rounded-[2rem] bg-apple-gray-500 p-5 text-white sm:rounded-[2.5rem] sm:p-8">
+              <div className="space-y-5 rounded-[2rem] bg-brand-500 p-5 text-white sm:rounded-[2.5rem] sm:p-8">
                 <h3 className="flex items-center gap-2 text-xl font-bold">
                   <CreditCard className="h-6 w-6" /> Order Summary
                 </h3>
@@ -506,7 +506,7 @@ export default function BuyAndDeliver() {
                 </p>
                 <button
                   onClick={() => setStep('payment')}
-                  className="inline-flex w-full items-center justify-center rounded-2xl bg-white py-4 text-base font-bold text-apple-gray-500 transition-colors hover:bg-apple-gray-50 sm:py-5 sm:text-lg"
+                  className="inline-flex w-full items-center justify-center rounded-2xl bg-white py-4 text-base font-bold text-brand-700 transition-colors hover:bg-brand-50 sm:py-5 sm:text-lg"
                 >
                   Confirm and Pay
                 </button>
@@ -523,8 +523,8 @@ export default function BuyAndDeliver() {
             className="mx-auto max-w-md px-4 pb-20 pt-24 text-center sm:px-6 sm:pt-32"
           >
             <div className="space-y-6 rounded-[2.25rem] border border-apple-gray-100 bg-white p-7 shadow-[0_18px_60px_rgba(29,29,31,0.08)] sm:rounded-[3rem] sm:p-10">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50">
-                <CreditCard className="h-10 w-10 text-blue-600" />
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-brand-50">
+                <CreditCard className="h-10 w-10 text-brand-600" />
               </div>
               <div className="space-y-3">
                 <h2 className="text-3xl font-bold tracking-tight text-apple-gray-500">Secure Payment</h2>
@@ -541,7 +541,7 @@ export default function BuyAndDeliver() {
                 <button
                   disabled={isSubmitting}
                   onClick={handleCheckout}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-apple-gray-500 py-4 text-base font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-500 py-4 text-base font-bold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 disabled:opacity-50"
                 >
                   {isSubmitting ? 'Processing...' : 'Pay Now'}
                 </button>

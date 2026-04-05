@@ -56,7 +56,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             className="mb-6 inline-flex max-w-full items-center gap-2 rounded-full bg-apple-gray-50 px-4 py-1.5 text-[12px] font-semibold text-apple-gray-300 sm:mb-8 sm:text-[13px]"
           >
-            <span className="text-blue-500">New</span> Active on 12 Campuses
+            <span className="text-brand-600">New</span> Active on 12 Campuses
           </motion.div>
 
           <motion.h1
@@ -85,13 +85,13 @@ export default function Home() {
           >
             <Link
               to="/request"
-              className="w-full rounded-full bg-apple-gray-500 px-8 py-4 text-center text-base font-semibold text-white shadow-sm transition-opacity hover:opacity-90 sm:w-auto sm:px-10 sm:text-lg"
+              className="w-full rounded-full bg-brand-500 px-8 py-4 text-center text-base font-semibold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 sm:w-auto sm:px-10 sm:text-lg"
             >
               Send Something
             </Link>
             <Link
               to="/become-runner"
-              className="w-full rounded-full border-2 border-apple-gray-500 bg-white px-8 py-4 text-center text-base font-semibold text-apple-gray-500 shadow-sm transition-all hover:bg-apple-gray-50 sm:w-auto sm:px-10 sm:text-lg"
+              className="w-full rounded-full border-2 border-brand-500 bg-white px-8 py-4 text-center text-base font-semibold text-brand-700 shadow-sm transition-all hover:bg-brand-50 sm:w-auto sm:px-10 sm:text-lg"
             >
               Become a Runner
             </Link>
@@ -140,7 +140,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-5 sm:px-6">
           <div className="grid grid-cols-1 items-center gap-12 sm:gap-24 lg:grid-cols-2">
             <div className="text-center lg:text-left">
-              <div className="mb-4 text-xs font-bold uppercase tracking-widest text-blue-600 sm:mb-6 sm:text-sm">New Service</div>
+              <div className="mb-4 text-xs font-bold uppercase tracking-widest text-brand-600 sm:mb-6 sm:text-sm">New Service</div>
               <h2 className="mb-6 text-4xl font-bold tracking-tight sm:mb-8 sm:text-5xl md:text-6xl">
                 Buy & Deliver. <br /> We&apos;ve got you.
               </h2>
@@ -149,7 +149,7 @@ export default function Home() {
               </p>
               <Link
                 to="/buy-and-deliver"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-apple-gray-500 px-8 py-4 text-lg font-semibold text-white transition-opacity hover:opacity-90 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-500 px-8 py-4 text-lg font-semibold text-white shadow-sm shadow-brand-500/20 transition-colors hover:bg-brand-600 sm:w-auto"
               >
                 Explore Buy & Deliver <ArrowRight className="h-5 w-5" />
               </Link>

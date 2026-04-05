@@ -1,16 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 import { Delivery } from '../types';
-import { Store, Package, TrendingUp, Clock, Plus, Search, MapPin } from 'lucide-react';
+import {
+  ArrowRight,
+  Clock,
+  CreditCard,
+  LockKeyhole,
+  MapPin,
+  Package,
+  Plus,
+  Search,
+  Store,
+  TrendingUp,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { format } from 'date-fns';
+import { Button } from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
+import {
+  activateBusinessSubscription,
+  getBusinessPlanSummary,
+  startBusinessTrial,
+} from '../lib/businessOnboarding';
 
 export default function BusinessDashboard() {
   const { user } = useAuth();
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [planSummary, setPlanSummary] = useState(() => getBusinessPlanSummary(user?.email));
 
   useEffect(() => {
     if (user) {
@@ -18,9 +37,31 @@ export default function BusinessDashboard() {
     }
   }, [user]);
 
+  useEffect(() => {
+    setPlanSummary(getBusinessPlanSummary(user?.email));
+  }, [user?.email]);
+
+  const refreshPlan = () => setPlanSummary(getBusinessPlanSummary(user?.email));
+
+  const handleStartTrial = () => {
+    if (!user?.email) return;
+    startBusinessTrial(user.email);
+    refreshPlan();
+  };
+
+  const handleSubscribe = () => {
+    if (!user?.email) return;
+    activateBusinessSubscription(user.email);
+    refreshPlan();
+  };
+
+  const isPremiumLocked = planSummary.locked;
+  const needsRegistration = planSummary.status === 'none';
+  const canStartTrial = planSummary.status === 'registered';
+
   const stats = [
-    { label: 'Total Orders', value: deliveries.length, icon: Package, color: 'text-blue-600' },
-    { label: 'Revenue', value: `N${(deliveries.length * 2500).toLocaleString()}`, icon: TrendingUp, color: 'text-emerald-600' },
+    { label: 'Total Orders', value: deliveries.length, icon: Package, color: 'text-brand-600' },
+    { label: 'Revenue', value: `N${(deliveries.length * 2500).toLocaleString()}`, icon: TrendingUp, color: 'text-brand-700' },
     { label: 'Active', value: deliveries.filter((delivery) => delivery.status !== 'delivered').length, icon: Clock, color: 'text-orange-600' },
   ];
 
@@ -30,62 +71,157 @@ export default function BusinessDashboard() {
       description: 'Manage your current customer deliveries.',
       path: '/dashboard',
       icon: Package,
-      color: 'bg-blue-50 text-blue-600',
+      color: 'bg-brand-50 text-brand-600',
     },
     {
       title: 'Business Profile',
       description: 'Update your shop details and location.',
       path: '/profile',
       icon: Store,
-      color: 'bg-emerald-50 text-emerald-600',
+      color: 'bg-apple-gray-50 text-apple-gray-500',
     },
     {
       title: 'Analytics',
       description: 'View your sales and delivery performance.',
       path: '/dashboard',
       icon: TrendingUp,
-      color: 'bg-indigo-50 text-indigo-600',
+      color: 'bg-brand-100 text-brand-700',
+      premium: true,
     },
   ];
 
   return (
     <div className="space-y-8 overflow-x-clip md:space-y-12">
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-apple-gray-500 shadow-sm">
-            <Store className="h-8 w-8 text-white" />
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <Card className="p-6 sm:p-8">
+          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-apple-gray-500 shadow-sm">
+                <Store className="h-8 w-8 text-white" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="break-words text-3xl font-bold text-apple-gray-500">{user?.name}</h1>
+                <p className="font-medium text-apple-gray-300">Business Dashboard · {deliveries.length} Deliveries</p>
+              </div>
+            </div>
+
+            {needsRegistration ? (
+              <Link to="/businesses" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto">
+                  Complete Business Registration
+                </Button>
+              </Link>
+            ) : isPremiumLocked ? (
+              <Button size="lg" className="w-full sm:w-auto" onClick={handleSubscribe}>
+                Subscribe for ₦3,500/month
+              </Button>
+            ) : canStartTrial ? (
+              <Button size="lg" className="w-full sm:w-auto" onClick={handleStartTrial}>
+                Start 7-Day Free Trial
+              </Button>
+            ) : (
+              <Link to="/request" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto">
+                  <Plus className="h-5 w-5" />
+                  New Delivery
+                </Button>
+              </Link>
+            )}
           </div>
-          <div className="min-w-0">
-            <h1 className="break-words text-3xl font-bold text-apple-gray-500">{user?.name}</h1>
-            <p className="font-medium text-apple-gray-300">Business Dashboard · {deliveries.length} Deliveries</p>
+        </Card>
+
+        <Card className="p-6 sm:p-7">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-brand-700">Current Plan</p>
+              <h2 className="mt-2 text-3xl font-black text-apple-gray-500">{planSummary.currentPlanLabel}</h2>
+            </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50">
+              <CreditCard className="h-6 w-6 text-brand-600" />
+            </div>
           </div>
-        </div>
-        <Link
-          to="/request"
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-apple-gray-500 px-8 py-3 font-bold text-white shadow-sm transition-opacity hover:opacity-90 sm:w-auto"
-        >
-          <Plus className="h-5 w-5" /> New Delivery
-        </Link>
+
+          <div className="mt-5 space-y-3 text-sm font-medium text-apple-gray-400">
+            <div className="flex items-center justify-between gap-4">
+              <span>Days remaining</span>
+              <span className="font-black text-apple-gray-500">{planSummary.daysRemaining}</span>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <span>Next billing</span>
+              <span className="text-right font-black text-apple-gray-500">{planSummary.nextBillingLabel}</span>
+            </div>
+          </div>
+
+          {isPremiumLocked ? (
+            <div className="mt-5 rounded-[1.5rem] border border-red-100 bg-red-50 p-4">
+              <div className="flex items-start gap-3">
+                <LockKeyhole className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
+                <div>
+                  <p className="font-black text-red-700">Premium features are locked</p>
+                  <p className="mt-1 text-sm font-medium leading-relaxed text-red-600">
+                    Renew your subscription to create new delivery jobs and unlock analytics again.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-5 rounded-[1.5rem] border border-brand-100 bg-brand-50 p-4">
+              <p className="text-sm font-medium leading-relaxed text-brand-900">
+                {planSummary.status === 'trial'
+                  ? 'Your trial is active. Explore the full business workflow before your first billing cycle begins.'
+                  : planSummary.status === 'active'
+                    ? 'Your subscription is active and your premium business tools are fully unlocked.'
+                    : needsRegistration
+                      ? 'Complete your business registration to unlock the onboarding and trial flow.'
+                      : 'Complete onboarding to activate your free trial and unlock business delivery tools.'}
+              </p>
+            </div>
+          )}
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
         {businessLinks.map((link) => (
-          <Link
-            key={`${link.title}-${link.path}`}
-            to={link.path}
-            className="group rounded-[2.25rem] border border-apple-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-xl sm:p-8"
-          >
-            <div
-              className={cn(
-                'mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-transform group-hover:scale-110 sm:mb-8',
-                link.color,
-              )}
-            >
-              <link.icon className="h-7 w-7" />
-            </div>
-            <h3 className="mb-2 text-xl font-bold text-apple-gray-500">{link.title}</h3>
-            <p className="text-sm font-medium leading-relaxed text-apple-gray-300">{link.description}</p>
-          </Link>
+          <div key={`${link.title}-${link.path}`} className="h-full">
+            {link.premium && isPremiumLocked ? (
+              <Card className="flex h-full flex-col p-6 opacity-80 sm:p-8">
+                <div className={cn('mb-6 flex h-14 w-14 items-center justify-center rounded-2xl sm:mb-8', link.color)}>
+                  <link.icon className="h-7 w-7" />
+                </div>
+                <div className="mb-2 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-apple-gray-500">{link.title}</h3>
+                  <span className="rounded-full bg-red-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-red-600">
+                    Locked
+                  </span>
+                </div>
+                <p className="text-sm font-medium leading-relaxed text-apple-gray-300">{link.description}</p>
+                <button
+                  type="button"
+                  onClick={handleSubscribe}
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-black text-brand-700"
+                >
+                  Unlock with subscription
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </Card>
+            ) : (
+              <Link
+                to={link.path}
+                className="group block h-full rounded-[2.25rem] border border-apple-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-xl sm:p-8"
+              >
+                <div
+                  className={cn(
+                    'mb-6 flex h-14 w-14 items-center justify-center rounded-2xl transition-transform group-hover:scale-110 sm:mb-8',
+                    link.color,
+                  )}
+                >
+                  <link.icon className="h-7 w-7" />
+                </div>
+                <h3 className="mb-2 text-xl font-bold text-apple-gray-500">{link.title}</h3>
+                <p className="text-sm font-medium leading-relaxed text-apple-gray-300">{link.description}</p>
+              </Link>
+            )}
+          </div>
         ))}
       </div>
 
@@ -109,7 +245,7 @@ export default function BusinessDashboard() {
             <input
               type="text"
               placeholder="Search orders..."
-              className="w-full rounded-full border-none bg-apple-gray-50 py-2 pl-9 pr-4 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-600 md:w-64"
+              className="w-full rounded-full border-none bg-apple-gray-50 py-2 pl-9 pr-4 text-sm font-medium outline-none focus:ring-2 focus:ring-brand-500 md:w-64"
             />
           </div>
         </div>
@@ -125,12 +261,17 @@ export default function BusinessDashboard() {
             <p className="mx-auto mb-8 max-w-xs font-medium text-apple-gray-300">
               Start using Pick&apos;em as your delivery infrastructure today.
             </p>
-            <Link
-              to="/request"
-              className="inline-flex w-full items-center justify-center rounded-full bg-apple-gray-500 px-8 py-3 font-bold text-white transition-opacity hover:opacity-90 sm:w-auto"
-            >
-              Create First Delivery
-            </Link>
+            {needsRegistration ? (
+              <Link to="/businesses" className="inline-flex w-full sm:w-auto">
+                <Button className="w-full sm:w-auto">Complete Registration</Button>
+              </Link>
+            ) : isPremiumLocked ? (
+              <Button onClick={handleSubscribe}>Subscribe for ₦3,500/month</Button>
+            ) : (
+              <Link to="/request" className="inline-flex w-full sm:w-auto">
+                <Button className="w-full sm:w-auto">Create First Delivery</Button>
+              </Link>
+            )}
           </div>
         ) : (
           <>
@@ -160,8 +301,8 @@ export default function BusinessDashboard() {
                           className={cn(
                             'rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider',
                             delivery.status === 'delivered'
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-blue-100 text-blue-700',
+                              ? 'bg-apple-gray-100 text-apple-gray-500'
+                              : 'bg-brand-100 text-brand-700',
                           )}
                         >
                           {delivery.status}
@@ -193,8 +334,8 @@ export default function BusinessDashboard() {
                         className={cn(
                           'rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider',
                           delivery.status === 'delivered'
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-blue-100 text-blue-700',
+                            ? 'bg-apple-gray-100 text-apple-gray-500'
+                            : 'bg-brand-100 text-brand-700',
                         )}
                       >
                         {delivery.status}
