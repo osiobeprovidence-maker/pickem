@@ -4,97 +4,95 @@ import { Mail, Phone, MapPin, Send, MessageSquare } from 'lucide-react';
 
 export default function Contact() {
   return (
-    <div className="bg-white min-h-screen">
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
-        <div className="max-w-5xl mx-auto text-center">
+    <div className="min-h-screen overflow-x-clip bg-white">
+      <section className="px-5 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-32">
+        <div className="mx-auto max-w-5xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-4 py-1.5 bg-apple-gray-50 rounded-full text-[13px] font-semibold text-apple-gray-300 mb-6"
+            className="mb-6 inline-block rounded-full bg-apple-gray-50 px-4 py-1.5 text-[13px] font-semibold text-apple-gray-300"
           >
             Support
           </motion.div>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold tracking-tight text-apple-gray-500 mb-8"
+            className="mb-6 text-4xl font-bold tracking-tight text-apple-gray-500 sm:mb-8 sm:text-5xl md:text-7xl"
           >
-            We're here <br /> to help.
+            We&apos;re here <br /> to help.
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-apple-gray-300 max-w-2xl mx-auto mb-12 font-medium leading-relaxed"
+            className="mx-auto mb-12 max-w-2xl text-lg font-medium leading-relaxed text-apple-gray-300 sm:text-xl md:text-2xl"
           >
-            Have questions or feedback? Reach out to our campus support team. We're available 24/7 for active deliveries.
+            Have questions or feedback? Reach out to our campus support team. We&apos;re available 24/7 for active deliveries.
           </motion.p>
         </div>
       </section>
 
-      {/* Contact Grid */}
-      <section className="py-24 bg-apple-gray-50">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16">
+      <section className="bg-apple-gray-50 py-20 sm:py-24">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 sm:px-6 lg:grid-cols-2 lg:gap-16">
           <div className="space-y-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
               {[
-                { icon: Mail, title: "Email Us", detail: "support@pickem.edu", desc: "We usually respond within 2 hours." },
-                { icon: Phone, title: "Call Us", detail: "+234 800 PICKEM", desc: "Available Mon-Fri, 9am-6pm." },
-                { icon: MessageSquare, title: "Live Chat", detail: "In-App Chat", desc: "Instant support for active deliveries." },
-                { icon: MapPin, title: "Visit Us", detail: "Campus Hub, Room 402", desc: "Drop by for a coffee and chat." }
+                { icon: Mail, title: 'Email Us', detail: 'support@pickem.edu', desc: 'We usually respond within 2 hours.' },
+                { icon: Phone, title: 'Call Us', detail: '+234 800 PICKEM', desc: 'Available Mon-Fri, 9am-6pm.' },
+                { icon: MessageSquare, title: 'Live Chat', detail: 'In-App Chat', desc: 'Instant support for active deliveries.' },
+                { icon: MapPin, title: 'Visit Us', detail: 'Campus Hub, Room 402', desc: 'Drop by for a coffee and chat.' },
               ].map((item, i) => (
-                <motion.div 
+                <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-8 bg-white rounded-[2rem] border border-apple-gray-100 shadow-sm space-y-4"
+                  className="space-y-4 rounded-[2rem] border border-apple-gray-100 bg-white p-6 shadow-sm sm:p-8"
                 >
-                  <div className="w-12 h-12 bg-apple-gray-50 rounded-2xl flex items-center justify-center">
-                    <item.icon className="w-6 h-6 text-apple-gray-500" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-apple-gray-50">
+                    <item.icon className="h-6 w-6 text-apple-gray-500" />
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-apple-gray-500">{item.title}</h3>
-                    <p className="text-blue-600 font-bold">{item.detail}</p>
-                    <p className="text-apple-gray-300 text-sm mt-2 font-medium">{item.desc}</p>
+                    <p className="break-words font-bold text-blue-600">{item.detail}</p>
+                    <p className="mt-2 text-sm font-medium text-apple-gray-300">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
             </div>
           </div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white p-10 md:p-12 rounded-[3rem] border border-apple-gray-100 shadow-xl space-y-10"
+            className="space-y-8 rounded-[2rem] border border-apple-gray-100 bg-white p-6 shadow-xl sm:space-y-10 sm:rounded-[3rem] sm:p-10 md:p-12"
           >
             <h2 className="text-3xl font-bold">Send us a message</h2>
             <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-apple-gray-300 ml-2">Full Name</label>
-                  <input 
-                    type="text" 
-                    className="w-full px-6 py-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium"
+                  <label className="ml-2 text-[13px] font-semibold text-apple-gray-300">Full Name</label>
+                  <input
+                    type="text"
+                    className="w-full rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="John Doe"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-apple-gray-300 ml-2">Email Address</label>
-                  <input 
-                    type="email" 
-                    className="w-full px-6 py-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium"
+                  <label className="ml-2 text-[13px] font-semibold text-apple-gray-300">Email Address</label>
+                  <input
+                    type="email"
+                    className="w-full rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="john@example.com"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-[13px] font-semibold text-apple-gray-300 ml-2">Subject</label>
-                <select className="w-full px-6 py-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all appearance-none font-medium">
+                <label className="ml-2 text-[13px] font-semibold text-apple-gray-300">Subject</label>
+                <select className="w-full appearance-none rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option>General Inquiry</option>
                   <option>Business Partnership</option>
                   <option>Runner Application</option>
@@ -102,15 +100,15 @@ export default function Contact() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-[13px] font-semibold text-apple-gray-300 ml-2">Message</label>
-                <textarea 
+                <label className="ml-2 text-[13px] font-semibold text-apple-gray-300">Message</label>
+                <textarea
                   rows={4}
-                  className="w-full px-6 py-4 bg-apple-gray-50 border border-apple-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium"
+                  className="w-full rounded-2xl border border-apple-gray-100 bg-apple-gray-50 px-6 py-4 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="How can we help you?"
                 />
               </div>
-              <button className="w-full bg-apple-gray-500 text-white py-5 rounded-2xl font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                Send Message <Send className="w-5 h-5" />
+              <button className="flex w-full items-center justify-center gap-2 rounded-2xl bg-apple-gray-500 py-5 text-lg font-bold text-white transition-opacity hover:opacity-90">
+                Send Message <Send className="h-5 w-5" />
               </button>
             </form>
           </motion.div>
